@@ -2,13 +2,17 @@
 /* Kurīpāwārudo (inspiré du jeu Creeper World 2)             */
 /*-----------------------------------------------------------*/
 /* Module            : type.h                                */
-/* Numéro de version : *0.3*                                 */
+/* Numéro de version : 0.4                                   */
 /* Date              : 21/03/2021                            */
 /* Auteurs           : Lilian CHARDON                        */
 /*************************************************************/
 
 #ifndef _TYPE_H_INCLUDED_
 #define _TYPE_H_INCLUDED_
+
+#define NULL (void*) 0
+/*Une erreur totalement incompréhensible m'a forcé
+  a définir NULL manuellement.*/
 
 #include <stdio.h>
 #include <stdlib.h>
