@@ -2,7 +2,7 @@
 /* Kurīpāwārudo (inspiré du jeu Creeper World 2)             */
 /*-----------------------------------------------------------*/
 /* Module            : fonction.h                            */
-/* Numéro de version : *0.3*                                 */
+/* Numéro de version : 0.4                                   */
 /* Date              : 21/03/2021                            */
 /* Auteurs           : Lilian CHARDON                        */
 /*************************************************************/
@@ -46,6 +46,6 @@ void decache (Map* m);
 
 //---------------------------Gestion Interface-------------------------//
 
-void afficherInterface (Map* m);
+void afficherInterface (Map* m, Coord* _tabEntitee, int _nb_Entitee);
 
 #endif
