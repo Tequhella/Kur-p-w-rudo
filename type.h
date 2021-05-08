@@ -2,8 +2,8 @@
 /* Kurīpāwārudo (inspiré du jeu Creeper World 2)             */
 /*-----------------------------------------------------------*/
 /* Module            : type.h                                */
-/* Numéro de version : 0.3                                   */
-/* Date              : 19/03/2021                            */
+/* Numéro de version : *0.3*                                 */
+/* Date              : 21/03/2021                            */
 /* Auteurs           : Lilian CHARDON                        */
 /*************************************************************/
 
@@ -16,6 +16,7 @@
 
 #define LARGEUR 35
 #define HAUTEUR 40
+#define NB_CREEPERSPAWNER 3
 
 typedef struct
 {
@@ -78,14 +79,14 @@ Ship;
 
 typedef struct str_Reactor
 {
-    double construction;
+    double build;
     Coord  pos;
 }
 Reactor;
 
 typedef struct str_Miner
 {
-    double construction;
+    double build;
     double power_quantity;
     double power_max;
     Coord  pos;
@@ -94,7 +95,7 @@ Miner;
 
 typedef struct str_Shield
 {
-    double construction;
+    double build;
     double health;
     Coord  pos;
 }
@@ -102,7 +103,7 @@ Shield;
 
 typedef struct str_Beacon
 {
-    double construction;
+    double build;
     int    range;
     double power_quantity;
     double power_max;
@@ -110,14 +111,38 @@ typedef struct str_Beacon
 }
 Beacon;
 
+typedef struct str_Bomb
+{
+    double build;
+    int    range;
+    double power_quantity;
+    double power_max;
+    double damage;
+    Coord  pos;
+}
+Bomb;
+
+
+typedef struct str_CreeperSpawner
+{
+    double pulse;
+    double power;
+    double health;
+    Coord  pos;
+}
+CreeperSpawner;
+
+
 typedef struct Entity
 {
-    unsigned int type;
-    Ship*        ship;
-    Reactor*     reactor;
-    Miner*       miner;
-    Shield*      shield;
-    Beacon*      beacon;
+    unsigned int    type;
+    Ship*           ship;
+    Reactor*        reactor;
+    Miner*          miner;
+    Shield*         shield;
+    Beacon*         beacon;
+    Bomb*           bombe;
+    CreeperSpawner* creeperSpawner;
 }
 Entity;
 
@@ -153,10 +178,12 @@ Map;
     #define STONE3 3
 #define GOLD  3
 
-#define SHIP     0
-#define REACTEUR 1
-#define MINER    2
-#define SHIELD   3
-#define BEACON   4
+#define SHIP           0
+#define REACTEUR       1
+#define MINER          2
+#define SHIELD         3
+#define BEACON         4
+#define BOMBE          5
+#define CREEPERSPAWNER 9
 
 #endif

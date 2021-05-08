@@ -2,8 +2,8 @@
 /* Kurīpāwārudo (inspiré du jeu Creeper World 2)             */
 /*-----------------------------------------------------------*/
 /* Module            : main.c                                */
-/* Numéro de version : 0.3                                   */
-/* Date              : 19/03/2021                            */
+/* Numéro de version : *0.3*                                 */
+/* Date              : 21/03/2021                            */
 /* Auteurs           : Lilian CHARDON                        */
 /*************************************************************/
 
@@ -21,14 +21,16 @@ int main ()
     creerCaverne  (mapHasard, rand() % LARGEUR * HAUTEUR + 280, 0);
     creerCaverne  (mapHasard, rand() % LARGEUR * HAUTEUR + 280, 0);
     creerCaverne  (mapHasard, rand() % LARGEUR * HAUTEUR + 280, 0);
+    ajouterSpawnerHasard(mapHasard->elements, NB_CREEPERSPAWNER);
 
-    int sortie        = 1;
-    int MvtOrAction   = 0;
+    int sortie        = NB_CREEPERSPAWNER;
+    char MvtOrAction  = 0;
     int blockAcasser  = 0;
     int entiteeAcreer = 0;
     int erreur        = 0;
     int nb_besoin     = 0;
     int compte[20]    = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
+    int compteE[20]   = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
     char action;
     Coord jPos = (Coord){17, 3};
     Coord bPos[10];
@@ -53,25 +55,25 @@ int main ()
         }
         erreur = 0;
 
-        scanf ("%d", &MvtOrAction);
+        scanf (" %c", &MvtOrAction);
 
         switch (MvtOrAction)
         {
-            case 1:
+            case 'a':
                 if (mapHasard->elements[LARGEUR * (int)jPos.y + (int)jPos.x].block == NULL && mapHasard->elements[LARGEUR * (int)jPos.y + (int)jPos.x].entitee == NULL)
                     mapHasard->elements[LARGEUR * (int)jPos.y + (int)jPos.x].type = 0;
                 jPos.x--;
                 mapHasard->elements[LARGEUR * (int)jPos.y + (int)jPos.x].type = 3;
 
                 break;
-            case 2:
+            case 's':
                 if (mapHasard->elements[LARGEUR * (int)jPos.y + (int)jPos.x].block == NULL && mapHasard->elements[LARGEUR * (int)jPos.y + (int)jPos.x].entitee == NULL)
                     mapHasard->elements[LARGEUR * (int)jPos.y + (int)jPos.x].type = 0;
                 jPos.y++;
                 mapHasard->elements[LARGEUR * (int)jPos.y + (int)jPos.x].type = 3;
 
                 break;
-            case 3:
+            case 'd':
                 if (mapHasard->elements[LARGEUR * (int)jPos.y + (int)jPos.x].block == NULL && mapHasard->elements[LARGEUR * (int)jPos.y + (int)jPos.x].entitee == NULL)
                     mapHasard->elements[LARGEUR * (int)jPos.y + (int)jPos.x].type = 0;
                 jPos.x++;
@@ -79,13 +81,13 @@ int main ()
 
 
                 break;
-            case 5:
+            case 'w':
                 if (mapHasard->elements[LARGEUR * (int)jPos.y + (int)jPos.x].block == NULL && mapHasard->elements[LARGEUR * (int)jPos.y + (int)jPos.x].entitee == NULL)
                     mapHasard->elements[LARGEUR * (int)jPos.y + (int)jPos.x].type = 0;
                 jPos.y--;
                 mapHasard->elements[LARGEUR * (int)jPos.y + (int)jPos.x].type = 3;
                 break;
-            case 6:
+            case 'z':
                 scanf (" %c", &action);
 
                 switch (action)
@@ -108,6 +110,14 @@ int main ()
                         }
                         else if (mapHasard->elements[LARGEUR * (int)jPos.y + (int)jPos.x].entitee != NULL && mapHasard->elements[LARGEUR * (int)jPos.y + (int)jPos.x].entitee->ship == NULL)
                         {
+                            if (mapHasard->elements[LARGEUR * (int)jPos.y + (int)jPos.x].entitee->type == REACTEUR)
+                            //--▼----------------------------------------------------------------------------▼--*/
+                                mapHasard->elements[LARGEUR * 2 + LARGEUR / 2].entitee->ship->energy_efficient -= 0.15;
+
+                            else if (mapHasard->elements[LARGEUR * (int)jPos.y + (int)jPos.x].entitee->type == MINER)
+                            //--▼--------------------------------------------------------------------------▼--*/
+                                mapHasard->elements[LARGEUR * 2 + LARGEUR / 2].entitee->ship->gold_efficient -= 0.15;
+                            
                             detruireEntitee(mapHasard->elements[LARGEUR * (int)jPos.y + (int)jPos.x].entitee);
                             mapHasard->elements[LARGEUR * (int)jPos.y + (int)jPos.x].entitee = NULL;
                             mapHasard->elements[LARGEUR * (int)jPos.y + (int)jPos.x].type = VIDE;
@@ -121,17 +131,12 @@ int main ()
                             erreur = 1;
                         else
                         {
-                            scanf ("%d", &MvtOrAction);
+                            scanf (" %c", &MvtOrAction);
                             if (entiteeAcreer <= 9)
                             {
                                 ePos[entiteeAcreer] = jPos;
-                                ajouterEntitee(mapHasard->elements, ePos[entiteeAcreer].x, ePos[entiteeAcreer].y, MvtOrAction, &erreur);
-                                if (erreur == 0)
-                                {
-                                    entiteeAcreer++;
-                                    nb_besoin++;
-                                }
-                                
+                                ajouterEntitee(mapHasard->elements, ePos[entiteeAcreer].x, ePos[entiteeAcreer].y, (int)MvtOrAction, &erreur);
+                                if (erreur == 0) /*--->*/ entiteeAcreer++;
                             }
                             else /*--->*/ erreur = 8;
 
@@ -152,7 +157,8 @@ int main ()
             {
                 if (compte[i] == 0)
                 {
-                    compte[i] = testAccessibilitee(mapHasard, bPos[i].x, bPos[i].y);
+                    compte[i] = testAccessibilitee (mapHasard, bPos[i].x, bPos[i].y);
+                    decache (mapHasard);
                     if (compte[i] == 1) /*--->*/ nb_besoin++;
                     
                 }
@@ -200,55 +206,106 @@ int main ()
         {
             for (unsigned int i = 0; i < entiteeAcreer; i++)
             {
-                switch (mapHasard->elements[LARGEUR * (int)ePos[i].y + (int)ePos[i].x].entitee->type)
+                if (compteE[i] == 0)
                 {
-                case 1:
-                    mapHasard->elements[LARGEUR * (int)ePos[i].y + (int)ePos[i].x].entitee->reactor->construction -= mapHasard->elements[LARGEUR * 2 + LARGEUR / 2].entitee->ship->energy_efficient / nb_besoin;
-                    if (mapHasard->elements[LARGEUR * (int)ePos[i].y + (int)ePos[i].x].entitee->reactor->construction <= 0)
+                    compteE[i] = testAccessibilitee(mapHasard, ePos[i].x, ePos[i].y);
+                    decache (mapHasard);
+                    if (compteE[i] == 1) /*--->*/ nb_besoin++;
+                    
+                }
+                if (compteE[i] == 1)
+                {
+                    switch (mapHasard->elements[LARGEUR * (int)ePos[i].y + (int)ePos[i].x].entitee->type)
                     {
-                        mapHasard->elements[LARGEUR * (int)ePos[i].y + (int)ePos[i].x].type = ENTITY;
-                        ePos[i] = ePos[entiteeAcreer - 1];
-                        entiteeAcreer--;
-                        nb_besoin--;
-                        i--;
-                    }
-                    break;
-                
-                case 2:
-                    mapHasard->elements[LARGEUR * (int)ePos[i].y + (int)ePos[i].x].entitee->miner->construction -= mapHasard->elements[LARGEUR * 2 + LARGEUR / 2].entitee->ship->energy_efficient / nb_besoin;
-                    if (mapHasard->elements[LARGEUR * (int)ePos[i].y + (int)ePos[i].x].entitee->miner->construction <= 0)
-                    {
-                        mapHasard->elements[LARGEUR * (int)ePos[i].y + (int)ePos[i].x].type = ENTITY;
-                        ePos[i] = ePos[entiteeAcreer - 1];
-                        entiteeAcreer--;
-                        nb_besoin--;
-                        i--;
-                    }
-                    break;
+                        case 1:
+                            mapHasard->elements[LARGEUR * (int)ePos[i].y + (int)ePos[i].x].entitee->reactor->build -= mapHasard->elements[LARGEUR * 2 + LARGEUR / 2].entitee->ship->energy_efficient / nb_besoin;
+                            if (mapHasard->elements[LARGEUR * (int)ePos[i].y + (int)ePos[i].x].entitee->reactor->build <= 0)
+                            {
+                                mapHasard->elements[LARGEUR * 2 + LARGEUR / 2].entitee->ship->energy_efficient += 0.15;
+                                mapHasard->elements[LARGEUR * (int)ePos[i].y + (int)ePos[i].x].type = ENTITY;
+                                ePos[i] = ePos[entiteeAcreer - 1];
+                                compteE[i] = compteE[entiteeAcreer - 1];
+                                compteE[entiteeAcreer - 1] = 0;
+                                entiteeAcreer--;
+                                nb_besoin--;
+                                i--;
+                            }
+                            break;
+                        
+                        case 2:
+                            mapHasard->elements[LARGEUR * (int)ePos[i].y + (int)ePos[i].x].entitee->miner->build -= mapHasard->elements[LARGEUR * 2 + LARGEUR / 2].entitee->ship->energy_efficient / nb_besoin;
+                            if (mapHasard->elements[LARGEUR * (int)ePos[i].y + (int)ePos[i].x].entitee->miner->build <= 0)
+                            {
+                                mapHasard->elements[LARGEUR * 2 + LARGEUR / 2].entitee->ship->gold_efficient += 0.15;
+                                mapHasard->elements[LARGEUR * (int)ePos[i].y + (int)ePos[i].x].type = ENTITY;
+                                ePos[i] = ePos[entiteeAcreer - 1];
+                                compteE[i] = compteE[entiteeAcreer - 1];
+                                compteE[entiteeAcreer - 1] = 0;
+                                entiteeAcreer--;
+                                nb_besoin--;
+                                i--;
+                            }
+                            break;
 
-                case 3:
-                    mapHasard->elements[LARGEUR * (int)ePos[i].y + (int)ePos[i].x].entitee->shield->construction -= mapHasard->elements[LARGEUR * 2 + LARGEUR / 2].entitee->ship->energy_efficient / nb_besoin;
-                    if (mapHasard->elements[LARGEUR * (int)ePos[i].y + (int)ePos[i].x].entitee->shield->construction <= 0)
-                    {
-                        mapHasard->elements[LARGEUR * (int)ePos[i].y + (int)ePos[i].x].type = ENTITY;
-                        ePos[i] = ePos[entiteeAcreer - 1];
-                        entiteeAcreer--;
-                        nb_besoin--;
-                        i--;
+                        case 3:
+                            mapHasard->elements[LARGEUR * (int)ePos[i].y + (int)ePos[i].x].entitee->shield->build -= mapHasard->elements[LARGEUR * 2 + LARGEUR / 2].entitee->ship->energy_efficient / nb_besoin;
+                            if (mapHasard->elements[LARGEUR * (int)ePos[i].y + (int)ePos[i].x].entitee->shield->build <= 0)
+                            {
+                                mapHasard->elements[LARGEUR * (int)ePos[i].y + (int)ePos[i].x].type = ENTITY;
+                                ePos[i] = ePos[entiteeAcreer - 1];
+                                compteE[i] = compteE[entiteeAcreer - 1];
+                                compteE[entiteeAcreer - 1] = 0;
+                                entiteeAcreer--;
+                                nb_besoin--;
+                                i--;
+                            }
+                            break;
+                        
+                        case 4:
+                            mapHasard->elements[LARGEUR * (int)ePos[i].y + (int)ePos[i].x].entitee->beacon->build -= mapHasard->elements[LARGEUR * 2 + LARGEUR / 2].entitee->ship->energy_efficient / nb_besoin;
+                            if (mapHasard->elements[LARGEUR * (int)ePos[i].y + (int)ePos[i].x].entitee->beacon->build <= 0)
+                            {
+                                mapHasard->elements[LARGEUR * (int)ePos[i].y + (int)ePos[i].x].type = ENTITY;
+                                ePos[i] = ePos[entiteeAcreer - 1];
+                                compteE[i] = compteE[entiteeAcreer - 1];
+                                compteE[entiteeAcreer - 1] = 0;
+                                entiteeAcreer--;
+                                nb_besoin--;
+                                i--;
+                            }
+                            break;
+                        
+                        case 5:
+                            mapHasard->elements[LARGEUR * (int)ePos[i].y + (int)ePos[i].x].entitee->bombe->build -= mapHasard->elements[LARGEUR * 2 + LARGEUR / 2].entitee->ship->energy_efficient / nb_besoin;
+                            if (mapHasard->elements[LARGEUR * (int)ePos[i].y + (int)ePos[i].x].entitee->bombe->build <= 0)
+                            {
+                                if (mapHasard->elements[LARGEUR * (int)ePos[i].y + (int)ePos[i].x + 1].type == ENTITY)
+                                    if (mapHasard->elements[LARGEUR * (int)ePos[i].y + (int)ePos[i].x + 1].entitee->type == CREEPERSPAWNER)
+                                    //--▼------▼--//
+                                        sortie--;
+                                if (mapHasard->elements[LARGEUR * (int)ePos[i].y + (int)ePos[i].x - 1].type == ENTITY)
+                                    if (mapHasard->elements[LARGEUR * (int)ePos[i].y + (int)ePos[i].x - 1].entitee->type == CREEPERSPAWNER)
+                                    //--▼------▼--//
+                                        sortie--;
+                                if (mapHasard->elements[LARGEUR * ((int)ePos[i].y + 1) + (int)ePos[i].x].type == ENTITY)
+                                    if (mapHasard->elements[LARGEUR * ((int)ePos[i].y + 1) + (int)ePos[i].x].entitee->type == CREEPERSPAWNER)
+                                    //--▼------▼--//
+                                        sortie--;
+                                if (mapHasard->elements[LARGEUR * ((int)ePos[i].y - 1) + (int)ePos[i].x].type == ENTITY)
+                                    if (mapHasard->elements[LARGEUR * ((int)ePos[i].y - 1) + (int)ePos[i].x].entitee->type == CREEPERSPAWNER)
+                                    //--▼------▼--//
+                                        sortie--;
+                                mapHasard->elements[LARGEUR * (int)ePos[i].y + (int)ePos[i].x].type = ENTITY;
+                                ePos[i] = ePos[entiteeAcreer - 1];
+                                compteE[i] = compteE[entiteeAcreer - 1];
+                                compteE[entiteeAcreer - 1] = 0;
+                                entiteeAcreer--;
+                                nb_besoin--;
+                                i--;
+                            }
+                            break;
                     }
-                    break;
                 
-                case 4:
-                    mapHasard->elements[LARGEUR * (int)ePos[i].y + (int)ePos[i].x].entitee->beacon->construction -= mapHasard->elements[LARGEUR * 2 + LARGEUR / 2].entitee->ship->energy_efficient / nb_besoin;
-                    if (mapHasard->elements[LARGEUR * (int)ePos[i].y + (int)ePos[i].x].entitee->beacon->construction <= 0)
-                    {
-                        mapHasard->elements[LARGEUR * (int)ePos[i].y + (int)ePos[i].x].type = ENTITY;
-                        ePos[i] = ePos[entiteeAcreer - 1];
-                        entiteeAcreer--;
-                        nb_besoin--;
-                        i--;
-                    }
-                    break;
                 }
 
             }
@@ -262,10 +319,29 @@ int main ()
 
             while (mapHasard->elements[LARGEUR * 2 + LARGEUR / 2].entitee->ship->energy_quantity > mapHasard->elements[LARGEUR * 2 + LARGEUR / 2].entitee->ship->energy_storage)
             {
-                mapHasard->elements[LARGEUR * 2 + LARGEUR / 2].entitee->ship->energy_quantity -= 0.25;
+                mapHasard->elements[LARGEUR * 2 + LARGEUR / 2].entitee->ship->energy_quantity -= 0.05;
             }
             
         }
+
+        if (mapHasard->elements[LARGEUR * 2 + LARGEUR / 2].entitee->ship->gold_quantity < mapHasard->elements[LARGEUR * 2 + LARGEUR / 2].entitee->ship->gold_storage)
+        {
+            mapHasard->elements[LARGEUR * 2 + LARGEUR / 2].entitee->ship->gold_quantity += mapHasard->elements[LARGEUR * 2 + LARGEUR / 2].entitee->ship->gold_efficient;
+
+            while (mapHasard->elements[LARGEUR * 2 + LARGEUR / 2].entitee->ship->gold_quantity > mapHasard->elements[LARGEUR * 2 + LARGEUR / 2].entitee->ship->gold_storage)
+            {
+                mapHasard->elements[LARGEUR * 2 + LARGEUR / 2].entitee->ship->gold_quantity -= 0.05;
+            }
+            
+        }
+
+        if (sortie == 0)
+        {
+            afficherInterface (mapHasard);
+            afficherCarte (mapHasard);
+            printf ("Vous avez gagne ! \n");
+        }
+        
 
     }
 

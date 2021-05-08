@@ -2,8 +2,8 @@
 /* Kurīpāwārudo (inspiré du jeu Creeper World 2)             */
 /*-----------------------------------------------------------*/
 /* Module            : fonction.h                            */
-/* Numéro de version : 0.3                                   */
-/* Date              : 19/03/2021                            */
+/* Numéro de version : *0.3*                                 */
+/* Date              : 21/03/2021                            */
 /* Auteurs           : Lilian CHARDON                        */
 /*************************************************************/
 
@@ -38,7 +38,11 @@ void detruireEntitee (Entity* e);
 
 void ajouterEntitee (Case* c, int x, int y, unsigned int type, unsigned int* erreur);
 
+void ajouterSpawnerHasard (Case* c, unsigned int nb_Spawner);
+
 int testAccessibilitee (Map* m, int x, int y);
+
+void decache (Map* m);
 
 //---------------------------Gestion Interface-------------------------//
 
