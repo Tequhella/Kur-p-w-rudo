@@ -2,7 +2,7 @@
 /* Kurīpāwārudo (inspiré du jeu Creeper World 2)             */
 /*-----------------------------------------------------------*/
 /* Module            : fonction.c                            */
-/* Numéro de version : 0.4.2                                 */
+/* Numéro de version : 0.5                                   */
 /* Date              : 21/03/2021                            */
 /* Auteurs           : Lilian CHARDON                        */
 /*************************************************************/
@@ -232,6 +232,8 @@ void remplirHasard (Map* m)
             {
                 m->elements[i].type = VIDE;
                 detruireBlock (m->elements[i].block);
+                m->elements[i].block = NULL;
+
             }
         }
         
@@ -740,7 +742,7 @@ void decache (Map* m)
 
 //---------------------------Gestion Interface-------------------------//
 
-void afficherInterface (Map* m)
+void afficherInterface (Map* m, Coord* _tabEntitee, int _nb_Entitee)
 {
     if (m)
     {
@@ -751,6 +753,29 @@ void afficherInterface (Map* m)
 
         printf ("Efficient E : %.2lf", m->elements[LARGEUR * 2  + LARGEUR / 2].entitee->ship->energy_efficient);
         printf ("\t\tEfficient Or : %.2lf \n", m->elements[LARGEUR * 2  + LARGEUR / 2].entitee->ship->gold_efficient);
+
+        if (_tabEntitee)
+        {
+            for (unsigned int i = 0; i < _nb_Entitee; i++)
+            {
+                switch (m->elements[LARGEUR * (int)_tabEntitee[i].y + (int)_tabEntitee[i].x].entitee->type)
+                {
+                    case 2:
+                        printf ("Mineur (%.0lf ; %.0lf) power : %.2lf \n", _tabEntitee[i].x, _tabEntitee[i].y, m->elements[LARGEUR * (int)_tabEntitee[i].y + (int)_tabEntitee[i].x].entitee->miner->power_quantity);
+                        break;
+                    
+                    case 4:
+                        printf ("Beacon (%.0lf ; %.0lf) power : %.2lf \n", _tabEntitee[i].x, _tabEntitee[i].y, m->elements[LARGEUR * (int)_tabEntitee[i].y + (int)_tabEntitee[i].x].entitee->beacon->power_quantity);
+                        break;
+
+                    case 5:
+                        printf ("Bombe  (%.0lf ; %.0lf) power : %.2lf \n", _tabEntitee[i].x, _tabEntitee[i].y, m->elements[LARGEUR * (int)_tabEntitee[i].y + (int)_tabEntitee[i].x].entitee->bombe->power_quantity);
+                        break;
+                }
+            }
+            
+        }
+
     }
     
 }
