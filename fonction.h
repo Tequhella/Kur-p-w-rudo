@@ -2,8 +2,8 @@
 /* Kurīpāwārudo (inspiré du jeu Creeper World 2)             */
 /*-----------------------------------------------------------*/
 /* Module            : fonction.h                            */
-/* Numéro de version : 0.2                                   */
-/* Date              : 17/03/2021                            */
+/* Numéro de version : 0.3                                   */
+/* Date              : 19/03/2021                            */
 /* Auteurs           : Lilian CHARDON                        */
 /*************************************************************/
 
@@ -14,11 +14,11 @@
 
 //-----------------------------Gestion Map-----------------------------//
 
-Map* creerMap (double dimX, double dimY, char nomDeLaCarte);
+Map* creerCarte (double dimX, double dimY, char* nomDeLaCarte);
 
-void detruireMap (Map* m);
+void detruireCarte (Map* m);
 
-void afficherMap (Map* m);
+void afficherCarte (Map* m);
 
 void remplirHasard (Map* m);
 
@@ -29,5 +29,19 @@ void creerCaverne (Map* m, unsigned int pos, int randMoins);
 Block* creerBlock (unsigned int type, unsigned int typeStone, double posX, double posY);
 
 void detruireBlock (Block* b);
+
+//----------------------------Gestion Entité---------------------------//
+
+Entity* creerEntitee (double x, double y, unsigned int type);
+
+void detruireEntitee (Entity* e);
+
+void ajouterEntitee (Case* c, int x, int y, unsigned int type, unsigned int* erreur);
+
+int testAccessibilitee (Map* m, int x, int y);
+
+//---------------------------Gestion Interface-------------------------//
+
+void afficherInterface (Map* m);
 
 #endif
