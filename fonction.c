@@ -2,8 +2,8 @@
 /* Kurīpāwārudo (inspiré du jeu Creeper World 2)             */
 /*-----------------------------------------------------------*/
 /* Module            : fonction.c                            */
-/* Numéro de version : 0.3                                   */
-/* Date              : 19/03/2021                            */
+/* Numéro de version : 0.4.2                                 */
+/* Date              : 21/03/2021                            */
 /* Auteurs           : Lilian CHARDON                        */
 /*************************************************************/
 
@@ -141,14 +141,17 @@ void afficherCarte (Map* m)
                         switch (m->elements[k].entitee->type)
                         {
                             case 0: printf ("◈"); break;
-                            case 1: if (m->elements[k].entitee->reactor->construction <= 0) /*--->*/ printf ("◬");
+                            case 1: if (m->elements[k].entitee->reactor->build <= 0) /*--->*/ printf ("◬");
                                     else /*--->*/ printf (" "); break;
-                            case 2: if (m->elements[k].entitee->miner->construction <= 0) /*----->*/ printf ("◭");
+                            case 2: if (m->elements[k].entitee->miner->build <= 0) /*----->*/ printf ("◭");
                                     else /*--->*/ printf (" "); break;
-                            case 3: if (m->elements[k].entitee->shield->construction <= 0) /*---->*/ printf ("◩");
+                            case 3: if (m->elements[k].entitee->shield->build <= 0) /*---->*/ printf ("◩");
                                     else /*--->*/ printf (" "); break;
-                            case 4: if (m->elements[k].entitee->beacon->construction <= 0) /*---->*/ printf ("◉");
+                            case 4: if (m->elements[k].entitee->beacon->build <= 0) /*---->*/ printf ("◉");
                                     else /*--->*/ printf (" "); break;
+                            case 5: if (m->elements[k].entitee->bombe->build <= 0) /*----->*/ printf ("◘");
+                                    else /*--->*/ printf (" "); break;
+                            case 9: printf ("◎"); break;
                         }
                     }
                     else if (m->elements[k].type == 3) /*--->*/ printf ("○");
@@ -182,17 +185,17 @@ void remplirHasard (Map* m)
         stone = (rand() % 100 + 1) + relief;
         gold  = (rand() % 100 + 1) + relief;
 
-        if (gold < 2)
+        if (gold < 3)
         {
             m->elements[i].type  = BLOCK;
             m->elements[i].block = creerBlock (GOLD, 0, i % LARGEUR, i / LARGEUR);
         }
-        else if (stone < 20)
+        else if (stone < 21)
         {
             stoneType = (rand() % 100 + 1);
 
             if (stoneType <= 5) /*---------->*/ stoneType = 3;
-            else if (stoneType <= 50) /*---->*/ stoneType = 2;
+            else if (stoneType <= 30) /*---->*/ stoneType = 2;
             else if (stoneType <= 100) /*--->*/ stoneType = 1;
 
             m->elements[i].type  = BLOCK;
@@ -208,7 +211,7 @@ void remplirHasard (Map* m)
         else /*--->*/ m->elements[i].type = VIDE;
         
         
-        if (relief > 0 & i % LARGEUR == 0) /*--->*/ relief -= 20;
+        if (relief > 0 & i % LARGEUR == 0) /*--->*/ relief -= 25;
 
         m->elements[i].cache = 0;
 
@@ -390,7 +393,7 @@ Entity* creerEntitee (double x, double y, unsigned int type)
         switch (type)
         {
             case 0:
-                e->type = 0;
+                e->type = SHIP;
                 e->ship = malloc (sizeof(Ship));
 
                 e->ship->health           = 1000;
@@ -404,68 +407,108 @@ Entity* creerEntitee (double x, double y, unsigned int type)
                 e->ship->range            = 7;
                 e->ship->pos              = (Coord){x, y};
                 
-                e->reactor = NULL;
-                e->miner   = NULL;
-                e->shield  = NULL;
-                e->beacon  = NULL;
+                e->reactor        = NULL;
+                e->miner          = NULL;
+                e->shield         = NULL;
+                e->beacon         = NULL;
+                e->creeperSpawner = NULL;
                 break;
             
             case 1:
-                e->type    = 1;
+                e->type    = REACTEUR;
                 e->reactor = malloc (sizeof(Reactor));
 
-                e->reactor->construction = 4;
+                e->reactor->build        = 4;
                 e->reactor->pos          = (Coord){x, y};
 
-                e->ship   = NULL;
-                e->miner  = NULL;
-                e->shield = NULL;
-                e->beacon = NULL;
+                e->ship           = NULL;
+                e->miner          = NULL;
+                e->shield         = NULL;
+                e->beacon         = NULL;
+                e->creeperSpawner = NULL;
                 break;
                     
             case 2: 
-                e->type  = 2;
+                e->type  = MINER;
                 e->miner = malloc (sizeof(Miner));
 
-                e->miner->construction   = 5;
+                e->miner->build          = 5;
                 e->miner->power_quantity = 0;
                 e->miner->power_max      = 20;
                 e->miner->pos            = (Coord){x, y};
 
-                e->ship    = NULL;
-                e->reactor = NULL;
-                e->shield  = NULL;
-                e->beacon  = NULL;
+                e->ship           = NULL;
+                e->reactor        = NULL;
+                e->shield         = NULL;
+                e->beacon         = NULL;
+                e->creeperSpawner = NULL;
                 break;
             
             case 3:
-                e->type   = 3;
+                e->type   = SHIELD;
                 e->shield = malloc (sizeof(Shield));
 
-                e->shield->construction = 4;
-                e->shield->health       = 20;
-                e->shield->pos          = (Coord){x, y};
+                e->shield->build  = 4;
+                e->shield->health = 20;
+                e->shield->pos    = (Coord){x, y};
 
-                e->ship    = NULL;
-                e->reactor = NULL;
-                e->miner   = NULL;
-                e->beacon  = NULL;
+                e->ship           = NULL;
+                e->reactor        = NULL;
+                e->miner          = NULL;
+                e->beacon         = NULL;
+                e->creeperSpawner = NULL;
                 break;
             
             case 4:
-                e->type = 4;
+                e->type   = BEACON;
                 e->beacon = malloc (sizeof(Beacon));
 
-                e->beacon->construction   = 7;
+                e->beacon->build          = 7;
                 e->beacon->power_max      = 20;
                 e->beacon->power_quantity = 0;
                 e->beacon->range          = 7;
                 e->beacon->pos            = (Coord){x, y};
 
+                e->ship           = NULL;
+                e->reactor        = NULL;
+                e->miner          = NULL;
+                e->shield         = NULL;
+                e->creeperSpawner = NULL;
+                break;
+            
+            case 5:
+                e->type  = BOMBE;
+                e->bombe = malloc (sizeof(Bomb));
+
+                e->bombe->build          = 20;
+                e->bombe->power_max      = 20;
+                e->bombe->power_quantity = 0;
+                e->bombe->range          = 2;
+                e->bombe->damage         = 100;
+                e->bombe->pos            = (Coord){x, y};
+
+                e->ship           = NULL;
+                e->reactor        = NULL;
+                e->miner          = NULL;
+                e->shield         = NULL;
+                e->beacon         = NULL;
+                e->creeperSpawner = NULL;
+                break;
+            
+            case 9:
+                e->type = CREEPERSPAWNER;
+                e->creeperSpawner = malloc (sizeof(CreeperSpawner));
+
+                e->creeperSpawner->health = 100;
+                e->creeperSpawner->pulse  = 0.5;
+                e->creeperSpawner->power  = 50;
+                e->creeperSpawner->pos    = (Coord){x, y};
+
                 e->ship    = NULL;
                 e->reactor = NULL;
                 e->miner   = NULL;
                 e->shield  = NULL;
+                e->beacon  = NULL;
                 break;
         }
 
@@ -509,6 +552,17 @@ void detruireEntitee (Entity* e)
             free (e->beacon);
             e->beacon = NULL;
         }
+        else if (e->bombe)
+        {
+            free (e->bombe);
+            e->bombe = NULL;
+        }
+        else if (e->creeperSpawner)
+        {
+            free (e->creeperSpawner);
+            e->creeperSpawner = NULL;
+        }
+        
         else
         {
             perror ("Erreur d'allocation de l'entitee");
@@ -528,29 +582,56 @@ void ajouterEntitee (Case* c, int x, int y, unsigned int type, unsigned int* err
     {
         switch (type)
         {
-            case 0: *erreur = 3; break;
-            case 1:
-                if (c[LARGEUR * (y + 1) + x].type != VIDE) /*---->*/ c[LARGEUR * y + x].entitee = creerEntitee(x, y, REACTEUR);
+            case 48: *erreur = 3; break;
+            case 49:
+                if (c[LARGEUR * (y + 1) + x].type != VIDE) /*--->*/ c[LARGEUR * y + x].entitee = creerEntitee(x, y, REACTEUR);
                 else /*--->*/ *erreur = 4;
                 break;
 
-            case 2:
+            case 50:
                 if (c[LARGEUR * (y + 1) + x].block != NULL)
                     if (c[LARGEUR * (y + 1) + x].block->type == GOLD) /*--->*/ c[LARGEUR * y + x].entitee = creerEntitee(x, y, MINER);
                     else /*--->*/ *erreur = 5;
                 else /*--->*/ *erreur = 5;
                 break;
 
-            case 3: c[LARGEUR * y + x].entitee = creerEntitee(x, y, SHIELD); break;
-            case 4: 
+            case 51: c[LARGEUR * y + x].entitee = creerEntitee(x, y, SHIELD); break;
+            case 52: 
                 if (c[LARGEUR * (y + 1) + x].type == BLOCK || c[LARGEUR * (y - 1) + x].type == BLOCK || c[LARGEUR * y + (x + 1)].type == BLOCK || c[LARGEUR * y + (x - 1)].type == BLOCK)
                 //--▼-----------------------------------------------------▼--*/
                     c[LARGEUR * y + x].entitee = creerEntitee(x, y, BEACON);
                 else /*--->*/ *erreur = 6;
                 break;
+
+            case 53: c[LARGEUR * y + x].entitee = creerEntitee(x, y, BOMBE); break;
             
         }
 
+    }
+    
+}
+
+void ajouterSpawnerHasard (Case* c, unsigned int nb_Spawner)
+{
+    if (c)
+    {
+        int i     = LARGEUR * 10;
+        int YesNo = 0;
+
+        while (nb_Spawner != 0)
+        {
+            YesNo = rand() % 10000;
+            if (c[i].type == VIDE && YesNo < 1)
+            {
+                c[i].entitee = creerEntitee(i % LARGEUR, i / LARGEUR, CREEPERSPAWNER);
+                c[i].type = ENTITY;
+                nb_Spawner--;
+            }
+            
+            if (i != LARGEUR * HAUTEUR) /*--->*/ i++;
+            else /*-------------------------->*/ i = LARGEUR * 10;
+        }
+        
     }
     
 }
@@ -560,7 +641,15 @@ int testAccessibilitee (Map* m, int x, int y)
     if (m)
     {
         m->elements[LARGEUR * y + x].cache = 1;
+        
+        if ((x == LARGEUR / 2 + 1 && y == 2) || (x == LARGEUR / 2 - 1 && y == 2) || (x == LARGEUR / 2 && y == 1) || (x == LARGEUR / 2 && y == 3))
+        {
+            m->elements[LARGEUR * y + x].cache = 0;
+            return 1;
+        }
+        
 
+        /*
         if (m->elements[LARGEUR * y + (x + 1)].type == ENTITY)
         {
             if (m->elements[LARGEUR * y + (x + 1)].entitee->type == 0)
@@ -593,10 +682,11 @@ int testAccessibilitee (Map* m, int x, int y)
                 return 1;
             }
         }
+        */
         
         else if (y == 2 && x > 17)
         {
-            if ((m->elements[LARGEUR * y + (x - 1)].type == 0 || m->elements[LARGEUR * y + (x - 1)].type == 3) && m->elements[LARGEUR * y + (x - 1)].cache == 0 && (x - 1) >= 0 && testAccessibilitee (m, x - 1, y) == 1)
+            if (m->elements[LARGEUR * y + (x - 1)].type != BLOCK && m->elements[LARGEUR * y + (x - 1)].cache == 0 && (x - 1) >= 0 && testAccessibilitee (m, x - 1, y) == 1)
             {
                 m->elements[LARGEUR * y + x].cache = 0;
                 return 1;
@@ -604,29 +694,29 @@ int testAccessibilitee (Map* m, int x, int y)
         }
         else if (y == 2 && x < 17)
         {
-            if ((m->elements[LARGEUR * y + (x + 1)].type == 0 || m->elements[LARGEUR * y + (x + 1)].type == 3) && m->elements[LARGEUR * y + (x + 1)].cache == 0 && (x + 1) < LARGEUR && testAccessibilitee (m, x + 1, y) == 1)
+            if (m->elements[LARGEUR * y + (x + 1)].type != BLOCK && m->elements[LARGEUR * y + (x + 1)].cache == 0 && (x + 1) < LARGEUR && testAccessibilitee (m, x + 1, y) == 1)
             {
                 m->elements[LARGEUR * y + x].cache = 0;
                 return 1;
             }
         }
 
-        else if ((m->elements[LARGEUR * (y - 1) + x].type == 0 || m->elements[LARGEUR * (y - 1) + x].type == 3) && m->elements[LARGEUR * (y - 1) + x].cache == 0 && (y - 1) >= 0 && testAccessibilitee (m, x, y - 1) == 1)
+        else if (m->elements[LARGEUR * (y - 1) + x].type != BLOCK && m->elements[LARGEUR * (y - 1) + x].cache == 0 && (y - 1) >= 0 && testAccessibilitee (m, x, y - 1) == 1)
         {
             m->elements[LARGEUR * y + x].cache = 0;
             return 1;
         }
-        else if ((m->elements[LARGEUR * y + (x + 1)].type == 0 || m->elements[LARGEUR * y + (x + 1)].type == 3) && m->elements[LARGEUR * y + (x + 1)].cache == 0 && (x + 1) < LARGEUR && testAccessibilitee (m, x + 1, y) == 1)
+        else if (m->elements[LARGEUR * y + (x + 1)].type != BLOCK && m->elements[LARGEUR * y + (x + 1)].cache == 0 && (x + 1) < LARGEUR && testAccessibilitee (m, x + 1, y) == 1)
         {
             m->elements[LARGEUR * y + x].cache = 0;
             return 1;
         }
-        else if ((m->elements[LARGEUR * y + (x - 1)].type == 0 || m->elements[LARGEUR * y + (x - 1)].type == 3) && m->elements[LARGEUR * y + (x - 1)].cache == 0 && (x - 1) >= 0 && testAccessibilitee (m, x - 1, y) == 1)
+        else if (m->elements[LARGEUR * y + (x - 1)].type != BLOCK && m->elements[LARGEUR * y + (x - 1)].cache == 0 && (x - 1) >= 0 && testAccessibilitee (m, x - 1, y) == 1)
         {
             m->elements[LARGEUR * y + x].cache = 0;
             return 1;
         }
-        else if ((m->elements[LARGEUR * (y + 1) + x].type == 0 || m->elements[LARGEUR * (y + 1) + x].type == 3) && m->elements[LARGEUR * (y + 1) + x].cache == 0 && (y + 1) < HAUTEUR && testAccessibilitee (m, x, y + 1) == 1)
+        else if (m->elements[LARGEUR * (y + 1) + x].type != BLOCK && m->elements[LARGEUR * (y + 1) + x].cache == 0 && (y + 1) < HAUTEUR && testAccessibilitee (m, x, y + 1) == 1)
         {
             m->elements[LARGEUR * y + x].cache = 0;
             return 1;
@@ -637,6 +727,17 @@ int testAccessibilitee (Map* m, int x, int y)
     return 0;
 }
 
+void decache (Map* m)
+{
+    if (m)
+    {
+        for (unsigned int i = 0; i < HAUTEUR*LARGEUR; i++)
+            if (m->elements[i].type == VIDE && m->elements[i].cache == 1) 
+                    m->elements[i].cache = 0;
+    }
+    
+}
+
 //---------------------------Gestion Interface-------------------------//
 
 void afficherInterface (Map* m)
@@ -645,11 +746,11 @@ void afficherInterface (Map* m)
     {
         printf ("Nom de la carte : %s\n", m->nomDeLaCarte);
 
-        printf ("Reserve d'energy : %.lf / %.lf", m->elements[LARGEUR *2  + LARGEUR / 2].entitee->ship->energy_quantity, m->elements[LARGEUR *2  + LARGEUR / 2].entitee->ship->energy_storage);
-        printf ("     Reserve d'or : %.lf / %.lf \n", m->elements[LARGEUR *2  + LARGEUR / 2].entitee->ship->gold_quantity, m->elements[LARGEUR *2  + LARGEUR / 2].entitee->ship->gold_storage);
+        printf ("Reserve d'energy : %.2lf / %.2lf", m->elements[LARGEUR * 2  + LARGEUR / 2].entitee->ship->energy_quantity, m->elements[LARGEUR *2  + LARGEUR / 2].entitee->ship->energy_storage);
+        printf ("\tReserve d'or : %.2lf / %.2lf \n", m->elements[LARGEUR * 2  + LARGEUR / 2].entitee->ship->gold_quantity, m->elements[LARGEUR *2  + LARGEUR / 2].entitee->ship->gold_storage);
 
-        printf ("Efficient E : %.lf", m->elements[LARGEUR *2  + LARGEUR / 2].entitee->ship->energy_efficient);
-        printf ("               Efficient Or : %.lf \n", m->elements[LARGEUR *2  + LARGEUR / 2].entitee->ship->gold_efficient);
+        printf ("Efficient E : %.2lf", m->elements[LARGEUR * 2  + LARGEUR / 2].entitee->ship->energy_efficient);
+        printf ("\t\tEfficient Or : %.2lf \n", m->elements[LARGEUR * 2  + LARGEUR / 2].entitee->ship->gold_efficient);
     }
     
 }
