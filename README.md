@@ -4,7 +4,7 @@
 Le versionning est un peu chaotic, je ne connais pas encore très bien la méthode. Je corrige donc au fur et mesure.
 
 
-Pour lancer le programme, il suffit de taper dans la console ./Jeu-v(le numéro de version) exemple : ./Jeu-v0.5.
+Pour lancer le programme, il faut être sous un environnement linux et dans la console, taper : ./Jeu-v(le numéro de version) exemple : ./Jeu-v0.5.
 
 
 Pour intéragir avec le jeu, les touches à utiliser sont :
