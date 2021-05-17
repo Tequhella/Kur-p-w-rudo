@@ -2,8 +2,8 @@
 /* Kurīpāwārudo (inspiré du jeu Creeper World 2)             */
 /*-----------------------------------------------------------*/
 /* Module            : type.h                                */
-/* Numéro de version : 0.5                                   */
-/* Date              : 21/03/2021                            */
+/* Numéro de version : 0.5.1                                 */
+/* Date              : 12/05/2021                            */
 /* Auteurs           : Lilian CHARDON                        */
 /*************************************************************/
 

@@ -2,8 +2,8 @@
 /* Kurīpāwārudo (inspiré du jeu Creeper World 2)             */
 /*-----------------------------------------------------------*/
 /* Module            : gestionAffichage.c                    */
-/* Numéro de version : 0.6                                   */
-/* Date              : 21/03/2021                            */
+/* Numéro de version : 0.5.1                                 */
+/* Date              : 12/05/2021                            */
 /* Auteurs           : Lilian CHARDON                        */
 /*************************************************************/
 
@@ -67,15 +67,20 @@ void afficherCarte (Map* m)
                         {
                             case 0: printf ("◈"); break;
                             case 1: if (m->elements[k].entitee->reactor->build <= 0) /*--->*/ printf ("◬");
-                                    else /*--->*/ printf (" "); break;
+                                    else /*--->*/ printf (" "); 
+                                    break;
                             case 2: if (m->elements[k].entitee->miner->build <= 0) /*----->*/ printf ("◭");
-                                    else /*--->*/ printf (" "); break;
+                                    else /*--->*/ printf (" "); 
+                                    break;
                             case 3: if (m->elements[k].entitee->shield->build <= 0) /*---->*/ printf ("◩");
-                                    else /*--->*/ printf (" "); break;
+                                    else /*--->*/ printf (" "); 
+                                    break;
                             case 4: if (m->elements[k].entitee->beacon->build <= 0) /*---->*/ printf ("◉");
-                                    else /*--->*/ printf (" "); break;
+                                    else /*--->*/ printf (" "); 
+                                    break;
                             case 5: if (m->elements[k].entitee->bombe->build <= 0) /*----->*/ printf ("◘");
-                                    else /*--->*/ printf (" "); break;
+                                    else /*--->*/ printf (" "); 
+                                    break;
                             case 9: printf ("◎"); break;
                         }
                     }
@@ -147,7 +152,7 @@ void afficherErreur (int* _erreur)
         case 8: printf ("Nombre maximum d'entitée pouvant être ajouter à la suite, atteint. \n");   break;
     }
 
-    _erreur = 0;
+    *_erreur = 0;
 }
 
 //--------------------------Affichage Graphique--------------------------//

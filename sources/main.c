@@ -2,8 +2,8 @@
 /* Kurīpāwārudo (inspiré du jeu Creeper World 2)             */
 /*-----------------------------------------------------------*/
 /* Module            : main.c                                */
-/* Numéro de version : 0.5                                   */
-/* Date              : 27/04/2021                            */
+/* Numéro de version : 0.5.1                                 */
+/* Date              : 12/05/2021                            */
 /* Auteurs           : Lilian CHARDON                        */
 /*************************************************************/
 
@@ -35,15 +35,15 @@ int main ()
 
     int erreur        = 0;
     int nb_besoin     = 0;
-    int* compte        = malloc (sizeof(int));
-    int* compteE       = malloc (sizeof(int));
+    int* compte       = malloc (sizeof(int));
+    int* compteE      = malloc (sizeof(int));
 
     Coord* tabEntitee = malloc (sizeof(Coord));
     int nb_Entitee    = 0;
 
-    Coord jPos = (Coord){17, 3};
-    Coord bPos[10];
-    Coord ePos[10];
+    Coord jPos  = (Coord){17, 3};
+    Coord bPos[20];
+    Coord ePos[20];
 
     mapHasard->elements[LARGEUR * (int)jPos.y + (int)jPos.x].type = 3;
     
@@ -95,7 +95,7 @@ int main ()
                         {
                             if (mapHasard->elements[LARGEUR * (int)jPos.y + (int)jPos.x].block->dirt != NULL || mapHasard->elements[LARGEUR * (int)jPos.y + (int)jPos.x].block->stone != NULL)
                             {
-                                if (blockAcasser <= 9)
+                                if (blockAcasser < 20)
                                 {
                                     bPos[blockAcasser] = jPos;
                                     blockAcasser++;
@@ -144,14 +144,14 @@ int main ()
                     case 'z':
                         if (mapHasard->elements[LARGEUR * (int)jPos.y + (int)jPos.x].block != NULL || mapHasard->elements[LARGEUR * (int)jPos.y + (int)jPos.x].entitee != NULL) 
                         //--▼--------▼--*/
-                            erreur = 1;
+                            erreur = 2;
                         else
                         {
                             scanf (" %c", &MvtOrAction);
                             if (entiteeAcreer <= 9)
                             {
                                 ePos[entiteeAcreer] = jPos;
-                                ajouterEntitee(mapHasard->elements, ePos[entiteeAcreer].x, ePos[entiteeAcreer].y, (int)MvtOrAction, &erreur);
+                                ajouterStructure(mapHasard->elements, ePos[entiteeAcreer].x, ePos[entiteeAcreer].y, (int)MvtOrAction, &erreur);
                                 if (erreur == 0) /*--->*/ entiteeAcreer++;
                             }
                             else /*--->*/ erreur = 8;
@@ -174,7 +174,7 @@ int main ()
             compte,
             &nb_besoin
         );
-        constructionEntitee
+        tabEntitee = constructionStructure
         (
             mapHasard,
             ePos,
@@ -189,8 +189,8 @@ int main ()
 
 
         remplirStock (mapHasard);
-        remplirEnergieEntitee (mapHasard, tabEntitee, &nb_Entitee, &nb_besoin);
-        viderEnergieEntitee (mapHasard, tabEntitee, &nb_Entitee);
+        remplirEnergieStructure (mapHasard, tabEntitee, nb_Entitee, &nb_besoin);
+        viderEnergieStructure (mapHasard, tabEntitee, nb_Entitee);
 
 
         if (sortie == 0)
@@ -203,6 +203,8 @@ int main ()
     }
 
     detruireCarte (mapHasard);
+    if (compte) /*------->*/ free (compte);
+    if (compteE) /*------>*/ free (compteE);
     if (tabEntitee) /*--->*/ free (tabEntitee);
 
     return 0;

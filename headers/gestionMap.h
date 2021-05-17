@@ -2,8 +2,8 @@
 /* Kurīpāwārudo (inspiré du jeu Creeper World 2)             */
 /*-----------------------------------------------------------*/
 /* Module            : gestionMap.h                          */
-/* Numéro de version : 0.5                                   */
-/* Date              : 21/03/2021                            */
+/* Numéro de version : 0.5.1                                 */
+/* Date              : 12/05/2021                            */
 /* Auteurs           : Lilian CHARDON                        */
 /*************************************************************/
 
@@ -37,9 +37,9 @@ void casserBlock
 
 //--------------------------Gestion Entitee--------------------------//
 
-void ajouterEntitee (Case* c, int x, int y, unsigned int type, unsigned int* erreur);
+void ajouterStructure (Case* c, int x, int y, unsigned int type, int* erreur);
 
-void constructionEntitee
+Coord* constructionStructure
 (
     Map* m,
     Coord* _ePos,
@@ -51,9 +51,9 @@ void constructionEntitee
     int* _sortie
 );
 
-void remplirEnergieEntitee (Map* m, Coord* _tabEntitee, int* _nb_Entitee, int* _nb_besoin);
+void remplirEnergieStructure (Map* m, Coord* _tabEntitee, int _nb_Entitee, int* _nb_besoin);
 
-void viderEnergieEntitee (Map* m, Coord* _tabEntitee, int* _nb_Entitee);
+void viderEnergieStructure (Map* m, Coord* _tabEntitee, int _nb_Entitee);
 
 void ajouterSpawnerHasard (Case* c, unsigned int nb_Spawner);
 

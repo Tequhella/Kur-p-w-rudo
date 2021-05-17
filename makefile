@@ -1,5 +1,5 @@
 all: main.o gestionMem.o gestionMap.o gestionAffichage.o
-	gcc main.o gestionMem.o gestionMap.o gestionAffichage.o -o Jeu
+	gcc main.o gestionMem.o gestionMap.o gestionAffichage.o -o Jeu-v0-5-1
 
 main.o:
 	gcc -c sources/main.c -o main.o

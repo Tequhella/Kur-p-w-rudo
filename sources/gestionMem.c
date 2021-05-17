@@ -2,8 +2,8 @@
 /* Kurīpāwārudo (inspiré du jeu Creeper World 2)             */
 /*-----------------------------------------------------------*/
 /* Module            : gestionMem.c                          */
-/* Numéro de version : 0.5                                   */
-/* Date              : 21/03/2021                            */
+/* Numéro de version : 0.5.1                                 */
+/* Date              : 12/05/2021                            */
 /* Auteurs           : Lilian CHARDON                        */
 /*************************************************************/
 
@@ -42,16 +42,16 @@ Map* creerCarte (double dimX, double dimY, char* nomDeLaCarte)
                 free (m);
                 m = NULL;
             }
-
+            
         }
-
+        
     }
     else
     {
         perror ("Erreur d'allocation. \n");
         exit (-1);
     }
-
+    
     return m;
 }
 
@@ -61,7 +61,7 @@ void detruireCarte (Map* m)
     {
         if (m->elements)
         {
-            for (unsigned int i = 0; i < m->dimX*m->dimY; i++)
+            for (unsigned int i = 0; i < m->dimX*m->dimY; i++) 
             {
                 detruireBlock (m->elements[i].block);
                 detruireEntitee (m->elements[i].entitee);
@@ -83,7 +83,7 @@ void detruireCarte (Map* m)
         perror ("Erreur dans l'allocation de la carte. \n");
         exit (-1);
     }
-
+    
 }
 
 //----------------------------Gestion Mem Block----------------------------//
@@ -98,7 +98,7 @@ Block* creerBlock (unsigned int type, unsigned int typeStone, double posX, doubl
         {
             case 1:
                 b->dirt = malloc (sizeof(Dirt));
-                if (b->dirt)
+                if (b->dirt) 
                 {
                     b->type           = DIRT;
                     b->dirt->hardness = 3;
@@ -111,7 +111,7 @@ Block* creerBlock (unsigned int type, unsigned int typeStone, double posX, doubl
                     free (b);
                     b = NULL;
                 }
-
+                
                 break;
             case 2:
                 b->stone = malloc (sizeof(Stone));
@@ -134,7 +134,7 @@ Block* creerBlock (unsigned int type, unsigned int typeStone, double posX, doubl
                     free (b);
                     b = NULL;
                 }
-
+                
                 break;
             case 3:
                 b->gold = malloc (sizeof(Gold));
@@ -151,9 +151,9 @@ Block* creerBlock (unsigned int type, unsigned int typeStone, double posX, doubl
                     free (b);
                     b = NULL;
                 }
-
+                
         }
-
+            
     }
     else
     {
@@ -162,7 +162,7 @@ Block* creerBlock (unsigned int type, unsigned int typeStone, double posX, doubl
     }
 
     return b;
-
+        
 }
 
 void detruireBlock (Block* b)
@@ -192,9 +192,9 @@ void detruireBlock (Block* b)
 
         free (b);
         b = NULL;
-
+        
     }
-
+    
 }
 
 //----------------------------Gestion Mem Entité---------------------------//
@@ -221,14 +221,15 @@ Entity* creerEntitee (double x, double y, unsigned int type)
                 e->ship->gold_efficient   = 0;
                 e->ship->range            = 7;
                 e->ship->pos              = (Coord){x, y};
-
+                
                 e->reactor        = NULL;
                 e->miner          = NULL;
                 e->shield         = NULL;
                 e->beacon         = NULL;
+                e->bombe          = NULL;
                 e->creeperSpawner = NULL;
                 break;
-
+            
             case 1:
                 e->type    = REACTEUR;
                 e->reactor = malloc (sizeof(Reactor));
@@ -240,10 +241,11 @@ Entity* creerEntitee (double x, double y, unsigned int type)
                 e->miner          = NULL;
                 e->shield         = NULL;
                 e->beacon         = NULL;
+                e->bombe          = NULL;
                 e->creeperSpawner = NULL;
                 break;
-
-            case 2:
+                    
+            case 2: 
                 e->type  = MINER;
                 e->miner = malloc (sizeof(Miner));
 
@@ -256,9 +258,10 @@ Entity* creerEntitee (double x, double y, unsigned int type)
                 e->reactor        = NULL;
                 e->shield         = NULL;
                 e->beacon         = NULL;
+                e->bombe          = NULL;
                 e->creeperSpawner = NULL;
                 break;
-
+            
             case 3:
                 e->type   = SHIELD;
                 e->shield = malloc (sizeof(Shield));
@@ -271,9 +274,10 @@ Entity* creerEntitee (double x, double y, unsigned int type)
                 e->reactor        = NULL;
                 e->miner          = NULL;
                 e->beacon         = NULL;
+                e->bombe          = NULL;
                 e->creeperSpawner = NULL;
                 break;
-
+            
             case 4:
                 e->type   = BEACON;
                 e->beacon = malloc (sizeof(Beacon));
@@ -288,9 +292,10 @@ Entity* creerEntitee (double x, double y, unsigned int type)
                 e->reactor        = NULL;
                 e->miner          = NULL;
                 e->shield         = NULL;
+                e->bombe          = NULL;
                 e->creeperSpawner = NULL;
                 break;
-
+            
             case 5:
                 e->type  = BOMBE;
                 e->bombe = malloc (sizeof(Bomb));
@@ -309,7 +314,7 @@ Entity* creerEntitee (double x, double y, unsigned int type)
                 e->beacon         = NULL;
                 e->creeperSpawner = NULL;
                 break;
-
+            
             case 9:
                 e->type = CREEPERSPAWNER;
                 e->creeperSpawner = malloc (sizeof(CreeperSpawner));
@@ -323,6 +328,7 @@ Entity* creerEntitee (double x, double y, unsigned int type)
                 e->reactor = NULL;
                 e->miner   = NULL;
                 e->shield  = NULL;
+                e->bombe   = NULL;
                 e->beacon  = NULL;
                 break;
         }
@@ -335,7 +341,7 @@ Entity* creerEntitee (double x, double y, unsigned int type)
     }
 
     return e;
-
+    
 }
 
 void detruireEntitee (Entity* e)
@@ -377,7 +383,7 @@ void detruireEntitee (Entity* e)
             free (e->creeperSpawner);
             e->creeperSpawner = NULL;
         }
-
+        
         else
         {
             perror ("Erreur d'allocation de l'entitee");
@@ -388,8 +394,5 @@ void detruireEntitee (Entity* e)
         e = NULL;
 
     }
-
+    
 }
-
-
-

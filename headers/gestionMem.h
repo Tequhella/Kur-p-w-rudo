@@ -2,8 +2,8 @@
 /* Kurīpāwārudo (inspiré du jeu Creeper World 2)             */
 /*-----------------------------------------------------------*/
 /* Module            : gestionMem.h                          */
-/* Numéro de version : 0.5                                   */
-/* Date              : 21/03/2021                            */
+/* Numéro de version : 0.5.1                                 */
+/* Date              : 12/05/2021                            */
 /* Auteurs           : Lilian CHARDON                        */
 /*************************************************************/
 
@@ -29,11 +29,6 @@ void detruireBlock (Block* b);
 Entity* creerEntitee (double x, double y, unsigned int type);
 
 void detruireEntitee (Entity* e);
-
-
-
-
-
 
 
 #endif
