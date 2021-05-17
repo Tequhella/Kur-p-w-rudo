@@ -32,7 +32,7 @@ Il y a une notion d'énergie, chaque action coûte de l'énergie, il faut donc u
 Si l'énergie se vide et est donc dans le négatif, la vitesse de construction est divisé  par le nombre de production.
 
 
-S'il n'y a pas d'accès au vaisseau '○', la procédure de construction ne commence pas ou est annulée.
+S'il n'y a pas d'accès au vaisseau '◈', la procédure de construction ne commence pas ou est annulée.
 
 
 Les réacteurs boost le gains d'énergie par tour.
