@@ -19,7 +19,7 @@ Pour intéragir avec le jeu, les touches à utiliser sont :
         - 1 : placement d'un réacteur (uniquement sur un sol)
         - 2 : placement d'un mineur (uniquement sur des block d'or '▚')
         - 3 : placement d'un bouclier
-        - 4 : placement d'un éclaireur (fonctionnalité pas encore intégrée)
+        - 4 : placement d'un éclaireur (éclaircir les zones dans le brouillards de guerre)
         - 5 : placement d'une bombe
 
 
@@ -38,4 +38,4 @@ S'il n'y a pas d'accès au vaisseau '◈', la procédure de construction ne comm
 Les réacteurs boost le gains d'énergie par tour.
 
 
-Pour gagner, il faut placer les bombes à côté des spawner de creepers '◎'.
+Pour gagner, il faut placer les bombes à côté des spawner de creepers '◎' et les laisser se charger d'énergie pour qu'elles explosent.
