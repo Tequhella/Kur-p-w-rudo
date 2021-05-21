@@ -2,7 +2,7 @@
 /* Kurīpāwārudo (inspiré du jeu Creeper World 2)             */
 /*-----------------------------------------------------------*/
 /* Module            : main.c                                */
-/* Numéro de version : 0.6                                   */
+/* Numéro de version : 0.6.1                                 */
 /* Date              : 18/05/2021                            */
 /* Auteurs           : Lilian CHARDON                        */
 /*************************************************************/
@@ -11,6 +11,7 @@
 #include "../headers/gestionMem.h"
 #include "../headers/gestionMap.h"
 #include "../headers/gestionAffichage.h"
+#include "../headers/gestionEntitee.h"
 
 /*
 #include <SDL2/SDL>
