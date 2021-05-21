@@ -2,8 +2,8 @@
 /* Kurīpāwārudo (inspiré du jeu Creeper World 2)             */
 /*-----------------------------------------------------------*/
 /* Module            : gestionMap.c                          */
-/* Numéro de version : 0.5.1                                 */
-/* Date              : 21/03/2021                            */
+/* Numéro de version : 0.6                                   */
+/* Date              : 18/05/2021                            */
 /* Auteurs           : Lilian CHARDON                        */
 /*************************************************************/
 
@@ -240,6 +240,87 @@ void remplirStock (Map* m)
     
 }
 
+void visibilitee (Map* m, int x, int y)
+{
+    if (m)
+    {
+        switch (m->elements[LARGEUR * y + x].entitee->type)
+        {
+            case SHIP:
+                    for (unsigned int i = 0; i < LARGEUR * HAUTEUR; i++)
+                    {
+                        if (i % LARGEUR < x)
+                        {
+                            if (i / LARGEUR < y)
+                            {
+                                if (x - i % LARGEUR <= 7 && y - i / LARGEUR <= 7 && (x - i % LARGEUR) + (y - i / LARGEUR) < 12)
+                                    m->elements[i].visibilitee = 1;
+                            }
+                            else
+                            {
+                                if (x - i % LARGEUR <= 7 && i / LARGEUR - y <= 7 && (x - i % LARGEUR) + (i / LARGEUR - y) < 12)
+                                    m->elements[i].visibilitee = 1;
+                            }
+                        }
+                        else
+                        {
+                            if (i / LARGEUR < y)
+                            {
+                                if (i % LARGEUR - x <= 7 && y - i / LARGEUR <= 7 && (i % LARGEUR - x) + (y - i / LARGEUR) < 12)
+                                    m->elements[i].visibilitee = 1;
+                            }
+                            else
+                            {
+                                if (i % LARGEUR - x <= 7 && i / LARGEUR - y <= 7 && (i % LARGEUR - x) + (i / LARGEUR - y) < 12)
+                                    m->elements[i].visibilitee = 1;
+                            }
+
+                        }
+
+                    }
+                
+                break;
+            
+            case BEACON:
+                    for (unsigned int i = 0; i < LARGEUR * HAUTEUR; i++)
+                    {
+                        if (i % LARGEUR < x)
+                        {
+                            if (i / LARGEUR < y)
+                            {
+                                if (x - i % LARGEUR <= 7 && y - i / LARGEUR <= 7 && (x - i % LARGEUR) + (y - i / LARGEUR) < 12)
+                                    m->elements[i].visibilitee = 1;
+                            }
+                            else
+                            {
+                                if (x - i % LARGEUR <= 7 && i / LARGEUR - y <= 7 && (x - i % LARGEUR) + (i / LARGEUR - y) < 12)
+                                    m->elements[i].visibilitee = 1;
+                            }
+                        }
+                        else
+                        {
+                            if (i / LARGEUR < y)
+                            {
+                                if (i % LARGEUR - x <= 7 && y - i / LARGEUR <= 7 && (i % LARGEUR - x) + (y - i / LARGEUR) < 12)
+                                    m->elements[i].visibilitee = 1;
+                            }
+                            else
+                            {
+                                if (i % LARGEUR - x <= 7 && i / LARGEUR - y <= 7 && (i % LARGEUR - x) + (i / LARGEUR - y) < 12)
+                                    m->elements[i].visibilitee = 1;
+                            }
+
+                        }
+
+                    }
+                break;
+        }
+
+    }
+    
+}
+
+
 //---------------------------Gestion Block---------------------------//
 
 void casserBlock (Map* m, Coord* _bPos, int* _blockAcasser, int* _compte, int* _nb_besoin)
@@ -248,87 +329,81 @@ void casserBlock (Map* m, Coord* _bPos, int* _blockAcasser, int* _compte, int* _
     {
         int tempBAC       = *_blockAcasser;
         int temp_nbBesoin = *_nb_besoin;
-        if (tempBAC > 0)
+
+        for (unsigned int i = 0; i < tempBAC; i++)
         {
-            _compte = (int*) realloc (_compte, sizeof(int) * tempBAC);
-            if (_compte[tempBAC - 1] != 1) /*--->*/ _compte[tempBAC - 1] = 0;
-
-            for (unsigned int i = 0; i < tempBAC; i++)
+            if (_compte[i] == 0)
             {
-                if (_compte[i] == 0)
+                _compte[i] = testAccessibilitee (m, _bPos[i].x, _bPos[i].y);
+                decache (m);
+                if (_compte[i] == 1) /*--->*/temp_nbBesoin++;
+                
+            }
+            if (m->elements[LARGEUR * (int)_bPos[i].y + (int)_bPos[i].x].block->dirt != NULL && _compte[i] == 1)
+            {
+                if (m->elements[LARGEUR * 2 + LARGEUR / 2].entitee->ship->energy_quantity > 0)
                 {
-                    _compte[i] = testAccessibilitee (m, _bPos[i].x, _bPos[i].y);
-                    decache (m);
-                    if (_compte[i] == 1) /*--->*/temp_nbBesoin++;
-                    
+                    m->elements[LARGEUR * (int)_bPos[i].y + (int)_bPos[i].x].block->dirt->hardness --;
+                    m->elements[LARGEUR * 2 + LARGEUR / 2].entitee->ship->energy_quantity --;
                 }
-                if (m->elements[LARGEUR * (int)_bPos[i].y + (int)_bPos[i].x].block->dirt != NULL && _compte[i] == 1)
+                else
                 {
-                    if (m->elements[LARGEUR * 2 + LARGEUR / 2].entitee->ship->energy_quantity > 0)
-                    {
-                        m->elements[LARGEUR * (int)_bPos[i].y + (int)_bPos[i].x].block->dirt->hardness --;
-                        m->elements[LARGEUR * 2 + LARGEUR / 2].entitee->ship->energy_quantity --;
-                    }
-                    else
-                    {
-                        m->elements[LARGEUR * (int)_bPos[i].y + (int)_bPos[i].x].block->dirt->hardness -= m->elements[LARGEUR * 2 + LARGEUR / 2].entitee->ship->energy_efficient / temp_nbBesoin;
-                        m->elements[LARGEUR * 2 + LARGEUR / 2].entitee->ship->energy_quantity --;
-                    }
-                    
-                    if (m->elements[LARGEUR * (int)_bPos[i].y + (int)_bPos[i].x].block->dirt->hardness <= 0)
-                    {
-                        detruireBlock (m->elements[LARGEUR * (int)_bPos[i].y + (int)_bPos[i].x].block);
-
-                        m->elements[LARGEUR * (int)_bPos[i].y + (int)_bPos[i].x].block = NULL;
-                        m->elements[LARGEUR * (int)_bPos[i].y + (int)_bPos[i].x].type = VIDE;
-
-                        _bPos[i] = _bPos[tempBAC - 1];
-                        _bPos[tempBAC - 1] = (Coord){0, 0};
-
-                        _compte[i] = _compte[tempBAC - 1];
-                        _compte[tempBAC - 1] = 0;
-
-                        tempBAC--;
-                        temp_nbBesoin--;
-                        i--;
-                    }
-
+                    m->elements[LARGEUR * (int)_bPos[i].y + (int)_bPos[i].x].block->dirt->hardness -= m->elements[LARGEUR * 2 + LARGEUR / 2].entitee->ship->energy_efficient / temp_nbBesoin;
+                    m->elements[LARGEUR * 2 + LARGEUR / 2].entitee->ship->energy_quantity --;
                 }
-                else if (m->elements[LARGEUR * (int)_bPos[i].y + (int)_bPos[i].x].block->stone != NULL && _compte[i] == 1)
+                
+                if (m->elements[LARGEUR * (int)_bPos[i].y + (int)_bPos[i].x].block->dirt->hardness <= 0)
                 {
-                    if (m->elements[LARGEUR * 2 + LARGEUR / 2].entitee->ship->energy_quantity > 0)
-                    {
-                        m->elements[LARGEUR * (int)_bPos[i].y + (int)_bPos[i].x].block->stone->hardness --;
-                        m->elements[LARGEUR * 2 + LARGEUR / 2].entitee->ship->energy_quantity --;
-                    }
-                    else
-                    {
-                        m->elements[LARGEUR * (int)_bPos[i].y + (int)_bPos[i].x].block->stone->hardness -= m->elements[LARGEUR * 2 + LARGEUR / 2].entitee->ship->energy_efficient / temp_nbBesoin;
-                        m->elements[LARGEUR * 2 + LARGEUR / 2].entitee->ship->energy_quantity --;
-                    }
+                    detruireBlock (m->elements[LARGEUR * (int)_bPos[i].y + (int)_bPos[i].x].block);
 
-                    if (m->elements[LARGEUR * (int)_bPos[i].y + (int)_bPos[i].x].block->stone->hardness <= 0)
-                    {
-                        detruireBlock (m->elements[LARGEUR * (int)_bPos[i].y + (int)_bPos[i].x].block);
+                    m->elements[LARGEUR * (int)_bPos[i].y + (int)_bPos[i].x].block = NULL;
+                    m->elements[LARGEUR * (int)_bPos[i].y + (int)_bPos[i].x].type = VIDE;
 
-                        m->elements[LARGEUR * (int)_bPos[i].y + (int)_bPos[i].x].block = NULL;
-                        m->elements[LARGEUR * (int)_bPos[i].y + (int)_bPos[i].x].type = VIDE;
+                    _bPos[i] = _bPos[tempBAC - 1];
+                    _bPos[tempBAC - 1] = (Coord){0, 0};
 
-                        _bPos[i] = _bPos[tempBAC - 1];
-                        _bPos[tempBAC - 1] = (Coord){0, 0};
+                    _compte[i] = _compte[tempBAC - 1];
+                    _compte[tempBAC - 1] = 0;
 
-                        _compte[i] = _compte[tempBAC - 1];
-                        _compte[tempBAC - 1] = 0;
-
-                        tempBAC--;
-                        temp_nbBesoin--;
-                        i--;
-                    }
-
+                    tempBAC--;
+                    temp_nbBesoin--;
+                    i--;
                 }
 
             }
-            
+            else if (m->elements[LARGEUR * (int)_bPos[i].y + (int)_bPos[i].x].block->stone != NULL && _compte[i] == 1)
+            {
+                if (m->elements[LARGEUR * 2 + LARGEUR / 2].entitee->ship->energy_quantity > 0)
+                {
+                    m->elements[LARGEUR * (int)_bPos[i].y + (int)_bPos[i].x].block->stone->hardness --;
+                    m->elements[LARGEUR * 2 + LARGEUR / 2].entitee->ship->energy_quantity --;
+                }
+                else
+                {
+                    m->elements[LARGEUR * (int)_bPos[i].y + (int)_bPos[i].x].block->stone->hardness -= m->elements[LARGEUR * 2 + LARGEUR / 2].entitee->ship->energy_efficient / temp_nbBesoin;
+                    m->elements[LARGEUR * 2 + LARGEUR / 2].entitee->ship->energy_quantity --;
+                }
+
+                if (m->elements[LARGEUR * (int)_bPos[i].y + (int)_bPos[i].x].block->stone->hardness <= 0)
+                {
+                    detruireBlock (m->elements[LARGEUR * (int)_bPos[i].y + (int)_bPos[i].x].block);
+
+                    m->elements[LARGEUR * (int)_bPos[i].y + (int)_bPos[i].x].block = NULL;
+                    m->elements[LARGEUR * (int)_bPos[i].y + (int)_bPos[i].x].type = VIDE;
+
+                    _bPos[i] = _bPos[tempBAC - 1];
+                    _bPos[tempBAC - 1] = (Coord){0, 0};
+
+                    _compte[i] = _compte[tempBAC - 1];
+                    _compte[tempBAC - 1] = 0;
+
+                    tempBAC--;
+                    temp_nbBesoin--;
+                    i--;
+                }
+
+            }
+
         }
 
         *_blockAcasser = tempBAC;
@@ -339,34 +414,36 @@ void casserBlock (Map* m, Coord* _bPos, int* _blockAcasser, int* _compte, int* _
 
 //--------------------------Gestion Entitee--------------------------//
 
-void ajouterStructure (Case* c, int x, int y, unsigned int type, int* erreur)
+void ajouterStructure (Map* m, int x, int y, unsigned int type, int* erreur)
 {
-    if (c)
+    if (m)
     {
         switch (type)
         {
             case 48: *erreur = 3; break;
             case 49:
-                if (c[LARGEUR * (y + 1) + x].type != VIDE) /*--->*/ c[LARGEUR * y + x].entitee = creerEntitee(x, y, REACTEUR);
+                if (m->elements[LARGEUR * (y + 1) + x].type != VIDE) /*--->*/ m->elements[LARGEUR * y + x].entitee = creerEntitee(x, y, REACTEUR);
                 else /*--->*/ *erreur = 4;
                 break;
 
             case 50:
-                if (c[LARGEUR * (y + 1) + x].block != NULL)
-                    if (c[LARGEUR * (y + 1) + x].block->type == GOLD) /*--->*/ c[LARGEUR * y + x].entitee = creerEntitee(x, y, MINER);
+                if (m->elements[LARGEUR * (y + 1) + x].block != NULL)
+                    if (m->elements[LARGEUR * (y + 1) + x].block->type == GOLD) /*--->*/ m->elements[LARGEUR * y + x].entitee = creerEntitee(x, y, MINER);
                     else /*--->*/ *erreur = 5;
                 else /*--->*/ *erreur = 5;
                 break;
 
-            case 51: c[LARGEUR * y + x].entitee = creerEntitee(x, y, SHIELD); break;
+            case 51: m->elements[LARGEUR * y + x].entitee = creerEntitee(x, y, SHIELD); break;
             case 52: 
-                if (c[LARGEUR * (y + 1) + x].type == BLOCK || c[LARGEUR * (y - 1) + x].type == BLOCK || c[LARGEUR * y + (x + 1)].type == BLOCK || c[LARGEUR * y + (x - 1)].type == BLOCK)
+                if (m->elements[LARGEUR * (y + 1) + x].type == BLOCK || m->elements[LARGEUR * (y - 1) + x].type == BLOCK || m->elements[LARGEUR * y + (x + 1)].type == BLOCK || m->elements[LARGEUR * y + (x - 1)].type == BLOCK)
                 //--▼-----------------------------------------------------▼--*/
-                    c[LARGEUR * y + x].entitee = creerEntitee(x, y, BEACON);
+                    m->elements[LARGEUR * y + x].entitee = creerEntitee(x, y, BEACON);
                 else /*--->*/ *erreur = 6;
                 break;
 
-            case 53: c[LARGEUR * y + x].entitee = creerEntitee(x, y, BOMBE); break;
+            case 53: m->elements[LARGEUR * y + x].entitee = creerEntitee(x, y, BOMBE); break;
+
+            default: *erreur = 9; break;
             
         }
 
@@ -382,8 +459,7 @@ Coord* constructionStructure
     int* _entiteeAcreer,
     int* _compteE,
     int* _nb_Entitee,
-    int* _nb_besoin,
-    int* _sortie
+    int* _nb_besoin
 )
 {
     if (m)
@@ -391,264 +467,211 @@ Coord* constructionStructure
         int tempEAC         = *_entiteeAcreer;
         int temp_nbEntitee  = *_nb_Entitee;
         int temp_nbBesoin   = *_nb_besoin;
-        int temp_sortie     = *_sortie;
-
-        if (tempEAC > 0)
+            
+        for (unsigned int i = 0; i < tempEAC; i++)
         {
-            _compteE = (int*) realloc (_compteE, sizeof(int) * tempEAC);
-            if (_compteE[tempEAC - 1] != 1) /*--->*/ _compteE[tempEAC - 1] = 0;
-            
-            for (unsigned int i = 0; i < tempEAC; i++)
+            if (_compteE[i] == 0)
             {
-                if (_compteE[i] == 0)
-                {
-                    _compteE[i] = testAccessibilitee(m, _ePos[i].x, _ePos[i].y);
-                    decache (m);
-                    if (_compteE[i] == 1) /*--->*/ temp_nbBesoin++;
-                    
-                }
-                if (_compteE[i] == 1)
-                {
-                    switch (m->elements[LARGEUR * (int)_ePos[i].y + (int)_ePos[i].x].entitee->type)
-                    {
-                        case 1:
-                            if (m->elements[LARGEUR * 2 + LARGEUR / 2].entitee->ship->energy_quantity > 0)
-                            {
-                                m->elements[LARGEUR * (int)_ePos[i].y + (int)_ePos[i].x].entitee->reactor->build --;
-                                m->elements[LARGEUR * 2 + LARGEUR / 2].entitee->ship->energy_quantity --;
-                            }
-                            else
-                            {
-                                m->elements[LARGEUR * (int)_ePos[i].y + (int)_ePos[i].x].entitee->reactor->build -= m->elements[LARGEUR * 2 + LARGEUR / 2].entitee->ship->energy_efficient / temp_nbBesoin;
-                                m->elements[LARGEUR * 2 + LARGEUR / 2].entitee->ship->energy_quantity --;
-                            }
-
-                            if (m->elements[LARGEUR * (int)_ePos[i].y + (int)_ePos[i].x].entitee->reactor->build <= 0)
-                            {
-                                m->elements[LARGEUR * 2 + LARGEUR / 2].entitee->ship->energy_efficient += 0.15;
-                                m->elements[LARGEUR * (int)_ePos[i].y + (int)_ePos[i].x].type = ENTITY;
-
-                                _ePos[i] = _ePos[tempEAC - 1];
-
-                                _compteE[i] = _compteE[tempEAC - 1];
-                                _compteE[tempEAC - 1] = 0;
-
-                                tempEAC--;
-                                temp_nbBesoin--;
-                                i--;
-                            }
-                            break;
-                        
-                        case 2:
-                            if (m->elements[LARGEUR * 2 + LARGEUR / 2].entitee->ship->energy_quantity > 0)
-                            {
-                                m->elements[LARGEUR * (int)_ePos[i].y + (int)_ePos[i].x].entitee->miner->build --;
-                                m->elements[LARGEUR * 2 + LARGEUR / 2].entitee->ship->energy_quantity --;
-                            }
-                            else
-                            {
-                                m->elements[LARGEUR * (int)_ePos[i].y + (int)_ePos[i].x].entitee->miner->build -= m->elements[LARGEUR * 2 + LARGEUR / 2].entitee->ship->energy_efficient / temp_nbBesoin;
-                                m->elements[LARGEUR * 2 + LARGEUR / 2].entitee->ship->energy_quantity --;
-                            }
-
-                            if (m->elements[LARGEUR * (int)_ePos[i].y + (int)_ePos[i].x].entitee->miner->build <= 0)
-                            {
-                                m->elements[LARGEUR * 2 + LARGEUR / 2].entitee->ship->gold_efficient += 0.15;
-                                m->elements[LARGEUR * (int)_ePos[i].y + (int)_ePos[i].x].type = ENTITY;
-
-
-
-                                temp_nbEntitee++;
-                                Coord temp_tabEntitee[temp_nbEntitee];
-
-                                for (unsigned int j = 0; j < temp_nbEntitee; j++)
-                                    temp_tabEntitee[j] = _tabEntitee[j];
-                                
-                                _tabEntitee = (Coord*) realloc (_tabEntitee, sizeof(Coord) * temp_nbEntitee);
-
-                                for (unsigned int j = 0; j < temp_nbEntitee; j++)
-                                    _tabEntitee[j] = temp_tabEntitee[j];
-                                
-                                _tabEntitee[temp_nbEntitee - 1] = _ePos[i];
-
-
-
-                                _ePos[i] = _ePos[tempEAC - 1];
-
-                                _compteE[i] = _compteE[tempEAC - 1];
-                                _compteE[tempEAC - 1] = 0;
-
-                                tempEAC--;
-                                temp_nbBesoin--;
-                                i--;
-                            }
-                            break;
-
-                        case 3:
-                            if (m->elements[LARGEUR * 2 + LARGEUR / 2].entitee->ship->energy_quantity > 0)
-                            {
-                                m->elements[LARGEUR * (int)_ePos[i].y + (int)_ePos[i].x].entitee->shield->build --;
-                                m->elements[LARGEUR * 2 + LARGEUR / 2].entitee->ship->energy_quantity --;
-                            }
-                            else
-                            {
-                                m->elements[LARGEUR * (int)_ePos[i].y + (int)_ePos[i].x].entitee->shield->build -= m->elements[LARGEUR * 2 + LARGEUR / 2].entitee->ship->energy_efficient / temp_nbBesoin;
-                                m->elements[LARGEUR * 2 + LARGEUR / 2].entitee->ship->energy_quantity --;
-                            }
-
-                            if (m->elements[LARGEUR * (int)_ePos[i].y + (int)_ePos[i].x].entitee->shield->build <= 0)
-                            {
-                                m->elements[LARGEUR * (int)_ePos[i].y + (int)_ePos[i].x].type = ENTITY;
-
-                                _ePos[i] = _ePos[tempEAC - 1];
-
-                                _compteE[i] = _compteE[tempEAC - 1];
-                                _compteE[tempEAC - 1] = 0;
-
-                                tempEAC--;
-                                temp_nbBesoin--;
-                                i--;
-                            }
-                            break;
-                        
-                        case 4:
-                            if (m->elements[LARGEUR * 2 + LARGEUR / 2].entitee->ship->energy_quantity > 0)
-                            {
-                                m->elements[LARGEUR * (int)_ePos[i].y + (int)_ePos[i].x].entitee->beacon->build --;
-                                m->elements[LARGEUR * 2 + LARGEUR / 2].entitee->ship->energy_quantity --;
-                            }
-                            else
-                            {
-                                m->elements[LARGEUR * (int)_ePos[i].y + (int)_ePos[i].x].entitee->beacon->build -= m->elements[LARGEUR * 2 + LARGEUR / 2].entitee->ship->energy_efficient / temp_nbBesoin;
-                                m->elements[LARGEUR * 2 + LARGEUR / 2].entitee->ship->energy_quantity --;
-                            }
-
-                            if (m->elements[LARGEUR * (int)_ePos[i].y + (int)_ePos[i].x].entitee->beacon->build <= 0)
-                            {
-                                m->elements[LARGEUR * (int)_ePos[i].y + (int)_ePos[i].x].type = ENTITY;
-
-
-
-                                temp_nbEntitee++;
-                                Coord temp_tabEntitee[temp_nbEntitee];
-
-                                for (unsigned int j = 0; j < temp_nbEntitee; j++)
-                                    temp_tabEntitee[j] = _tabEntitee[j];
-                                
-                                _tabEntitee = (Coord*) realloc (_tabEntitee, sizeof(Coord) * temp_nbEntitee);
-                                for (unsigned int j = 0; j < temp_nbEntitee; j++)
-                                    _tabEntitee[j] = temp_tabEntitee[j];
-                                
-                                _tabEntitee[temp_nbEntitee - 1] = _ePos[i];
-
-
-
-                                _ePos[i] = _ePos[tempEAC - 1];
-
-                                _compteE[i] = _compteE[tempEAC - 1];
-                                _compteE[tempEAC - 1] = 0;
-
-                                tempEAC--;
-                                temp_nbBesoin--;
-                                i--;
-                            }
-                            break;
-                        
-                        case 5:
-                            if (m->elements[LARGEUR * 2 + LARGEUR / 2].entitee->ship->energy_quantity > 0)
-                            {
-                                m->elements[LARGEUR * (int)_ePos[i].y + (int)_ePos[i].x].entitee->bombe->build --;
-                                m->elements[LARGEUR * 2 + LARGEUR / 2].entitee->ship->energy_quantity --;
-                            }
-                            else
-                            {
-                                m->elements[LARGEUR * (int)_ePos[i].y + (int)_ePos[i].x].entitee->bombe->build -= m->elements[LARGEUR * 2 + LARGEUR / 2].entitee->ship->energy_efficient / temp_nbBesoin;
-                                m->elements[LARGEUR * 2 + LARGEUR / 2].entitee->ship->energy_quantity --;
-                            }
-
-                            if (m->elements[LARGEUR * (int)_ePos[i].y + (int)_ePos[i].x].entitee->bombe->build <= 0)
-                            {
-                                if (m->elements[LARGEUR * (int)_ePos[i].y + (int)_ePos[i].x + 1].type == ENTITY)
-                                {
-                                    if (m->elements[LARGEUR * (int)_ePos[i].y + (int)_ePos[i].x + 1].entitee->type == CREEPERSPAWNER)
-                                    //--▼------▼--//
-                                        temp_sortie--;
-                                }
-                                if (m->elements[LARGEUR * (int)_ePos[i].y + (int)_ePos[i].x - 1].type == ENTITY)
-                                {
-                                    if (m->elements[LARGEUR * (int)_ePos[i].y + (int)_ePos[i].x - 1].entitee->type == CREEPERSPAWNER)
-                                    //--▼------▼--//
-                                        temp_sortie--;
-                                }
-                                if (m->elements[LARGEUR * ((int)_ePos[i].y + 1) + (int)_ePos[i].x].type == ENTITY)
-                                {    
-                                    if (m->elements[LARGEUR * ((int)_ePos[i].y + 1) + (int)_ePos[i].x].entitee->type == CREEPERSPAWNER)
-                                    //--▼------▼--//
-                                        temp_sortie--;
-                                }
-                                if (m->elements[LARGEUR * ((int)_ePos[i].y - 1) + (int)_ePos[i].x].type == ENTITY)
-                                {    
-                                    if (m->elements[LARGEUR * ((int)_ePos[i].y - 1) + (int)_ePos[i].x].entitee->type == CREEPERSPAWNER)
-                                    //--▼------▼--//
-                                        temp_sortie--;
-                                }
-
-                                m->elements[LARGEUR * (int)_ePos[i].y + (int)_ePos[i].x].type = ENTITY;
-
-
-
-                                temp_nbEntitee++;
-                                Coord temp_tabEntitee[temp_nbEntitee];
-
-                                for (unsigned int j = 0; j < temp_nbEntitee; j++)
-                                    temp_tabEntitee[j] = _tabEntitee[j];
-                                
-                                _tabEntitee = (Coord*) realloc (_tabEntitee, sizeof(Coord) * temp_nbEntitee);
-                                for (unsigned int j = 0; j < temp_nbEntitee; j++)
-                                    _tabEntitee[j] = temp_tabEntitee[j];
-                                
-                                _tabEntitee[temp_nbEntitee - 1] = _ePos[i];
-
-
-
-                                _ePos[i] = _ePos[tempEAC - 1];
-
-                                _compteE[i] = _compteE[tempEAC - 1];
-                                _compteE[tempEAC - 1] = 0;
-
-                                tempEAC--;
-                                temp_nbBesoin--;
-                                i--;
-                            }
-                            break;
-
-                    }
+                _compteE[i] = testAccessibilitee(m, _ePos[i].x, _ePos[i].y);
+                decache (m);
+                if (_compteE[i] == 1) /*--->*/ temp_nbBesoin++;
                 
-                }
-
             }
+            if (_compteE[i] == 1)
+            {
+                switch (m->elements[LARGEUR * (int)_ePos[i].y + (int)_ePos[i].x].entitee->type)
+                {
+                    case 1:
+                        if (m->elements[LARGEUR * 2 + LARGEUR / 2].entitee->ship->energy_quantity > 0)
+                        {
+                            m->elements[LARGEUR * (int)_ePos[i].y + (int)_ePos[i].x].entitee->reactor->build --;
+                            m->elements[LARGEUR * 2 + LARGEUR / 2].entitee->ship->energy_quantity --;
+                        }
+                        else
+                        {
+                            m->elements[LARGEUR * (int)_ePos[i].y + (int)_ePos[i].x].entitee->reactor->build -= m->elements[LARGEUR * 2 + LARGEUR / 2].entitee->ship->energy_efficient / temp_nbBesoin;
+                            m->elements[LARGEUR * 2 + LARGEUR / 2].entitee->ship->energy_quantity --;
+                        }
+
+                        if (m->elements[LARGEUR * (int)_ePos[i].y + (int)_ePos[i].x].entitee->reactor->build <= 0)
+                        {
+                            m->elements[LARGEUR * 2 + LARGEUR / 2].entitee->ship->energy_efficient += 0.15;
+                            m->elements[LARGEUR * (int)_ePos[i].y + (int)_ePos[i].x].type = ENTITY;
+
+                            _ePos[i] = _ePos[tempEAC - 1];
+
+                            _compteE[i] = _compteE[tempEAC - 1];
+                            _compteE[tempEAC - 1] = 0;
+
+                            tempEAC--;
+                            temp_nbBesoin--;
+                            i--;
+                        }
+                        break;
+                    
+                    case 2:
+                        if (m->elements[LARGEUR * 2 + LARGEUR / 2].entitee->ship->energy_quantity > 0)
+                        {
+                            m->elements[LARGEUR * (int)_ePos[i].y + (int)_ePos[i].x].entitee->miner->build --;
+                            m->elements[LARGEUR * 2 + LARGEUR / 2].entitee->ship->energy_quantity --;
+                        }
+                        else
+                        {
+                            m->elements[LARGEUR * (int)_ePos[i].y + (int)_ePos[i].x].entitee->miner->build -= m->elements[LARGEUR * 2 + LARGEUR / 2].entitee->ship->energy_efficient / temp_nbBesoin;
+                            m->elements[LARGEUR * 2 + LARGEUR / 2].entitee->ship->energy_quantity --;
+                        }
+
+                        if (m->elements[LARGEUR * (int)_ePos[i].y + (int)_ePos[i].x].entitee->miner->build <= 0)
+                        {
+                            m->elements[LARGEUR * 2 + LARGEUR / 2].entitee->ship->gold_efficient += 0.15;
+                            m->elements[LARGEUR * (int)_ePos[i].y + (int)_ePos[i].x].type = ENTITY;
+
+
+                            temp_nbEntitee++;
+                            _tabEntitee = (Coord*) realloc (_tabEntitee, sizeof(Coord) * temp_nbEntitee);
+                            _tabEntitee[temp_nbEntitee - 1] = _ePos[i];
+
+
+                            _ePos[i] = _ePos[tempEAC - 1];
+
+                            _compteE[i] = _compteE[tempEAC - 1];
+                            _compteE[tempEAC - 1] = 0;
+
+                            tempEAC--;
+                            temp_nbBesoin--;
+                            i--;
+                        }
+                        break;
+
+                    case 3:
+                        if (m->elements[LARGEUR * 2 + LARGEUR / 2].entitee->ship->energy_quantity > 0)
+                        {
+                            m->elements[LARGEUR * (int)_ePos[i].y + (int)_ePos[i].x].entitee->shield->build --;
+                            m->elements[LARGEUR * 2 + LARGEUR / 2].entitee->ship->energy_quantity --;
+                        }
+                        else
+                        {
+                            m->elements[LARGEUR * (int)_ePos[i].y + (int)_ePos[i].x].entitee->shield->build -= m->elements[LARGEUR * 2 + LARGEUR / 2].entitee->ship->energy_efficient / temp_nbBesoin;
+                            m->elements[LARGEUR * 2 + LARGEUR / 2].entitee->ship->energy_quantity --;
+                        }
+
+                        if (m->elements[LARGEUR * (int)_ePos[i].y + (int)_ePos[i].x].entitee->shield->build <= 0)
+                        {
+                            m->elements[LARGEUR * (int)_ePos[i].y + (int)_ePos[i].x].type = ENTITY;
+
+                            _ePos[i] = _ePos[tempEAC - 1];
+
+                            _compteE[i] = _compteE[tempEAC - 1];
+                            _compteE[tempEAC - 1] = 0;
+
+                            tempEAC--;
+                        
+                            temp_nbBesoin--;
+                            i--;
+                        }
+                        break;
+                    
+                    case 4:
+                        if (m->elements[LARGEUR * 2 + LARGEUR / 2].entitee->ship->energy_quantity > 0)
+                        {
+                            m->elements[LARGEUR * (int)_ePos[i].y + (int)_ePos[i].x].entitee->beacon->build --;
+                            m->elements[LARGEUR * 2 + LARGEUR / 2].entitee->ship->energy_quantity --;
+                        }
+                        else
+                        {
+                            m->elements[LARGEUR * (int)_ePos[i].y + (int)_ePos[i].x].entitee->beacon->build -= m->elements[LARGEUR * 2 + LARGEUR / 2].entitee->ship->energy_efficient / temp_nbBesoin;
+                            m->elements[LARGEUR * 2 + LARGEUR / 2].entitee->ship->energy_quantity --;
+                        }
+
+                        if (m->elements[LARGEUR * (int)_ePos[i].y + (int)_ePos[i].x].entitee->beacon->build <= 0)
+                        {
+                            m->elements[LARGEUR * (int)_ePos[i].y + (int)_ePos[i].x].type = ENTITY;
+
+
+                            temp_nbEntitee++;
+                            _tabEntitee = (Coord*) realloc (_tabEntitee, sizeof(Coord) * temp_nbEntitee);
+                            _tabEntitee[temp_nbEntitee - 1] = _ePos[i];
+                            
+                            _tabEntitee[temp_nbEntitee - 1] = _ePos[i];
+
+
+                            _ePos[i] = _ePos[tempEAC - 1];
+
+                            _compteE[i] = _compteE[tempEAC - 1];
+                            _compteE[tempEAC - 1] = 0;
+
+                            tempEAC--;
+                            temp_nbBesoin--;
+                            i--;
+                        }
+                        break;
+                    
+                    case 5:
+                        if (m->elements[LARGEUR * 2 + LARGEUR / 2].entitee->ship->energy_quantity > 0)
+                        {
+                            m->elements[LARGEUR * (int)_ePos[i].y + (int)_ePos[i].x].entitee->bombe->build --;
+                            m->elements[LARGEUR * 2 + LARGEUR / 2].entitee->ship->energy_quantity --;
+                        }
+                        else
+                        {
+                            m->elements[LARGEUR * (int)_ePos[i].y + (int)_ePos[i].x].entitee->bombe->build -= m->elements[LARGEUR * 2 + LARGEUR / 2].entitee->ship->energy_efficient / temp_nbBesoin;
+                            m->elements[LARGEUR * 2 + LARGEUR / 2].entitee->ship->energy_quantity --;
+                        }
+
+                        if (m->elements[LARGEUR * (int)_ePos[i].y + (int)_ePos[i].x].entitee->bombe->build <= 0)
+                        {
+                            m->elements[LARGEUR * (int)_ePos[i].y + (int)_ePos[i].x].type = ENTITY;
+
+
+                            temp_nbEntitee++;
+                            _tabEntitee = (Coord*) realloc (_tabEntitee, sizeof(Coord) * temp_nbEntitee);
+                            _tabEntitee[temp_nbEntitee - 1] = _ePos[i];
+
+
+                            _ePos[i] = _ePos[tempEAC - 1];
+
+                            _compteE[i] = _compteE[tempEAC - 1];
+                            _compteE[tempEAC - 1] = 0;
+
+                            tempEAC--;
+                            temp_nbBesoin--;
+                            i--;
+                        }
+                        break;
+
+                }
             
+            }
+
         }
 
         *_entiteeAcreer = tempEAC;
         *_nb_Entitee    = temp_nbEntitee;
         *_nb_besoin     = temp_nbBesoin;
-        *_sortie        = temp_sortie;
-
     }
 
     return _tabEntitee;
     
 }
 
-void remplirEnergieStructure (Map* m, Coord* _tabEntitee, int _nb_Entitee, int* _nb_besoin)
+Coord* remplirEnergieStructure 
+(
+    Map* m,
+    Coord* _tabEntitee,
+    int* _nb_Entitee,
+    int* _nb_besoin,
+    int* _sortie
+)
 {
     if (m)
     {
         int x;
         int y;
-        int temp_nbBesoin = *_nb_besoin;
-        for (unsigned int i = 0; i < _nb_Entitee; i++)
+        int temp_nbBesoin  = *_nb_besoin;
+        int temp_nbEntitee = *_nb_Entitee;
+        int temp_sortie    = *_sortie;
+
+        for (unsigned int i = 0; i < temp_nbEntitee; i++)
         {
             x = _tabEntitee[i].x;
             y = _tabEntitee[i].y;
@@ -671,7 +694,7 @@ void remplirEnergieStructure (Map* m, Coord* _tabEntitee, int _nb_Entitee, int* 
 
         }
 
-        for (unsigned int i = 0; i < _nb_Entitee; i++)
+        for (unsigned int i = 0; i < temp_nbEntitee; i++)
         {
             x = _tabEntitee[i].x;
             y = _tabEntitee[i].y;
@@ -713,6 +736,10 @@ void remplirEnergieStructure (Map* m, Coord* _tabEntitee, int _nb_Entitee, int* 
 
                         temp_nbBesoin--;
                     }
+
+                    if (m->elements[LARGEUR * y + x].entitee->beacon->power_quantity > 0)
+                        visibilitee (m, _tabEntitee[i].x, _tabEntitee[i].y);
+                    
                     break;
                 
                 case 5:
@@ -731,14 +758,71 @@ void remplirEnergieStructure (Map* m, Coord* _tabEntitee, int _nb_Entitee, int* 
 
                         temp_nbBesoin--;
                     }
+                    else if (m->elements[LARGEUR * y + x].entitee->bombe->power_quantity == 20)
+                    {
+                        if (m->elements[LARGEUR * y + x + 1].type == ENTITY)
+                        {
+                            if (m->elements[LARGEUR * y + x + 1].entitee->type == CREEPERSPAWNER)
+                            {
+                                effetDegats (m->elements, m->elements[LARGEUR * y + x].entitee, m->elements[LARGEUR * y + x + 1].entitee);
+                                temp_sortie--;
+                                _tabEntitee[i] = _tabEntitee[temp_nbEntitee - 1];
+                                _tabEntitee[temp_nbEntitee - 1] = (Coord) {0, 0};
+                                temp_nbEntitee--;
+                                _tabEntitee = (Coord*) realloc (_tabEntitee, sizeof(Coord) * temp_nbEntitee);
+                            }
+                        }
+                        if (m->elements[LARGEUR * y + x - 1].type == ENTITY)
+                        {
+                            if (m->elements[LARGEUR * y + x - 1].entitee->type == CREEPERSPAWNER)
+                            {
+                                effetDegats (m->elements, m->elements[LARGEUR * y + x].entitee, m->elements[LARGEUR * y + x - 1].entitee);
+                                temp_sortie--;
+                                _tabEntitee[i] = _tabEntitee[temp_nbEntitee - 1];
+                                _tabEntitee[temp_nbEntitee - 1] = (Coord) {0, 0};
+                                temp_nbEntitee--;
+                                _tabEntitee = (Coord*) realloc (_tabEntitee, sizeof(Coord) * temp_nbEntitee);
+                            }
+                        }
+                        if (m->elements[LARGEUR * (y + 1) + x].type == ENTITY)
+                        {    
+                            if (m->elements[LARGEUR * (y + 1) + x].entitee->type == CREEPERSPAWNER)
+                            {
+                                effetDegats (m->elements, m->elements[LARGEUR * y + x].entitee, m->elements[LARGEUR * (y + 1) + x].entitee);
+                                temp_sortie--;
+                                _tabEntitee[i] = _tabEntitee[temp_nbEntitee - 1];
+                                _tabEntitee[temp_nbEntitee - 1] = (Coord) {0, 0};
+                                temp_nbEntitee--;
+                                _tabEntitee = (Coord*) realloc (_tabEntitee, sizeof(Coord) * temp_nbEntitee);
+                            }
+                        }
+                        if (m->elements[LARGEUR * (y - 1) + x].type == ENTITY)
+                        {    
+                            if (m->elements[LARGEUR * (y - 1) + x].entitee->type == CREEPERSPAWNER)
+                            {
+                                effetDegats (m->elements, m->elements[LARGEUR * y + x].entitee, m->elements[LARGEUR * (y - 1) + x].entitee);
+                                temp_sortie--;
+                                _tabEntitee[i] = _tabEntitee[temp_nbEntitee - 1];
+                                _tabEntitee[temp_nbEntitee - 1] = (Coord) {0, 0};
+                                temp_nbEntitee--;
+                                _tabEntitee = (Coord*) realloc (_tabEntitee, sizeof(Coord) * temp_nbEntitee);
+                            }
+
+                        }
+
+                    }
+                    
                     break;
             }
 
         }
 
-        *_nb_besoin = temp_nbBesoin;
+        *_nb_besoin  = temp_nbBesoin;
+        *_nb_Entitee = temp_nbEntitee;
+        *_sortie     = temp_sortie;
     
     }
+    return _tabEntitee;
 
 }
 
@@ -758,9 +842,9 @@ void viderEnergieStructure (Map* m, Coord* _tabEntitee, int _nb_Entitee)
                     break;
                 
                 case 4:
-                    if (m->elements[LARGEUR * (int)_tabEntitee[i].y + (int)_tabEntitee[i].x].entitee->miner->power_quantity > 0)
+                    if (m->elements[LARGEUR * (int)_tabEntitee[i].y + (int)_tabEntitee[i].x].entitee->beacon->power_quantity > 0)
                     {
-                        m->elements[LARGEUR * (int)_tabEntitee[i].y + (int)_tabEntitee[i].x].entitee->miner->power_quantity -= 0.05;
+                        m->elements[LARGEUR * (int)_tabEntitee[i].y + (int)_tabEntitee[i].x].entitee->beacon->power_quantity -= 0.05;
                     }
                     break;
             }
@@ -790,6 +874,51 @@ void ajouterSpawnerHasard (Case* c, unsigned int nb_Spawner)
             else /*-------------------------->*/ i = LARGEUR * 10;
         }
         
+    }
+    
+}
+
+void effetDegats (Case* c, Entity* attaquant, Entity* victime)
+{
+    if (attaquant && victime)
+    {
+        int xA;
+        int yA;
+        int xV;
+        int yV;
+        switch (attaquant->type)
+        {
+            case BOMBE:
+                xA = attaquant->bombe->pos.x;
+                yA = attaquant->bombe->pos.y;
+                switch (victime->type)
+                {
+                    case CREEPERSPAWNER:
+                        xV = victime->creeperSpawner->pos.x;
+                        yV = victime->creeperSpawner->pos.y;
+
+                        victime->creeperSpawner->health -= attaquant->bombe->damage;
+                        
+                        if (victime->creeperSpawner->health <= 0)
+                        {
+                            detruireEntitee (victime);
+                            detruireEntitee (attaquant);
+                            
+                            victime   = NULL;
+                            attaquant = NULL;
+
+                            c[LARGEUR * yV + xV].entitee = NULL;
+                            c[LARGEUR * yA + xA].entitee = NULL;
+
+                            c[LARGEUR * yV + xV].type = VIDE;
+                            c[LARGEUR * yA + xA].type = VIDE;
+                        }
+                        break;
+                }
+                break;
+            
+        }
+
     }
     
 }

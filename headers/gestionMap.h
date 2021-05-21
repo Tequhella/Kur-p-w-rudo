@@ -2,8 +2,8 @@
 /* Kurīpāwārudo (inspiré du jeu Creeper World 2)             */
 /*-----------------------------------------------------------*/
 /* Module            : gestionMap.h                          */
-/* Numéro de version : 0.5.1                                 */
-/* Date              : 12/05/2021                            */
+/* Numéro de version : 0.6                                   */
+/* Date              : 18/05/2021                            */
 /* Auteurs           : Lilian CHARDON                        */
 /*************************************************************/
 
@@ -24,6 +24,8 @@ void decache (Map* m);
 
 void remplirStock (Map* m);
 
+void visibilitee (Map* m, int x, int y);
+
 //---------------------------Gestion Block---------------------------//
 
 void casserBlock
@@ -37,7 +39,7 @@ void casserBlock
 
 //--------------------------Gestion Entitee--------------------------//
 
-void ajouterStructure (Case* c, int x, int y, unsigned int type, int* erreur);
+void ajouterStructure (Map* m, int x, int y, unsigned int type, int* erreur);
 
 Coord* constructionStructure
 (
@@ -47,14 +49,22 @@ Coord* constructionStructure
     int* _entiteeAcreer,
     int* _compteE,
     int* _nb_Entitee,
+    int* _nb_besoin
+);
+
+Coord* remplirEnergieStructure
+(
+    Map* m,
+    Coord* _tabEntitee,
+    int* _nb_Entitee,
     int* _nb_besoin,
     int* _sortie
 );
 
-void remplirEnergieStructure (Map* m, Coord* _tabEntitee, int _nb_Entitee, int* _nb_besoin);
-
 void viderEnergieStructure (Map* m, Coord* _tabEntitee, int _nb_Entitee);
 
 void ajouterSpawnerHasard (Case* c, unsigned int nb_Spawner);
+
+void effetDegats (Case* c, Entity* attaquant, Entity* victime);
 
 #endif

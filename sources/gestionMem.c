@@ -2,12 +2,13 @@
 /* Kurīpāwārudo (inspiré du jeu Creeper World 2)             */
 /*-----------------------------------------------------------*/
 /* Module            : gestionMem.c                          */
-/* Numéro de version : 0.5.1                                 */
-/* Date              : 12/05/2021                            */
+/* Numéro de version : 0.6                                   */
+/* Date              : 18/05/2021                            */
 /* Auteurs           : Lilian CHARDON                        */
 /*************************************************************/
 
 #include "../headers/gestionMem.h"
+#include "../headers/gestionMap.h"
 
 //-----------------------------Gestion Mem Map-----------------------------//
 
@@ -35,6 +36,12 @@ Map* creerCarte (double dimX, double dimY, char* nomDeLaCarte)
                 m->nomDeLaCarte = nomDeLaCarte;
                 m->elements[LARGEUR * 2 + LARGEUR / 2].entitee = creerEntitee (LARGEUR / 2, 2, SHIP);
                 m->elements[LARGEUR * 2 + LARGEUR / 2].type = ENTITY;
+
+                for (unsigned int i = 0; i < LARGEUR * HAUTEUR; i++)
+                    m->elements[i].visibilitee = 0;
+                
+                visibilitee (m, m->elements[LARGEUR * 2 + LARGEUR / 2].entitee->ship->pos.x, m->elements[LARGEUR * 2 + LARGEUR / 2].entitee->ship->pos.y);
+
             }
             else
             {

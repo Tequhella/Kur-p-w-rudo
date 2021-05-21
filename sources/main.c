@@ -2,8 +2,8 @@
 /* Kurīpāwārudo (inspiré du jeu Creeper World 2)             */
 /*-----------------------------------------------------------*/
 /* Module            : main.c                                */
-/* Numéro de version : 0.5.1                                 */
-/* Date              : 12/05/2021                            */
+/* Numéro de version : 0.6                                   */
+/* Date              : 18/05/2021                            */
 /* Auteurs           : Lilian CHARDON                        */
 /*************************************************************/
 
@@ -11,6 +11,12 @@
 #include "../headers/gestionMem.h"
 #include "../headers/gestionMap.h"
 #include "../headers/gestionAffichage.h"
+
+/*
+#include <SDL2/SDL>
+#include <freetype2/ft2build.h>
+#include FT_FREETYPE_H
+*/
 
 int main ()
 {
@@ -129,7 +135,7 @@ int main ()
 
                                     nb_Entitee--;
                                     
-                                    tabEntitee = (Coord*) realloc (tabEntitee, sizeof(Coord)*nb_Entitee);
+                                    tabEntitee = (Coord*) realloc (tabEntitee, sizeof(Coord) * nb_Entitee);
                                 }
                                 
                             }
@@ -151,45 +157,72 @@ int main ()
                             if (entiteeAcreer <= 9)
                             {
                                 ePos[entiteeAcreer] = jPos;
-                                ajouterStructure(mapHasard->elements, ePos[entiteeAcreer].x, ePos[entiteeAcreer].y, (int)MvtOrAction, &erreur);
+                                ajouterStructure(mapHasard, ePos[entiteeAcreer].x, ePos[entiteeAcreer].y, (int)MvtOrAction, &erreur);
                                 if (erreur == 0) /*--->*/ entiteeAcreer++;
                             }
                             else /*--->*/ erreur = 8;
                         }
                             
                         break;
+                    case 'c':
+                        for (unsigned int i = 0; i < LARGEUR * HAUTEUR; i++)
+                        {
+                            mapHasard->elements[i].visibilitee = 1;
+                        }
+                        break;
+                        
+                    default: erreur = 9; break;
                 }
                 break;
 
-            default: sortie = 0; break;
+            default: erreur = 9; break;
         }
         if (mapHasard->elements[LARGEUR * (int)jPos.y + (int)jPos.x].block != NULL) /*----->*/ mapHasard->elements[LARGEUR * (int)jPos.y + (int)jPos.x].type = 1;
         if (mapHasard->elements[LARGEUR * (int)jPos.y + (int)jPos.x].entitee != NULL) /*--->*/ mapHasard->elements[LARGEUR * (int)jPos.y + (int)jPos.x].type = 2;
         
-        casserBlock 
-        (
-            mapHasard,
-            bPos,
-            &blockAcasser,
-            compte,
-            &nb_besoin
-        );
-        tabEntitee = constructionStructure
-        (
-            mapHasard,
-            ePos,
-            tabEntitee,
-            &entiteeAcreer,
-            compteE,
-            &nb_Entitee,
-            &nb_besoin,
-            &sortie
-        );
+        if (blockAcasser > 0)
+        {
+            compte = (int*) realloc (compte, sizeof(int) * blockAcasser);
+            if (compte[blockAcasser - 1] != 1) /*--->*/ compte[blockAcasser - 1] = 0;
+
+            casserBlock 
+            (
+                mapHasard,
+                bPos,
+                &blockAcasser,
+                compte,
+                &nb_besoin
+            );
+        }
+        
+        if (entiteeAcreer > 0)
+        {
+            compteE = (int*) realloc (compteE, sizeof(int) * entiteeAcreer);
+            if (compteE[entiteeAcreer - 1] != 1) /*--->*/ compteE[entiteeAcreer - 1] = 0;
+
+            tabEntitee = constructionStructure
+            (
+                mapHasard,
+                ePos,
+                tabEntitee,
+                &entiteeAcreer,
+                compteE,
+                &nb_Entitee,
+                &nb_besoin
+            );
+        }
         
 
 
         remplirStock (mapHasard);
-        remplirEnergieStructure (mapHasard, tabEntitee, nb_Entitee, &nb_besoin);
+        tabEntitee = remplirEnergieStructure
+        (
+            mapHasard,
+            tabEntitee,
+            &nb_Entitee,
+            &nb_besoin,
+            &sortie
+        );
         viderEnergieStructure (mapHasard, tabEntitee, nb_Entitee);
 
 
@@ -197,7 +230,7 @@ int main ()
         {
             afficherInterface (mapHasard, tabEntitee, nb_Entitee);
             afficherCarte (mapHasard);
-            printf ("Vous avez gagne ! \n");
+            printf ("Vous avez gagné ! \n");
         }
 
     }

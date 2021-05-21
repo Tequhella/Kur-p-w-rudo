@@ -2,8 +2,8 @@
 /* Kurīpāwārudo (inspiré du jeu Creeper World 2)             */
 /*-----------------------------------------------------------*/
 /* Module            : gestionAffichage.c                    */
-/* Numéro de version : 0.5.1                                 */
-/* Date              : 12/05/2021                            */
+/* Numéro de version : 0.6                                   */
+/* Date              : 18/05/2021                            */
 /* Auteurs           : Lilian CHARDON                        */
 /*************************************************************/
 
@@ -43,48 +43,52 @@ void afficherCarte (Map* m)
                 if (j == 0 || j == LARGEUR + 1) /*--->*/ printf ("║");
                 else
                 {
-                    if (m->elements[k].type == 0) /*--->*/ printf (" ");
-                    else if (m->elements[k].type == 1)
+                    if (m->elements[k].visibilitee == 1)
                     {
-                        switch (m->elements[k].block->type)
+                        if (m->elements[k].type == 0) /*--->*/ printf (" ");
+                        else if (m->elements[k].type == 1)
                         {
-                            case 1: printf ("░"); break;
-                            case 2:
-                                switch (m->elements[k].block->stone->type)
-                                {
-                                    case 1: printf ("▒"); break;
-                                    case 2: printf ("▓"); break;
-                                    case 3: printf ("█"); break;
-                                }
-                                break;
-                            case 3: printf ("▚"); break;
-                        }
+                            switch (m->elements[k].block->type)
+                            {
+                                case 1: printf ("░"); break;
+                                case 2:
+                                    switch (m->elements[k].block->stone->type)
+                                    {
+                                        case 1: printf ("▒"); break;
+                                        case 2: printf ("▓"); break;
+                                        case 3: printf ("█"); break;
+                                    }
+                                    break;
+                                case 3: printf ("▚"); break;
+                            }
 
-                    }
-                    else if (m->elements[k].type == 2)
-                    {
-                        switch (m->elements[k].entitee->type)
-                        {
-                            case 0: printf ("◈"); break;
-                            case 1: if (m->elements[k].entitee->reactor->build <= 0) /*--->*/ printf ("◬");
-                                    else /*--->*/ printf (" "); 
-                                    break;
-                            case 2: if (m->elements[k].entitee->miner->build <= 0) /*----->*/ printf ("◭");
-                                    else /*--->*/ printf (" "); 
-                                    break;
-                            case 3: if (m->elements[k].entitee->shield->build <= 0) /*---->*/ printf ("◩");
-                                    else /*--->*/ printf (" "); 
-                                    break;
-                            case 4: if (m->elements[k].entitee->beacon->build <= 0) /*---->*/ printf ("◉");
-                                    else /*--->*/ printf (" "); 
-                                    break;
-                            case 5: if (m->elements[k].entitee->bombe->build <= 0) /*----->*/ printf ("◘");
-                                    else /*--->*/ printf (" "); 
-                                    break;
-                            case 9: printf ("◎"); break;
                         }
+                        else if (m->elements[k].type == 2)
+                        {
+                            switch (m->elements[k].entitee->type)
+                            {
+                                case 0: printf ("◈"); break;
+                                case 1: if (m->elements[k].entitee->reactor->build <= 0) /*--->*/ printf ("◬");
+                                        else /*--->*/ printf (" "); 
+                                        break;
+                                case 2: if (m->elements[k].entitee->miner->build <= 0) /*----->*/ printf ("◭");
+                                        else /*--->*/ printf (" "); 
+                                        break;
+                                case 3: if (m->elements[k].entitee->shield->build <= 0) /*---->*/ printf ("◩");
+                                        else /*--->*/ printf (" "); 
+                                        break;
+                                case 4: if (m->elements[k].entitee->beacon->build <= 0) /*---->*/ printf ("◉");
+                                        else /*--->*/ printf (" "); 
+                                        break;
+                                case 5: if (m->elements[k].entitee->bombe->build <= 0) /*----->*/ printf ("◘");
+                                        else /*--->*/ printf (" "); 
+                                        break;
+                                case 9: printf ("◎"); break;
+                            }
+                        }
+                        else if (m->elements[k].type == 3) /*--->*/ printf ("○");
                     }
-                    else if (m->elements[k].type == 3) /*--->*/ printf ("○");
+                    else /*--->*/ printf (" ");
                     
                     k++;
 
@@ -150,6 +154,7 @@ void afficherErreur (int* _erreur)
         case 6: printf ("Impossible de placer de beacon ici.                                \n");   break;
         case 7: printf ("Nombre maximum de cases pouvant être cassé à la suite, atteint.    \n");   break;
         case 8: printf ("Nombre maximum d'entitée pouvant être ajouter à la suite, atteint. \n");   break;
+        case 9: printf ("Insérez une touche valide.                                         \n");   break;
     }
 
     *_erreur = 0;

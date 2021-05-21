@@ -2,17 +2,16 @@
 /* Kurīpāwārudo (inspiré du jeu Creeper World 2)             */
 /*-----------------------------------------------------------*/
 /* Module            : type.h                                */
-/* Numéro de version : 0.5.1                                 */
-/* Date              : 12/05/2021                            */
+/* Numéro de version : 0.6                                   */
+/* Date              : 18/05/2021                            */
 /* Auteurs           : Lilian CHARDON                        */
 /*************************************************************/
 
 #ifndef _TYPE_H_INCLUDED_
 #define _TYPE_H_INCLUDED_
 
-#define NULL (void*) 0
-/*Une erreur incompréhensible m'a forcé
-  a définir NULL manuellement.*/
+//#define NULL (void*) 0
+// à remettre uniquement quand l'IDE met une erreur à chaque appelle de NULL
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -154,8 +153,10 @@ Entity;
 
 typedef struct Case
 {
-    int type;
-    int cache;
+    int     type;
+    int     cache;
+    int     visibilitee;
+    
     Block*  block;
     Entity* entitee;
 }
