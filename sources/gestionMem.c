@@ -34,13 +34,13 @@ Map* creerCarte (double dimX, double dimY, char* nomDeLaCarte)
                 m->dimX         = dimX;
                 m->dimY         = dimY;
                 m->nomDeLaCarte = nomDeLaCarte;
-                m->elements[LARGEUR * 2 + LARGEUR / 2].entitee = creerEntitee (LARGEUR / 2, 2, SHIP);
-                m->elements[LARGEUR * 2 + LARGEUR / 2].type = ENTITY;
+                m->elements[LARGEUR * SHIPY + SHIPX].entitee = creerEntitee (LARGEUR / 2, 2, SHIP);
+                m->elements[LARGEUR * SHIPY + SHIPX].type = ENTITY;
 
                 for (unsigned int i = 0; i < LARGEUR * HAUTEUR; i++)
                     m->elements[i].visibilitee = 0;
                 
-                visibilitee (m, m->elements[LARGEUR * 2 + LARGEUR / 2].entitee->ship->pos.x, m->elements[LARGEUR * 2 + LARGEUR / 2].entitee->ship->pos.y);
+                visibilitee (m, m->elements[LARGEUR * SHIPY + SHIPX].entitee->ship->pos.x, m->elements[LARGEUR * SHIPY + SHIPX].entitee->ship->pos.y);
 
             }
             else

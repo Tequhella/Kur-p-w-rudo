@@ -79,8 +79,6 @@ void remplirHasard (Map* m)
             }
         }
         
-        
-        
     }
     
 }
@@ -121,9 +119,9 @@ int testAccessibilitee (Map* m, int x, int y)
     {
         m->elements[LARGEUR * y + x].cache = 1;
         
-        if ((x == LARGEUR / 2 + 1 && y == 2) || (x == LARGEUR / 2 - 1 && y == 2) || (x == LARGEUR / 2 && y == 1) || (x == LARGEUR / 2 && y == 3))
+        if ((x == SHIPX + 1 && y == 2) || (x == SHIPX - 1 && y == 2) || (x == SHIPX && y == 1) || (x == SHIPX && y == 3))
         {
-            m->elements[LARGEUR * y + x].cache = 0;
+            m->elements[LARGEUR * SHIPY + x].cache = 0;
             return 1;
         }
         
@@ -221,20 +219,20 @@ void remplirStock (Map* m)
 {
     if (m)
     {
-        if (m->elements[LARGEUR * 2 + LARGEUR / 2].entitee->ship->energy_quantity < m->elements[LARGEUR * 2 + LARGEUR / 2].entitee->ship->energy_storage)
+        if (m->elements[LARGEUR * SHIPY + SHIPX].entitee->ship->energy_quantity < m->elements[LARGEUR * SHIPY + SHIPX].entitee->ship->energy_storage)
         {
-            m->elements[LARGEUR * 2 + LARGEUR / 2].entitee->ship->energy_quantity += m->elements[LARGEUR * 2 + LARGEUR / 2].entitee->ship->energy_efficient;
+            m->elements[LARGEUR * SHIPY + SHIPX].entitee->ship->energy_quantity += m->elements[LARGEUR * SHIPY + SHIPX].entitee->ship->energy_efficient;
 
-            while (m->elements[LARGEUR * 2 + LARGEUR / 2].entitee->ship->energy_quantity > m->elements[LARGEUR * 2 + LARGEUR / 2].entitee->ship->energy_storage)
-                m->elements[LARGEUR * 2 + LARGEUR / 2].entitee->ship->energy_quantity -= 0.05;
+            while (m->elements[LARGEUR * SHIPY + SHIPX].entitee->ship->energy_quantity > m->elements[LARGEUR * SHIPY + SHIPX].entitee->ship->energy_storage)
+                m->elements[LARGEUR * SHIPY + SHIPX].entitee->ship->energy_quantity -= 0.05;
         }
 
-        if (m->elements[LARGEUR * 2 + LARGEUR / 2].entitee->ship->gold_quantity < m->elements[LARGEUR * 2 + LARGEUR / 2].entitee->ship->gold_storage)
+        if (m->elements[LARGEUR * SHIPY + SHIPX].entitee->ship->gold_quantity < m->elements[LARGEUR * SHIPY + SHIPX].entitee->ship->gold_storage)
         {
-            m->elements[LARGEUR * 2 + LARGEUR / 2].entitee->ship->gold_quantity += m->elements[LARGEUR * 2 + LARGEUR / 2].entitee->ship->gold_efficient;
+            m->elements[LARGEUR * SHIPY + SHIPX].entitee->ship->gold_quantity += m->elements[LARGEUR * SHIPY + SHIPX].entitee->ship->gold_efficient;
 
-            while (m->elements[LARGEUR * 2 + LARGEUR / 2].entitee->ship->gold_quantity > m->elements[LARGEUR * 2 + LARGEUR / 2].entitee->ship->gold_storage)
-                m->elements[LARGEUR * 2 + LARGEUR / 2].entitee->ship->gold_quantity -= 0.05;
+            while (m->elements[LARGEUR * SHIPY + SHIPX].entitee->ship->gold_quantity > m->elements[LARGEUR * SHIPY + SHIPX].entitee->ship->gold_storage)
+                m->elements[LARGEUR * SHIPY + SHIPX].entitee->ship->gold_quantity -= 0.05;
         }
     }
     
@@ -282,6 +280,8 @@ void visibilitee (Map* m, int x, int y)
                 break;
             
             case BEACON:
+                if (m->elements[LARGEUR * y + x].entitee->beacon->power_quantity > 0)
+                {
                     for (unsigned int i = 0; i < LARGEUR * HAUTEUR; i++)
                     {
                         if (i % LARGEUR < x)
@@ -313,6 +313,43 @@ void visibilitee (Map* m, int x, int y)
                         }
 
                     }
+
+                }
+                else
+                {
+                    for (unsigned int i = 0; i < LARGEUR * HAUTEUR; i++)
+                    {
+                        if (i % LARGEUR < x)
+                        {
+                            if (i / LARGEUR < y)
+                            {
+                                if (x - i % LARGEUR <= 7 && y - i / LARGEUR <= 7 && (x - i % LARGEUR) + (y - i / LARGEUR) < 12)
+                                    m->elements[i].visibilitee = 0;
+                            }
+                            else
+                            {
+                                if (x - i % LARGEUR <= 7 && i / LARGEUR - y <= 7 && (x - i % LARGEUR) + (i / LARGEUR - y) < 12)
+                                    m->elements[i].visibilitee = 0;
+                            }
+                        }
+                        else
+                        {
+                            if (i / LARGEUR < y)
+                            {
+                                if (i % LARGEUR - x <= 7 && y - i / LARGEUR <= 7 && (i % LARGEUR - x) + (y - i / LARGEUR) < 12)
+                                    m->elements[i].visibilitee = 0;
+                            }
+                            else
+                            {
+                                if (i % LARGEUR - x <= 7 && i / LARGEUR - y <= 7 && (i % LARGEUR - x) + (i / LARGEUR - y) < 12)
+                                    m->elements[i].visibilitee = 0;
+                            }
+
+                        }
+
+                    }
+                }
+                
                 break;
         }
 
@@ -341,15 +378,15 @@ void casserBlock (Map* m, Coord* _bPos, int* _blockAcasser, int* _compte, int* _
             }
             if (m->elements[LARGEUR * (int)_bPos[i].y + (int)_bPos[i].x].block->dirt != NULL && _compte[i] == 1)
             {
-                if (m->elements[LARGEUR * 2 + LARGEUR / 2].entitee->ship->energy_quantity > 0)
+                if (m->elements[LARGEUR * SHIPY + SHIPX].entitee->ship->energy_quantity > 0)
                 {
                     m->elements[LARGEUR * (int)_bPos[i].y + (int)_bPos[i].x].block->dirt->hardness --;
-                    m->elements[LARGEUR * 2 + LARGEUR / 2].entitee->ship->energy_quantity --;
+                    m->elements[LARGEUR * SHIPY + SHIPX].entitee->ship->energy_quantity --;
                 }
                 else
                 {
-                    m->elements[LARGEUR * (int)_bPos[i].y + (int)_bPos[i].x].block->dirt->hardness -= m->elements[LARGEUR * 2 + LARGEUR / 2].entitee->ship->energy_efficient / temp_nbBesoin;
-                    m->elements[LARGEUR * 2 + LARGEUR / 2].entitee->ship->energy_quantity --;
+                    m->elements[LARGEUR * (int)_bPos[i].y + (int)_bPos[i].x].block->dirt->hardness -= m->elements[LARGEUR * SHIPY + SHIPX].entitee->ship->energy_efficient / temp_nbBesoin;
+                    m->elements[LARGEUR * SHIPY + SHIPX].entitee->ship->energy_quantity --;
                 }
                 
                 if (m->elements[LARGEUR * (int)_bPos[i].y + (int)_bPos[i].x].block->dirt->hardness <= 0)
@@ -373,15 +410,15 @@ void casserBlock (Map* m, Coord* _bPos, int* _blockAcasser, int* _compte, int* _
             }
             else if (m->elements[LARGEUR * (int)_bPos[i].y + (int)_bPos[i].x].block->stone != NULL && _compte[i] == 1)
             {
-                if (m->elements[LARGEUR * 2 + LARGEUR / 2].entitee->ship->energy_quantity > 0)
+                if (m->elements[LARGEUR * SHIPY + SHIPX].entitee->ship->energy_quantity > 0)
                 {
                     m->elements[LARGEUR * (int)_bPos[i].y + (int)_bPos[i].x].block->stone->hardness --;
-                    m->elements[LARGEUR * 2 + LARGEUR / 2].entitee->ship->energy_quantity --;
+                    m->elements[LARGEUR * SHIPY + SHIPX].entitee->ship->energy_quantity --;
                 }
                 else
                 {
-                    m->elements[LARGEUR * (int)_bPos[i].y + (int)_bPos[i].x].block->stone->hardness -= m->elements[LARGEUR * 2 + LARGEUR / 2].entitee->ship->energy_efficient / temp_nbBesoin;
-                    m->elements[LARGEUR * 2 + LARGEUR / 2].entitee->ship->energy_quantity --;
+                    m->elements[LARGEUR * (int)_bPos[i].y + (int)_bPos[i].x].block->stone->hardness -= m->elements[LARGEUR * SHIPY + SHIPX].entitee->ship->energy_efficient / temp_nbBesoin;
+                    m->elements[LARGEUR * SHIPY + SHIPX].entitee->ship->energy_quantity --;
                 }
 
                 if (m->elements[LARGEUR * (int)_bPos[i].y + (int)_bPos[i].x].block->stone->hardness <= 0)

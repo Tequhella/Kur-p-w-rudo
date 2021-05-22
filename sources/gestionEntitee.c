@@ -79,20 +79,20 @@ Coord* constructionStructure
                 switch (m->elements[LARGEUR * (int)_ePos[i].y + (int)_ePos[i].x].entitee->type)
                 {
                     case 1:
-                        if (m->elements[LARGEUR * 2 + LARGEUR / 2].entitee->ship->energy_quantity > 0)
+                        if (m->elements[LARGEUR * SHIPY + SHIPX].entitee->ship->energy_quantity > 0)
                         {
                             m->elements[LARGEUR * (int)_ePos[i].y + (int)_ePos[i].x].entitee->reactor->build --;
-                            m->elements[LARGEUR * 2 + LARGEUR / 2].entitee->ship->energy_quantity --;
+                            m->elements[LARGEUR * SHIPY + SHIPX].entitee->ship->energy_quantity --;
                         }
                         else
                         {
-                            m->elements[LARGEUR * (int)_ePos[i].y + (int)_ePos[i].x].entitee->reactor->build -= m->elements[LARGEUR * 2 + LARGEUR / 2].entitee->ship->energy_efficient / temp_nbBesoin;
-                            m->elements[LARGEUR * 2 + LARGEUR / 2].entitee->ship->energy_quantity --;
+                            m->elements[LARGEUR * (int)_ePos[i].y + (int)_ePos[i].x].entitee->reactor->build -= m->elements[LARGEUR * SHIPY + SHIPX].entitee->ship->energy_efficient / temp_nbBesoin;
+                            m->elements[LARGEUR * SHIPY + SHIPX].entitee->ship->energy_quantity --;
                         }
 
                         if (m->elements[LARGEUR * (int)_ePos[i].y + (int)_ePos[i].x].entitee->reactor->build <= 0)
                         {
-                            m->elements[LARGEUR * 2 + LARGEUR / 2].entitee->ship->energy_efficient += 0.15;
+                            m->elements[LARGEUR * SHIPY + SHIPX].entitee->ship->energy_efficient += 0.15;
                             m->elements[LARGEUR * (int)_ePos[i].y + (int)_ePos[i].x].type = ENTITY;
 
                             _ePos[i] = _ePos[tempEAC - 1];
@@ -107,20 +107,20 @@ Coord* constructionStructure
                         break;
                     
                     case 2:
-                        if (m->elements[LARGEUR * 2 + LARGEUR / 2].entitee->ship->energy_quantity > 0)
+                        if (m->elements[LARGEUR * SHIPY + SHIPX].entitee->ship->energy_quantity > 0)
                         {
                             m->elements[LARGEUR * (int)_ePos[i].y + (int)_ePos[i].x].entitee->miner->build --;
-                            m->elements[LARGEUR * 2 + LARGEUR / 2].entitee->ship->energy_quantity --;
+                            m->elements[LARGEUR * SHIPY + SHIPX].entitee->ship->energy_quantity --;
                         }
                         else
                         {
-                            m->elements[LARGEUR * (int)_ePos[i].y + (int)_ePos[i].x].entitee->miner->build -= m->elements[LARGEUR * 2 + LARGEUR / 2].entitee->ship->energy_efficient / temp_nbBesoin;
-                            m->elements[LARGEUR * 2 + LARGEUR / 2].entitee->ship->energy_quantity --;
+                            m->elements[LARGEUR * (int)_ePos[i].y + (int)_ePos[i].x].entitee->miner->build -= m->elements[LARGEUR * SHIPY + SHIPX].entitee->ship->energy_efficient / temp_nbBesoin;
+                            m->elements[LARGEUR * SHIPY + SHIPX].entitee->ship->energy_quantity --;
                         }
 
                         if (m->elements[LARGEUR * (int)_ePos[i].y + (int)_ePos[i].x].entitee->miner->build <= 0)
                         {
-                            m->elements[LARGEUR * 2 + LARGEUR / 2].entitee->ship->gold_efficient += 0.15;
+                            m->elements[LARGEUR * SHIPY + SHIPX].entitee->ship->gold_efficient += 0.15;
                             m->elements[LARGEUR * (int)_ePos[i].y + (int)_ePos[i].x].type = ENTITY;
 
 
@@ -141,15 +141,15 @@ Coord* constructionStructure
                         break;
 
                     case 3:
-                        if (m->elements[LARGEUR * 2 + LARGEUR / 2].entitee->ship->energy_quantity > 0)
+                        if (m->elements[LARGEUR * SHIPY + SHIPX].entitee->ship->energy_quantity > 0)
                         {
                             m->elements[LARGEUR * (int)_ePos[i].y + (int)_ePos[i].x].entitee->shield->build --;
-                            m->elements[LARGEUR * 2 + LARGEUR / 2].entitee->ship->energy_quantity --;
+                            m->elements[LARGEUR * SHIPY + SHIPX].entitee->ship->energy_quantity --;
                         }
                         else
                         {
-                            m->elements[LARGEUR * (int)_ePos[i].y + (int)_ePos[i].x].entitee->shield->build -= m->elements[LARGEUR * 2 + LARGEUR / 2].entitee->ship->energy_efficient / temp_nbBesoin;
-                            m->elements[LARGEUR * 2 + LARGEUR / 2].entitee->ship->energy_quantity --;
+                            m->elements[LARGEUR * (int)_ePos[i].y + (int)_ePos[i].x].entitee->shield->build -= m->elements[LARGEUR * SHIPY + SHIPX].entitee->ship->energy_efficient / temp_nbBesoin;
+                            m->elements[LARGEUR * SHIPY + SHIPX].entitee->ship->energy_quantity --;
                         }
 
                         if (m->elements[LARGEUR * (int)_ePos[i].y + (int)_ePos[i].x].entitee->shield->build <= 0)
@@ -169,15 +169,15 @@ Coord* constructionStructure
                         break;
                     
                     case 4:
-                        if (m->elements[LARGEUR * 2 + LARGEUR / 2].entitee->ship->energy_quantity > 0)
+                        if (m->elements[LARGEUR * SHIPY + SHIPX].entitee->ship->energy_quantity > 0)
                         {
                             m->elements[LARGEUR * (int)_ePos[i].y + (int)_ePos[i].x].entitee->beacon->build --;
-                            m->elements[LARGEUR * 2 + LARGEUR / 2].entitee->ship->energy_quantity --;
+                            m->elements[LARGEUR * SHIPY + SHIPX].entitee->ship->energy_quantity --;
                         }
                         else
                         {
-                            m->elements[LARGEUR * (int)_ePos[i].y + (int)_ePos[i].x].entitee->beacon->build -= m->elements[LARGEUR * 2 + LARGEUR / 2].entitee->ship->energy_efficient / temp_nbBesoin;
-                            m->elements[LARGEUR * 2 + LARGEUR / 2].entitee->ship->energy_quantity --;
+                            m->elements[LARGEUR * (int)_ePos[i].y + (int)_ePos[i].x].entitee->beacon->build -= m->elements[LARGEUR * SHIPY + SHIPX].entitee->ship->energy_efficient / temp_nbBesoin;
+                            m->elements[LARGEUR * SHIPY + SHIPX].entitee->ship->energy_quantity --;
                         }
 
                         if (m->elements[LARGEUR * (int)_ePos[i].y + (int)_ePos[i].x].entitee->beacon->build <= 0)
@@ -204,15 +204,15 @@ Coord* constructionStructure
                         break;
                     
                     case 5:
-                        if (m->elements[LARGEUR * 2 + LARGEUR / 2].entitee->ship->energy_quantity > 0)
+                        if (m->elements[LARGEUR * SHIPY + SHIPX].entitee->ship->energy_quantity > 0)
                         {
                             m->elements[LARGEUR * (int)_ePos[i].y + (int)_ePos[i].x].entitee->bombe->build --;
-                            m->elements[LARGEUR * 2 + LARGEUR / 2].entitee->ship->energy_quantity --;
+                            m->elements[LARGEUR * SHIPY + SHIPX].entitee->ship->energy_quantity --;
                         }
                         else
                         {
-                            m->elements[LARGEUR * (int)_ePos[i].y + (int)_ePos[i].x].entitee->bombe->build -= m->elements[LARGEUR * 2 + LARGEUR / 2].entitee->ship->energy_efficient / temp_nbBesoin;
-                            m->elements[LARGEUR * 2 + LARGEUR / 2].entitee->ship->energy_quantity --;
+                            m->elements[LARGEUR * (int)_ePos[i].y + (int)_ePos[i].x].entitee->bombe->build -= m->elements[LARGEUR * SHIPY + SHIPX].entitee->ship->energy_efficient / temp_nbBesoin;
+                            m->elements[LARGEUR * SHIPY + SHIPX].entitee->ship->energy_quantity --;
                         }
 
                         if (m->elements[LARGEUR * (int)_ePos[i].y + (int)_ePos[i].x].entitee->bombe->build <= 0)
@@ -301,15 +301,15 @@ Coord* remplirEnergieStructure
                 case 2:
                     if (m->elements[LARGEUR * y + x].entitee->miner->power_quantity <= 19)
                     {
-                        if (m->elements[LARGEUR * 2 + LARGEUR / 2].entitee->ship->energy_quantity > 0)
+                        if (m->elements[LARGEUR * SHIPY + SHIPX].entitee->ship->energy_quantity > 0)
                         {
                             m->elements[LARGEUR * y + x].entitee->miner->power_quantity ++;
-                            m->elements[LARGEUR * 2 + LARGEUR / 2].entitee->ship->energy_quantity --;
+                            m->elements[LARGEUR * SHIPY + SHIPX].entitee->ship->energy_quantity --;
                         }
                         else
                         {
                             m->elements[LARGEUR * y + x].entitee->miner->power_quantity += 1 / temp_nbBesoin;
-                            m->elements[LARGEUR * 2 + LARGEUR / 2].entitee->ship->energy_quantity --;
+                            m->elements[LARGEUR * SHIPY + SHIPX].entitee->ship->energy_quantity --;
                         }
 
                         temp_nbBesoin--;
@@ -320,15 +320,15 @@ Coord* remplirEnergieStructure
                 case 4:
                     if (m->elements[LARGEUR * y + x].entitee->beacon->power_quantity <= 19)
                     {
-                        if (m->elements[LARGEUR * 2 + LARGEUR / 2].entitee->ship->energy_quantity > 0)
+                        if (m->elements[LARGEUR * SHIPY + SHIPX].entitee->ship->energy_quantity > 0)
                         {
                             m->elements[LARGEUR * y + x].entitee->beacon->power_quantity ++;
-                            m->elements[LARGEUR * 2 + LARGEUR / 2].entitee->ship->energy_quantity --;
+                            m->elements[LARGEUR * SHIPY + SHIPX].entitee->ship->energy_quantity --;
                         }
                         else
                         {
                             m->elements[LARGEUR * y + x].entitee->beacon->power_quantity += 1 / temp_nbBesoin;
-                            m->elements[LARGEUR * 2 + LARGEUR / 2].entitee->ship->energy_quantity --;
+                            m->elements[LARGEUR * SHIPY + SHIPX].entitee->ship->energy_quantity --;
                         }
 
                         temp_nbBesoin--;
@@ -342,15 +342,15 @@ Coord* remplirEnergieStructure
                 case 5:
                     if (m->elements[LARGEUR * y + x].entitee->bombe->power_quantity <= 19)
                     {
-                        if (m->elements[LARGEUR * 2 + LARGEUR / 2].entitee->ship->energy_quantity > 0)
+                        if (m->elements[LARGEUR * SHIPY + SHIPX].entitee->ship->energy_quantity > 0)
                         {
                             m->elements[LARGEUR * y + x].entitee->bombe->power_quantity ++;
-                            m->elements[LARGEUR * 2 + LARGEUR / 2].entitee->ship->energy_quantity --;
+                            m->elements[LARGEUR * SHIPY + SHIPX].entitee->ship->energy_quantity --;
                         }
                         else
                         {
                             m->elements[LARGEUR * y + x].entitee->bombe->power_quantity += 1 / temp_nbBesoin;
-                            m->elements[LARGEUR * 2 + LARGEUR / 2].entitee->ship->energy_quantity --;
+                            m->elements[LARGEUR * SHIPY + SHIPX].entitee->ship->energy_quantity --;
                         }
 
                         temp_nbBesoin--;

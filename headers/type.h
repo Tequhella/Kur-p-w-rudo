@@ -19,6 +19,8 @@
 
 #define LARGEUR 35
 #define HAUTEUR 40
+#define SHIPX LARGEUR / 2
+#define SHIPY 2
 #define NB_CREEPERSPAWNER 3
 
 typedef struct

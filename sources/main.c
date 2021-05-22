@@ -116,11 +116,11 @@ int main ()
                         {
                             if (mapHasard->elements[LARGEUR * (int)jPos.y + (int)jPos.x].entitee->type == REACTEUR)
                             //--▼----------------------------------------------------------------------------▼--*/
-                                mapHasard->elements[LARGEUR * 2 + LARGEUR / 2].entitee->ship->energy_efficient -= 0.15;
+                                mapHasard->elements[LARGEUR * SHIPY + SHIPX].entitee->ship->energy_efficient -= 0.15;
 
                             else if (mapHasard->elements[LARGEUR * (int)jPos.y + (int)jPos.x].entitee->type == MINER)
                             //--▼--------------------------------------------------------------------------▼--*/
-                                mapHasard->elements[LARGEUR * 2 + LARGEUR / 2].entitee->ship->gold_efficient -= 0.15;
+                                mapHasard->elements[LARGEUR * SHIPY + SHIPX].entitee->ship->gold_efficient -= 0.15;
                             
                            
 
@@ -140,7 +140,11 @@ int main ()
                                 }
                                 
                             }
-                            
+                            if (mapHasard->elements[LARGEUR * (int)jPos.y + (int)jPos.x].entitee->type == BEACON)
+                            {
+                                mapHasard->elements[LARGEUR * (int)jPos.y + (int)jPos.x].entitee->beacon->power_quantity = 0;
+                                visibilitee (mapHasard, jPos.x, jPos.y);
+                            }
                             detruireEntitee (mapHasard->elements[LARGEUR * (int)jPos.y + (int)jPos.x].entitee);
                             mapHasard->elements[LARGEUR * (int)jPos.y + (int)jPos.x].entitee = NULL;
                             mapHasard->elements[LARGEUR * (int)jPos.y + (int)jPos.x].type = VIDE;
@@ -213,6 +217,7 @@ int main ()
             );
         }
         
+        visibilitee (mapHasard, SHIPX, SHIPY);
 
 
         remplirStock (mapHasard);
