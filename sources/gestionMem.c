@@ -2,7 +2,7 @@
 /* Kurīpāwārudo (inspiré du jeu Creeper World 2)             */
 /*-----------------------------------------------------------*/
 /* Module            : gestionMem.c                          */
-/* Numéro de version : 0.6.1                                 */
+/* Numéro de version : 0.7                                   */
 /* Date              : 18/05/2021                            */
 /* Auteurs           : Lilian CHARDON                        */
 /*************************************************************/
@@ -38,7 +38,11 @@ Map* creerCarte (double dimX, double dimY, char* nomDeLaCarte)
                 m->elements[LARGEUR * SHIPY + SHIPX].type = ENTITY;
 
                 for (unsigned int i = 0; i < LARGEUR * HAUTEUR; i++)
+                {    
                     m->elements[i].visibilitee = 0;
+                    m->elements[i].cache       = 0;
+                    m->elements[i].vide        = creerVide (i);
+                }
                 
                 visibilitee (m, m->elements[LARGEUR * SHIPY + SHIPX].entitee->ship->pos.x, m->elements[LARGEUR * SHIPY + SHIPX].entitee->ship->pos.y);
 
@@ -70,15 +74,16 @@ void detruireCarte (Map* m)
         {
             for (unsigned int i = 0; i < m->dimX*m->dimY; i++) 
             {
-                detruireBlock (m->elements[i].block);
+                detruireBlock   (m->elements[i].block);
                 detruireEntitee (m->elements[i].entitee);
+                detruireVide    (m->elements[i].vide);
             }
             free (m->elements);
             m->elements = NULL;
         }
         else
         {
-            perror ("Erreur dans l'allocation des elements de la carte. \n");
+            perror ("Erreur dans la désallocation des elements de la carte. \n");
             exit (-1);
         }
 
@@ -87,7 +92,7 @@ void detruireCarte (Map* m)
     }
     else
     {
-        perror ("Erreur dans l'allocation de la carte. \n");
+        perror ("Erreur dans la désallocation de la carte. \n");
         exit (-1);
     }
     
@@ -110,13 +115,14 @@ Block* creerBlock (unsigned int type, unsigned int typeStone, double posX, doubl
                     b->type           = DIRT;
                     b->dirt->hardness = 3;
                     b->dirt->pos      = (Coord) {posX, posY};
+
+                    b->stone = NULL;
+                    b->gold  = NULL;
                 }
                 else
                 {
                     perror ("Erreur d'allocation du block type terre. \n");
                     exit (-1);
-                    free (b);
-                    b = NULL;
                 }
                 
                 break;
@@ -128,11 +134,14 @@ Block* creerBlock (unsigned int type, unsigned int typeStone, double posX, doubl
                     b->stone->type = typeStone;
                     switch (typeStone)
                     {
-                        case 1: b->stone->hardness = 7;  break;
-                        case 2: b->stone->hardness = 15; break;
-                        case 3: b->stone->hardness = 30; break;
+                        case STONE1: b->stone->hardness = 7;  break;
+                        case STONE2: b->stone->hardness = 15; break;
+                        case STONE3: b->stone->hardness = 30; break;
                     }
                     b->stone->pos  = (Coord) {posX, posY};
+
+                    b->dirt = NULL;
+                    b->gold = NULL;
                 }
                 else
                 {
@@ -150,6 +159,9 @@ Block* creerBlock (unsigned int type, unsigned int typeStone, double posX, doubl
                     b->type           = GOLD;
                     b->gold->quantity = 200;
                     b->gold->pos      = (Coord) {posX, posY};
+
+                    b->stone = NULL;
+                    b->dirt = NULL;
                 }
                 else
                 {
@@ -328,7 +340,7 @@ Entity* creerEntitee (double x, double y, unsigned int type)
 
                 e->creeperSpawner->health = 100;
                 e->creeperSpawner->pulse  = 0.5;
-                e->creeperSpawner->power  = 50;
+                e->creeperSpawner->power  = 250;
                 e->creeperSpawner->pos    = (Coord){x, y};
 
                 e->ship    = NULL;
@@ -393,13 +405,49 @@ void detruireEntitee (Entity* e)
         
         else
         {
-            perror ("Erreur d'allocation de l'entitee");
+            perror ("Erreur dans la désallocation de l'entitee");
             exit (-1);
         }
 
         free (e);
         e = NULL;
 
+    }
+    
+}
+
+//-----------------------------Gestion Mem Vide----------------------------//
+
+Vide* creerVide (int pos)
+{
+    Vide* v = (Vide*) calloc (1, sizeof(Vide));
+
+    if (v)
+    {
+        v->creeperQuantity = (unsigned int*) calloc (4, 4);
+        v->pos             = (Coord) {pos % LARGEUR, pos / LARGEUR};
+    }
+    else
+    {
+        perror ("Erreur d'allocation de la case vide.\n");
+        exit (-1);
+    }
+
+    return v;
+}
+
+void detruireVide (Vide* v)
+{
+    if (v)
+    {
+        if (v->creeperQuantity)
+        {
+            free (v->creeperQuantity);
+            v->creeperQuantity = NULL;
+        }
+
+        free (v);
+        v = NULL;
     }
     
 }

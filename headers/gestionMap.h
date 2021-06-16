@@ -2,15 +2,15 @@
 /* Kurīpāwārudo (inspiré du jeu Creeper World 2)             */
 /*-----------------------------------------------------------*/
 /* Module            : gestionMap.h                          */
-/* Numéro de version : 0.6.1                                 */
-/* Date              : 18/05/2021                            */
+/* Numéro de version : 0.7                                   */
+/* Date              : 27/05/2021                            */
 /* Auteurs           : Lilian CHARDON                        */
 /*************************************************************/
 
 #ifndef _GESTIONMAP_H_INCLUDED_
 #define _GESTIONMAP_H_INCLUDED_
 
-#include "../headers/type.h"
+#include "type.h"
 
 //----------------------------Gestion Map----------------------------//
 
@@ -34,7 +34,8 @@ void casserBlock
     Coord* _bPos,
     int* _blockAcasser,
     int* _compte,
-    int* _nb_besoin
+    int* _nb_besoin,
+    int* _erreur
 );
 
 #endif

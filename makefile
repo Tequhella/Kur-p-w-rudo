@@ -1,5 +1,5 @@
-all: main.o gestionMem.o gestionMap.o gestionAffichage.o gestionEntitee.o
-	gcc main.o gestionMem.o gestionMap.o gestionAffichage.o gestionEntitee.o -o Jeu-v0-6.2
+all: main.o gestionMem.o gestionMap.o gestionAffichage.o gestionEntitee.o gestionFichier.o
+	gcc main.o gestionMem.o gestionMap.o gestionAffichage.o gestionEntitee.o gestionFichier.o -o Jeu-v0-7
 
 main.o:
 	gcc -c sources/main.c -o main.o
@@ -15,3 +15,6 @@ gestionAffichage.o:
 
 gestionEntitee.o:
 	gcc -c sources/gestionEntitee.c -o gestionEntitee.o
+
+gestionFichier.o:
+	gcc -c sources/gestionFichier.c -o gestionFichier.o

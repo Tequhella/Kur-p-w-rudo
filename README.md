@@ -18,7 +18,7 @@ Pour intéragir avec le jeu, les touches à utiliser sont :
     - z : construction d'une structure :
         - 1 : placement d'un réacteur (uniquement sur un sol)
         - 2 : placement d'un mineur (uniquement sur des block d'or '▚')
-        - 3 : placement d'un bouclier
+        - 3 : placement d'un bouclier (fonctionnalité non intégrée)
         - 4 : placement d'un éclaireur (éclaircir les zones dans le brouillards de guerre)
         - 5 : placement d'une bombe
 
@@ -29,7 +29,7 @@ Le jeu n'est pas encore dynamique, il est nécessaire d'appuyer sur "entrée" po
 Il y a une notion d'énergie, chaque action coûte de l'énergie, il faut donc un certain temps pour que l'action se finalise.
 
 
-Si l'énergie se vide et est donc dans le négatif, la vitesse de construction est divisé  par le nombre de production.
+Si l'énergie se vide et est donc dans le négatif, la vitesse de construction est divisé par le nombre de production.
 
 
 S'il n'y a pas d'accès au vaisseau '◈', la procédure de construction ne commence pas ou est annulée.

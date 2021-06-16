@@ -2,20 +2,21 @@
 /* Kurīpāwārudo (inspiré du jeu Creeper World 2)             */
 /*-----------------------------------------------------------*/
 /* Module            : type.h                                */
-/* Numéro de version : 0.6.1                                 */
-/* Date              : 18/05/2021                            */
+/* Numéro de version : 0.7                                   */
+/* Date              : 27/05/2021                            */
 /* Auteurs           : Lilian CHARDON                        */
 /*************************************************************/
 
 #ifndef _TYPE_H_INCLUDED_
 #define _TYPE_H_INCLUDED_
 
-//#define NULL (void*) 0
+#define NULL (void*) 0
 // à remettre uniquement quand l'IDE met une erreur à chaque appelle de NULL
 
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
+#include <string.h>
 
 #define LARGEUR 35
 #define HAUTEUR 40
@@ -23,12 +24,16 @@
 #define SHIPY 2
 #define NB_CREEPERSPAWNER 3
 
+char nomDeLaCarteBis[15];
+
 typedef struct
 {
     double x;
     double y;
 }
 Coord;
+
+Coord cPos[3];
 
 //-----------------------------Block-----------------------------//
 
@@ -50,7 +55,7 @@ Stone;
 typedef struct str_gold
 {
     unsigned int type;
-    unsigned int quantity;
+    double       quantity;
     Coord        pos;
 }
 Gold;
@@ -151,6 +156,15 @@ typedef struct Entity
 }
 Entity;
 
+//-------------------------Gestion Creeper-------------------------//
+
+typedef struct Vide
+{
+    unsigned int* creeperQuantity;
+    Coord   pos;
+}
+Vide;
+
 //-------------------------Gestion Carte------------------------//
 
 typedef struct Case
@@ -159,6 +173,7 @@ typedef struct Case
     int     cache;
     int     visibilitee;
     
+    Vide*   vide;
     Block*  block;
     Entity* entitee;
 }
@@ -173,16 +188,22 @@ typedef struct Map
 }
 Map;
 
-#define VIDE   0
-#define BLOCK  1
-#define ENTITY 2
-#define CURSOR 4
+enum
+{
+    VIDE,
+    BLOCK,
+    ENTITY,
+    CURSOR
+};
 
 #define DIRT  1
 #define STONE 2
-    #define STONE1 1
-    #define STONE2 2
-    #define STONE3 3
+enum
+{
+    STONE1,
+    STONE2,
+    STONE3
+};
 #define GOLD  3
 
 #define SHIP           0

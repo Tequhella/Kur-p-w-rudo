@@ -2,16 +2,16 @@
 /* Kurīpāwārudo (inspiré du jeu Creeper World 2)             */
 /*-----------------------------------------------------------*/
 /* Module            : main.c                                */
-/* Numéro de version : 0.6.1                                 */
-/* Date              : 18/05/2021                            */
+/* Numéro de version : 0.7                                   */
+/* Date              : 27/05/2021                            */
 /* Auteurs           : Lilian CHARDON                        */
 /*************************************************************/
 
-#include "../headers/type.h"
 #include "../headers/gestionMem.h"
 #include "../headers/gestionMap.h"
 #include "../headers/gestionAffichage.h"
 #include "../headers/gestionEntitee.h"
+#include "../headers/gestionFichier.h"
 
 /*
 #include <SDL2/SDL>
@@ -19,23 +19,55 @@
 #include FT_FREETYPE_H
 */
 
-int main ()
+int main (int argc, char** argv)
 {
     srand (time(NULL));
+
+    char yesno;
+
+    Map* carte = NULL;
     
+    printf ("Voulez-vous charger une carte déjà enregistrée ? (y/n) ");
+    scanf ("%s", &yesno);
+    if (yesno == 'y')
+    {
+        carte = chargerCarte ();
+        if (carte) /*--->*/ carte->nomDeLaCarte = nomDeLaCarteBis;
+        
+    }
 
-    Map* mapHasard = creerCarte(LARGEUR, HAUTEUR, "newMap");
+    yesno = 0;
 
-    remplirHasard (mapHasard);
-    creerCaverne  (mapHasard, rand() % LARGEUR * HAUTEUR + 280, 0);
-    creerCaverne  (mapHasard, rand() % LARGEUR * HAUTEUR + 280, 0);
-    creerCaverne  (mapHasard, rand() % LARGEUR * HAUTEUR + 280, 0);
-    creerCaverne  (mapHasard, rand() % LARGEUR * HAUTEUR + 280, 0);
-    ajouterSpawnerHasard(mapHasard->elements, NB_CREEPERSPAWNER);
+    if (carte == NULL)
+    {
+        printf ("Voulez-vous sauvegarder cette map ? (y/n) ");
+        scanf ("%s", &yesno);
+        if (yesno == 'y')
+        {
+            carte = sauvegarderCarte (carte);
+            char temp[15];
+            for (unsigned int i = 0; i < 15; i++)
+                temp[i] = carte->nomDeLaCarte[i];
+                
+            carte->nomDeLaCarte = temp;
+        }
+        else
+        {
+            carte = creerCarte(LARGEUR, HAUTEUR, "newMap");
+
+            remplirHasard (carte);
+            creerCaverne  (carte, rand() % LARGEUR * HAUTEUR + 280, 0);
+            creerCaverne  (carte, rand() % LARGEUR * HAUTEUR + 280, 0);
+            creerCaverne  (carte, rand() % LARGEUR * HAUTEUR + 280, 0);
+            creerCaverne  (carte, rand() % LARGEUR * HAUTEUR + 280, 0);
+            ajouterSpawnerHasard(carte->elements, NB_CREEPERSPAWNER);
+        }
+
+    }
 
     int sortie        = NB_CREEPERSPAWNER;
     char MvtOrAction  = 0;
-    char action;
+    char action       = 0;
 
     int blockAcasser  = 0;
     int entiteeAcreer = 0;
@@ -52,12 +84,12 @@ int main ()
     Coord bPos[20];
     Coord ePos[20];
 
-    mapHasard->elements[LARGEUR * (int)jPos.y + (int)jPos.x].type = 3;
+    carte->elements[LARGEUR * (int)jPos.y + (int)jPos.x].type = 3;
     
     while (sortie != 0)
     {
-        afficherInterface (mapHasard, tabEntitee, nb_Entitee);
-        afficherCarte     (mapHasard);
+        afficherInterface (carte, tabEntitee, nb_Entitee);
+        afficherCarteV2   (carte);
         afficherErreur    (&erreur);
 
         scanf (" %c", &MvtOrAction);
@@ -65,31 +97,31 @@ int main ()
         switch (MvtOrAction)
         {
             case 'a':
-                if (mapHasard->elements[LARGEUR * (int)jPos.y + (int)jPos.x].block == NULL && mapHasard->elements[LARGEUR * (int)jPos.y + (int)jPos.x].entitee == NULL)
-                    mapHasard->elements[LARGEUR * (int)jPos.y + (int)jPos.x].type = 0;
+                if (carte->elements[LARGEUR * (int)jPos.y + (int)jPos.x].block == NULL && carte->elements[LARGEUR * (int)jPos.y + (int)jPos.x].entitee == NULL)
+                    carte->elements[LARGEUR * (int)jPos.y + (int)jPos.x].type = 0;
                 jPos.x--;
-                mapHasard->elements[LARGEUR * (int)jPos.y + (int)jPos.x].type = 3;
+                carte->elements[LARGEUR * (int)jPos.y + (int)jPos.x].type = 3;
 
                 break;
             case 's':
-                if (mapHasard->elements[LARGEUR * (int)jPos.y + (int)jPos.x].block == NULL && mapHasard->elements[LARGEUR * (int)jPos.y + (int)jPos.x].entitee == NULL)
-                    mapHasard->elements[LARGEUR * (int)jPos.y + (int)jPos.x].type = 0;
+                if (carte->elements[LARGEUR * (int)jPos.y + (int)jPos.x].block == NULL && carte->elements[LARGEUR * (int)jPos.y + (int)jPos.x].entitee == NULL)
+                    carte->elements[LARGEUR * (int)jPos.y + (int)jPos.x].type = 0;
                 jPos.y++;
-                mapHasard->elements[LARGEUR * (int)jPos.y + (int)jPos.x].type = 3;
+                carte->elements[LARGEUR * (int)jPos.y + (int)jPos.x].type = 3;
 
                 break;
             case 'd':
-                if (mapHasard->elements[LARGEUR * (int)jPos.y + (int)jPos.x].block == NULL && mapHasard->elements[LARGEUR * (int)jPos.y + (int)jPos.x].entitee == NULL)
-                    mapHasard->elements[LARGEUR * (int)jPos.y + (int)jPos.x].type = 0;
+                if (carte->elements[LARGEUR * (int)jPos.y + (int)jPos.x].block == NULL && carte->elements[LARGEUR * (int)jPos.y + (int)jPos.x].entitee == NULL)
+                    carte->elements[LARGEUR * (int)jPos.y + (int)jPos.x].type = 0;
                 jPos.x++;
-                mapHasard->elements[LARGEUR * (int)jPos.y + (int)jPos.x].type = 3;
+                carte->elements[LARGEUR * (int)jPos.y + (int)jPos.x].type = 3;
 
                 break;
             case 'w':
-                if (mapHasard->elements[LARGEUR * (int)jPos.y + (int)jPos.x].block == NULL && mapHasard->elements[LARGEUR * (int)jPos.y + (int)jPos.x].entitee == NULL)
-                    mapHasard->elements[LARGEUR * (int)jPos.y + (int)jPos.x].type = 0;
+                if (carte->elements[LARGEUR * (int)jPos.y + (int)jPos.x].block == NULL && carte->elements[LARGEUR * (int)jPos.y + (int)jPos.x].entitee == NULL)
+                    carte->elements[LARGEUR * (int)jPos.y + (int)jPos.x].type = 0;
                 jPos.y--;
-                mapHasard->elements[LARGEUR * (int)jPos.y + (int)jPos.x].type = 3;
+                carte->elements[LARGEUR * (int)jPos.y + (int)jPos.x].type = 3;
                 break;
             case 'z':
                 scanf (" %c", &action);
@@ -98,9 +130,9 @@ int main ()
                 {
                     case 'a':
                         
-                        if (mapHasard->elements[LARGEUR * (int)jPos.y + (int)jPos.x].block != NULL)
+                        if (carte->elements[LARGEUR * (int)jPos.y + (int)jPos.x].block != NULL)
                         {
-                            if (mapHasard->elements[LARGEUR * (int)jPos.y + (int)jPos.x].block->dirt != NULL || mapHasard->elements[LARGEUR * (int)jPos.y + (int)jPos.x].block->stone != NULL)
+                            if (carte->elements[LARGEUR * (int)jPos.y + (int)jPos.x].block->dirt != NULL || carte->elements[LARGEUR * (int)jPos.y + (int)jPos.x].block->stone != NULL)
                             {
                                 if (blockAcasser < 20)
                                 {
@@ -112,15 +144,15 @@ int main ()
                             }
                             
                         }
-                        else if (mapHasard->elements[LARGEUR * (int)jPos.y + (int)jPos.x].entitee != NULL && mapHasard->elements[LARGEUR * (int)jPos.y + (int)jPos.x].entitee->ship == NULL)
+                        else if (carte->elements[LARGEUR * (int)jPos.y + (int)jPos.x].entitee != NULL && carte->elements[LARGEUR * (int)jPos.y + (int)jPos.x].entitee->ship == NULL)
                         {
-                            if (mapHasard->elements[LARGEUR * (int)jPos.y + (int)jPos.x].entitee->type == REACTEUR)
+                            if (carte->elements[LARGEUR * (int)jPos.y + (int)jPos.x].entitee->type == REACTEUR)
                             //--▼----------------------------------------------------------------------------▼--*/
-                                mapHasard->elements[LARGEUR * SHIPY + SHIPX].entitee->ship->energy_efficient -= 0.15;
+                                carte->elements[LARGEUR * SHIPY + SHIPX].entitee->ship->energy_efficient -= 0.15;
 
-                            else if (mapHasard->elements[LARGEUR * (int)jPos.y + (int)jPos.x].entitee->type == MINER)
+                            else if (carte->elements[LARGEUR * (int)jPos.y + (int)jPos.x].entitee->type == MINER)
                             //--▼--------------------------------------------------------------------------▼--*/
-                                mapHasard->elements[LARGEUR * SHIPY + SHIPX].entitee->ship->gold_efficient -= 0.15;
+                                carte->elements[LARGEUR * SHIPY + SHIPX].entitee->ship->gold_efficient -= 0.15;
                             
                            
 
@@ -140,20 +172,20 @@ int main ()
                                 }
                                 
                             }
-                            if (mapHasard->elements[LARGEUR * (int)jPos.y + (int)jPos.x].entitee->type == BEACON)
+                            if (carte->elements[LARGEUR * (int)jPos.y + (int)jPos.x].entitee->type == BEACON)
                             {
-                                mapHasard->elements[LARGEUR * (int)jPos.y + (int)jPos.x].entitee->beacon->power_quantity = 0;
-                                visibilitee (mapHasard, jPos.x, jPos.y);
+                                carte->elements[LARGEUR * (int)jPos.y + (int)jPos.x].entitee->beacon->power_quantity = 0;
+                                visibilitee (carte, jPos.x, jPos.y);
                             }
-                            detruireEntitee (mapHasard->elements[LARGEUR * (int)jPos.y + (int)jPos.x].entitee);
-                            mapHasard->elements[LARGEUR * (int)jPos.y + (int)jPos.x].entitee = NULL;
-                            mapHasard->elements[LARGEUR * (int)jPos.y + (int)jPos.x].type = VIDE;
+                            detruireEntitee (carte->elements[LARGEUR * (int)jPos.y + (int)jPos.x].entitee);
+                            carte->elements[LARGEUR * (int)jPos.y + (int)jPos.x].entitee = NULL;
+                            carte->elements[LARGEUR * (int)jPos.y + (int)jPos.x].type = VIDE;
                         }
                         else erreur = 1;
                         
                         break;
                     case 'z':
-                        if (mapHasard->elements[LARGEUR * (int)jPos.y + (int)jPos.x].block != NULL || mapHasard->elements[LARGEUR * (int)jPos.y + (int)jPos.x].entitee != NULL) 
+                        if (carte->elements[LARGEUR * (int)jPos.y + (int)jPos.x].block != NULL || carte->elements[LARGEUR * (int)jPos.y + (int)jPos.x].entitee != NULL) 
                         //--▼--------▼--*/
                             erreur = 2;
                         else
@@ -162,7 +194,7 @@ int main ()
                             if (entiteeAcreer <= 9)
                             {
                                 ePos[entiteeAcreer] = jPos;
-                                ajouterStructure(mapHasard, ePos[entiteeAcreer].x, ePos[entiteeAcreer].y, (int)MvtOrAction, &erreur);
+                                ajouterStructure(carte, ePos[entiteeAcreer].x, ePos[entiteeAcreer].y, (int)MvtOrAction, &erreur);
                                 if (erreur == 0) /*--->*/ entiteeAcreer++;
                             }
                             else /*--->*/ erreur = 8;
@@ -172,7 +204,7 @@ int main ()
                     case 'c':
                         for (unsigned int i = 0; i < LARGEUR * HAUTEUR; i++)
                         {
-                            mapHasard->elements[i].visibilitee = 1;
+                            carte->elements[i].visibilitee = 1;
                         }
                         break;
                         
@@ -182,8 +214,8 @@ int main ()
 
             default: erreur = 9; break;
         }
-        if (mapHasard->elements[LARGEUR * (int)jPos.y + (int)jPos.x].block != NULL) /*----->*/ mapHasard->elements[LARGEUR * (int)jPos.y + (int)jPos.x].type = 1;
-        if (mapHasard->elements[LARGEUR * (int)jPos.y + (int)jPos.x].entitee != NULL) /*--->*/ mapHasard->elements[LARGEUR * (int)jPos.y + (int)jPos.x].type = 2;
+        if (carte->elements[LARGEUR * (int)jPos.y + (int)jPos.x].block != NULL) /*----->*/ carte->elements[LARGEUR * (int)jPos.y + (int)jPos.x].type = 1;
+        if (carte->elements[LARGEUR * (int)jPos.y + (int)jPos.x].entitee != NULL) /*--->*/ carte->elements[LARGEUR * (int)jPos.y + (int)jPos.x].type = 2;
         
         if (blockAcasser > 0)
         {
@@ -192,11 +224,12 @@ int main ()
 
             casserBlock 
             (
-                mapHasard,
+                carte,
                 bPos,
                 &blockAcasser,
                 compte,
-                &nb_besoin
+                &nb_besoin,
+                &erreur
             );
         }
         
@@ -207,7 +240,7 @@ int main ()
 
             tabEntitee = constructionStructure
             (
-                mapHasard,
+                carte,
                 ePos,
                 tabEntitee,
                 &entiteeAcreer,
@@ -217,34 +250,46 @@ int main ()
             );
         }
         
-        visibilitee (mapHasard, SHIPX, SHIPY);
+        visibilitee (carte, SHIPX, SHIPY);
 
 
-        remplirStock (mapHasard);
+        remplirStock (carte);
         tabEntitee = remplirEnergieStructure
         (
-            mapHasard,
+            carte,
             tabEntitee,
             &nb_Entitee,
             &nb_besoin,
             &sortie
         );
-        viderEnergieStructure (mapHasard, tabEntitee, nb_Entitee);
+        viderEnergieStructure (carte, tabEntitee, nb_Entitee);
+        
+        for (unsigned int i = 0; i < 3; i++)
+        {
+            int x = cPos[i].x;
+            int y = cPos[i].y;
 
+            if (carte->elements[LARGEUR * y + x].entitee)
+                carte->elements[LARGEUR * y + x].vide->creeperQuantity[0] += carte->elements[LARGEUR * y + x].entitee->creeperSpawner->power;
+
+        }
+        
+        mouvementCreeper (carte);
 
         if (sortie == 0)
         {
-            afficherInterface (mapHasard, tabEntitee, nb_Entitee);
-            afficherCarte (mapHasard);
+            afficherInterface (carte, tabEntitee, nb_Entitee);
+            afficherCarteV2   (carte);
             printf ("Vous avez gagné ! \n");
         }
 
     }
 
-    detruireCarte (mapHasard);
+    detruireCarte (carte);
     if (compte) /*------->*/ free (compte);
     if (compteE) /*------>*/ free (compteE);
     if (tabEntitee) /*--->*/ free (tabEntitee);
+    
 
     return 0;
 }

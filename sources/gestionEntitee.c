@@ -2,7 +2,7 @@
 /* Kurīpāwārudo (inspiré du jeu Creeper World 2)             */
 /*-----------------------------------------------------------*/
 /* Module            : gestionAffichage.c                    */
-/* Numéro de version : 0.6.1                                 */
+/* Numéro de version : 0.7                                   */
 /* Date              : 18/05/2021                            */
 /* Auteurs           : Lilian CHARDON                        */
 /*************************************************************/
@@ -64,9 +64,14 @@ Coord* constructionStructure
         int tempEAC         = *_entiteeAcreer;
         int temp_nbEntitee  = *_nb_Entitee;
         int temp_nbBesoin   = *_nb_besoin;
+
+        int x, y;
             
         for (unsigned int i = 0; i < tempEAC; i++)
         {
+            x = _ePos[i].x;
+            y = _ePos[i].y;
+
             if (_compteE[i] == 0)
             {
                 _compteE[i] = testAccessibilitee(m, _ePos[i].x, _ePos[i].y);
@@ -76,24 +81,24 @@ Coord* constructionStructure
             }
             if (_compteE[i] == 1)
             {
-                switch (m->elements[LARGEUR * (int)_ePos[i].y + (int)_ePos[i].x].entitee->type)
+                switch (m->elements[LARGEUR * y + x].entitee->type)
                 {
                     case 1:
                         if (m->elements[LARGEUR * SHIPY + SHIPX].entitee->ship->energy_quantity > 0)
                         {
-                            m->elements[LARGEUR * (int)_ePos[i].y + (int)_ePos[i].x].entitee->reactor->build --;
+                            m->elements[LARGEUR * y + x].entitee->reactor->build --;
                             m->elements[LARGEUR * SHIPY + SHIPX].entitee->ship->energy_quantity --;
                         }
                         else
                         {
-                            m->elements[LARGEUR * (int)_ePos[i].y + (int)_ePos[i].x].entitee->reactor->build -= m->elements[LARGEUR * SHIPY + SHIPX].entitee->ship->energy_efficient / temp_nbBesoin;
+                            m->elements[LARGEUR * y + x].entitee->reactor->build -= m->elements[LARGEUR * SHIPY + SHIPX].entitee->ship->energy_efficient / temp_nbBesoin;
                             m->elements[LARGEUR * SHIPY + SHIPX].entitee->ship->energy_quantity --;
                         }
 
-                        if (m->elements[LARGEUR * (int)_ePos[i].y + (int)_ePos[i].x].entitee->reactor->build <= 0)
+                        if (m->elements[LARGEUR * y + x].entitee->reactor->build <= 0)
                         {
                             m->elements[LARGEUR * SHIPY + SHIPX].entitee->ship->energy_efficient += 0.15;
-                            m->elements[LARGEUR * (int)_ePos[i].y + (int)_ePos[i].x].type = ENTITY;
+                            m->elements[LARGEUR * y + x].type = ENTITY;
 
                             _ePos[i] = _ePos[tempEAC - 1];
 
@@ -109,19 +114,19 @@ Coord* constructionStructure
                     case 2:
                         if (m->elements[LARGEUR * SHIPY + SHIPX].entitee->ship->energy_quantity > 0)
                         {
-                            m->elements[LARGEUR * (int)_ePos[i].y + (int)_ePos[i].x].entitee->miner->build --;
+                            m->elements[LARGEUR * y + x].entitee->miner->build --;
                             m->elements[LARGEUR * SHIPY + SHIPX].entitee->ship->energy_quantity --;
                         }
                         else
                         {
-                            m->elements[LARGEUR * (int)_ePos[i].y + (int)_ePos[i].x].entitee->miner->build -= m->elements[LARGEUR * SHIPY + SHIPX].entitee->ship->energy_efficient / temp_nbBesoin;
+                            m->elements[LARGEUR * y + x].entitee->miner->build -= m->elements[LARGEUR * SHIPY + SHIPX].entitee->ship->energy_efficient / temp_nbBesoin;
                             m->elements[LARGEUR * SHIPY + SHIPX].entitee->ship->energy_quantity --;
                         }
 
-                        if (m->elements[LARGEUR * (int)_ePos[i].y + (int)_ePos[i].x].entitee->miner->build <= 0)
+                        if (m->elements[LARGEUR * y + x].entitee->miner->build <= 0)
                         {
                             m->elements[LARGEUR * SHIPY + SHIPX].entitee->ship->gold_efficient += 0.15;
-                            m->elements[LARGEUR * (int)_ePos[i].y + (int)_ePos[i].x].type = ENTITY;
+                            m->elements[LARGEUR * y + x].type = ENTITY;
 
 
                             temp_nbEntitee++;
@@ -143,18 +148,18 @@ Coord* constructionStructure
                     case 3:
                         if (m->elements[LARGEUR * SHIPY + SHIPX].entitee->ship->energy_quantity > 0)
                         {
-                            m->elements[LARGEUR * (int)_ePos[i].y + (int)_ePos[i].x].entitee->shield->build --;
+                            m->elements[LARGEUR * y + x].entitee->shield->build --;
                             m->elements[LARGEUR * SHIPY + SHIPX].entitee->ship->energy_quantity --;
                         }
                         else
                         {
-                            m->elements[LARGEUR * (int)_ePos[i].y + (int)_ePos[i].x].entitee->shield->build -= m->elements[LARGEUR * SHIPY + SHIPX].entitee->ship->energy_efficient / temp_nbBesoin;
+                            m->elements[LARGEUR * y + x].entitee->shield->build -= m->elements[LARGEUR * SHIPY + SHIPX].entitee->ship->energy_efficient / temp_nbBesoin;
                             m->elements[LARGEUR * SHIPY + SHIPX].entitee->ship->energy_quantity --;
                         }
 
-                        if (m->elements[LARGEUR * (int)_ePos[i].y + (int)_ePos[i].x].entitee->shield->build <= 0)
+                        if (m->elements[LARGEUR * y + x].entitee->shield->build <= 0)
                         {
-                            m->elements[LARGEUR * (int)_ePos[i].y + (int)_ePos[i].x].type = ENTITY;
+                            m->elements[LARGEUR * y + x].type = ENTITY;
 
                             _ePos[i] = _ePos[tempEAC - 1];
 
@@ -171,18 +176,18 @@ Coord* constructionStructure
                     case 4:
                         if (m->elements[LARGEUR * SHIPY + SHIPX].entitee->ship->energy_quantity > 0)
                         {
-                            m->elements[LARGEUR * (int)_ePos[i].y + (int)_ePos[i].x].entitee->beacon->build --;
+                            m->elements[LARGEUR * y + x].entitee->beacon->build --;
                             m->elements[LARGEUR * SHIPY + SHIPX].entitee->ship->energy_quantity --;
                         }
                         else
                         {
-                            m->elements[LARGEUR * (int)_ePos[i].y + (int)_ePos[i].x].entitee->beacon->build -= m->elements[LARGEUR * SHIPY + SHIPX].entitee->ship->energy_efficient / temp_nbBesoin;
+                            m->elements[LARGEUR * y + x].entitee->beacon->build -= m->elements[LARGEUR * SHIPY + SHIPX].entitee->ship->energy_efficient / temp_nbBesoin;
                             m->elements[LARGEUR * SHIPY + SHIPX].entitee->ship->energy_quantity --;
                         }
 
-                        if (m->elements[LARGEUR * (int)_ePos[i].y + (int)_ePos[i].x].entitee->beacon->build <= 0)
+                        if (m->elements[LARGEUR * y + x].entitee->beacon->build <= 0)
                         {
-                            m->elements[LARGEUR * (int)_ePos[i].y + (int)_ePos[i].x].type = ENTITY;
+                            m->elements[LARGEUR * y + x].type = ENTITY;
 
 
                             temp_nbEntitee++;
@@ -206,18 +211,18 @@ Coord* constructionStructure
                     case 5:
                         if (m->elements[LARGEUR * SHIPY + SHIPX].entitee->ship->energy_quantity > 0)
                         {
-                            m->elements[LARGEUR * (int)_ePos[i].y + (int)_ePos[i].x].entitee->bombe->build --;
+                            m->elements[LARGEUR * y + x].entitee->bombe->build --;
                             m->elements[LARGEUR * SHIPY + SHIPX].entitee->ship->energy_quantity --;
                         }
                         else
                         {
-                            m->elements[LARGEUR * (int)_ePos[i].y + (int)_ePos[i].x].entitee->bombe->build -= m->elements[LARGEUR * SHIPY + SHIPX].entitee->ship->energy_efficient / temp_nbBesoin;
+                            m->elements[LARGEUR * y + x].entitee->bombe->build -= m->elements[LARGEUR * SHIPY + SHIPX].entitee->ship->energy_efficient / temp_nbBesoin;
                             m->elements[LARGEUR * SHIPY + SHIPX].entitee->ship->energy_quantity --;
                         }
 
-                        if (m->elements[LARGEUR * (int)_ePos[i].y + (int)_ePos[i].x].entitee->bombe->build <= 0)
+                        if (m->elements[LARGEUR * y + x].entitee->bombe->build <= 0)
                         {
-                            m->elements[LARGEUR * (int)_ePos[i].y + (int)_ePos[i].x].type = ENTITY;
+                            m->elements[LARGEUR * y + x].type = ENTITY;
 
 
                             temp_nbEntitee++;
@@ -425,23 +430,26 @@ Coord* remplirEnergieStructure
 
 void viderEnergieStructure (Map* m, Coord* _tabEntitee, int _nb_Entitee)
 {
-    if (m)
+    if (m && _tabEntitee)
     {
+        int x, y;
         for (unsigned int i = 0; i < _nb_Entitee; i++)
         {
-            switch (m->elements[LARGEUR * (int)_tabEntitee[i].y + (int)_tabEntitee[i].x].entitee->type)
+            x = _tabEntitee[i].x;
+            y = _tabEntitee[i].y;
+            switch (m->elements[LARGEUR * y + x].entitee->type)
             {
                 case 2:
-                    if (m->elements[LARGEUR * (int)_tabEntitee[i].y + (int)_tabEntitee[i].x].entitee->miner->power_quantity > 0)
+                    if (m->elements[LARGEUR * y + x].entitee->miner->power_quantity > 0)
                     {
-                        m->elements[LARGEUR * (int)_tabEntitee[i].y + (int)_tabEntitee[i].x].entitee->miner->power_quantity -= 0.05;
+                        m->elements[LARGEUR * y + x].entitee->miner->power_quantity -= 0.05;
                     }
                     break;
                 
                 case 4:
-                    if (m->elements[LARGEUR * (int)_tabEntitee[i].y + (int)_tabEntitee[i].x].entitee->beacon->power_quantity > 0)
+                    if (m->elements[LARGEUR * y + x].entitee->beacon->power_quantity > 0)
                     {
-                        m->elements[LARGEUR * (int)_tabEntitee[i].y + (int)_tabEntitee[i].x].entitee->beacon->power_quantity -= 0.05;
+                        m->elements[LARGEUR * y + x].entitee->beacon->power_quantity -= 0.05;
                     }
                     break;
             }
@@ -464,6 +472,8 @@ void ajouterSpawnerHasard (Case* c, unsigned int nb_Spawner)
             {
                 c[i].entitee = creerEntitee(i % LARGEUR, i / LARGEUR, CREEPERSPAWNER);
                 c[i].type = ENTITY;
+
+                cPos[nb_Spawner - 1] = (Coord) {i % LARGEUR, i / LARGEUR};
                 nb_Spawner--;
             }
             
@@ -516,6 +526,145 @@ void effetDegats (Case* c, Entity* attaquant, Entity* victime)
             
         }
 
+    }
+    
+}
+
+void mouvementCreeper (Map* m)
+{
+    if (m)
+    {
+        for (unsigned int i = 0; i < LARGEUR * HAUTEUR; i++)
+        {
+            int x = i % LARGEUR;
+            int y = i / LARGEUR;
+
+        //----------------------Transfert Bas-----------------------//
+            if (m->elements[LARGEUR * y + x].vide)
+            {
+                if (m->elements[LARGEUR * (y + 1) + x].vide && (y + 1) < HAUTEUR)
+                {
+                    if (m->elements[LARGEUR * y + x].vide->creeperQuantity[2] >= 1)
+                    {
+                        m->elements[LARGEUR * (y + 1) + x].vide->creeperQuantity[0] += m->elements[LARGEUR * y + x].vide->creeperQuantity[2] / 1.75;
+                        m->elements[LARGEUR * y + x].vide->creeperQuantity[2]       -= m->elements[LARGEUR * y + x].vide->creeperQuantity[2] / 1.75;
+                    }
+                    if (m->elements[LARGEUR * y + x].vide->creeperQuantity[3] >= 1)
+                    {
+                        m->elements[LARGEUR * (y + 1) + x].vide->creeperQuantity[1] += m->elements[LARGEUR * y + x].vide->creeperQuantity[3] / 1.75;
+                        m->elements[LARGEUR * y + x].vide->creeperQuantity[3]       -= m->elements[LARGEUR * y + x].vide->creeperQuantity[3] / 1.75;
+                    }
+                    
+                }
+                if (m->elements[LARGEUR * y + x].vide->creeperQuantity[0] >= 1)
+                {
+                    m->elements[LARGEUR * y + x].vide->creeperQuantity[2] += m->elements[LARGEUR * y + x].vide->creeperQuantity[0] / 1.75;
+                    m->elements[LARGEUR * y + x].vide->creeperQuantity[0] -= m->elements[LARGEUR * y + x].vide->creeperQuantity[0] / 1.75;
+                }
+                if (m->elements[LARGEUR * y + x].vide->creeperQuantity[1] >= 1)
+                {
+                    m->elements[LARGEUR * y + x].vide->creeperQuantity[3] += m->elements[LARGEUR * y + x].vide->creeperQuantity[1] / 1.75;
+                    m->elements[LARGEUR * y + x].vide->creeperQuantity[1] -= m->elements[LARGEUR * y + x].vide->creeperQuantity[1] / 1.75;
+                }
+
+            }
+            
+
+        //---------------------Transfert Gauche---------------------//
+
+            if (m->elements[LARGEUR * y + x].vide)
+            {
+                if (m->elements[LARGEUR * y + x - 1].vide && (x - 1) >= 0)
+                {
+                    if (m->elements[LARGEUR * y + x].vide->creeperQuantity[0] >= 10)
+                    {
+                        m->elements[LARGEUR * y + x - 1].vide->creeperQuantity[1] += m->elements[LARGEUR * y + x].vide->creeperQuantity[0] / 5;
+                        m->elements[LARGEUR * y + x].vide->creeperQuantity[0]     -= m->elements[LARGEUR * y + x].vide->creeperQuantity[0] / 5;
+                    }
+                    if (m->elements[LARGEUR * y + x].vide->creeperQuantity[2] >= 10)
+                    {
+                        m->elements[LARGEUR * y + x - 1].vide->creeperQuantity[3] += m->elements[LARGEUR * y + x].vide->creeperQuantity[2] / 5;
+                        m->elements[LARGEUR * y + x].vide->creeperQuantity[2]     -= m->elements[LARGEUR * y + x].vide->creeperQuantity[2] / 5;
+                    }
+                    
+                }
+                if (m->elements[LARGEUR * y + x].vide->creeperQuantity[1] >= 10)
+                {
+                    m->elements[LARGEUR * y + x].vide->creeperQuantity[0] += m->elements[LARGEUR * y + x].vide->creeperQuantity[1] / 5;
+                    m->elements[LARGEUR * y + x].vide->creeperQuantity[1] -= m->elements[LARGEUR * y + x].vide->creeperQuantity[1] / 5;
+                }
+                if (m->elements[LARGEUR * y + x].vide->creeperQuantity[3] >= 10)
+                {
+                    m->elements[LARGEUR * y + x].vide->creeperQuantity[2] += m->elements[LARGEUR * y + x].vide->creeperQuantity[3] / 5;
+                    m->elements[LARGEUR * y + x].vide->creeperQuantity[3] -= m->elements[LARGEUR * y + x].vide->creeperQuantity[3] / 5;
+                }
+
+            }
+             
+
+        //---------------------Transfert Droite---------------------//
+
+            if (m->elements[LARGEUR * y + x].vide)
+            {
+                if (m->elements[LARGEUR * y + x + 1].vide && (x + 1) < LARGEUR)
+                {
+                    if (m->elements[LARGEUR * y + x].vide->creeperQuantity[1] >= 10)
+                    {
+                        m->elements[LARGEUR * y + x + 1].vide->creeperQuantity[0] += m->elements[LARGEUR * y + x].vide->creeperQuantity[1] / 5;
+                        m->elements[LARGEUR * y + x].vide->creeperQuantity[1]     -= m->elements[LARGEUR * y + x].vide->creeperQuantity[1] / 5;
+                    }
+                    if (m->elements[LARGEUR * y + x].vide->creeperQuantity[3] >= 10)
+                    {
+                        m->elements[LARGEUR * y + x + 1].vide->creeperQuantity[2] += m->elements[LARGEUR * y + x].vide->creeperQuantity[3] / 5;
+                        m->elements[LARGEUR * y + x].vide->creeperQuantity[3]     -= m->elements[LARGEUR * y + x].vide->creeperQuantity[3] / 5;
+                    }
+                    
+                }
+                if (m->elements[LARGEUR * y + x].vide->creeperQuantity[0] >= 10)
+                {
+                    m->elements[LARGEUR * y + x].vide->creeperQuantity[1] += m->elements[LARGEUR * y + x].vide->creeperQuantity[0] / 5;
+                    m->elements[LARGEUR * y + x].vide->creeperQuantity[0] -= m->elements[LARGEUR * y + x].vide->creeperQuantity[0] / 5;
+                }
+                if (m->elements[LARGEUR * y + x].vide->creeperQuantity[2] >= 10)
+                {
+                    m->elements[LARGEUR * y + x].vide->creeperQuantity[3] += m->elements[LARGEUR * y + x].vide->creeperQuantity[2] / 5;
+                    m->elements[LARGEUR * y + x].vide->creeperQuantity[2] -= m->elements[LARGEUR * y + x].vide->creeperQuantity[2] / 5;
+                }
+
+            }
+        
+        //----------------------Transfert Haut----------------------//
+
+            if (m->elements[LARGEUR * y + x].vide)
+            {
+                if (m->elements[LARGEUR * (y - 1) + x].vide && (y - 1) >= 0)
+                {
+                    if (m->elements[LARGEUR * y + x].vide->creeperQuantity[0] >= 50)
+                    {
+                        m->elements[LARGEUR * (y - 1) + x].vide->creeperQuantity[2] += m->elements[LARGEUR * y + x].vide->creeperQuantity[0] / 10;
+                        m->elements[LARGEUR * y + x].vide->creeperQuantity[0]       -= m->elements[LARGEUR * y + x].vide->creeperQuantity[0] / 10;
+                    }
+                    if (m->elements[LARGEUR * y + x].vide->creeperQuantity[1] >= 50)
+                    {
+                        m->elements[LARGEUR * (y - 1) + x].vide->creeperQuantity[3] += m->elements[LARGEUR * y + x].vide->creeperQuantity[1] / 10;
+                        m->elements[LARGEUR * y + x].vide->creeperQuantity[1]       -= m->elements[LARGEUR * y + x].vide->creeperQuantity[1] / 10;
+                    }
+                    
+                }
+                if (m->elements[LARGEUR * y + x].vide->creeperQuantity[2] >= 50)
+                {
+                    m->elements[LARGEUR * y + x].vide->creeperQuantity[0] += m->elements[LARGEUR * y + x].vide->creeperQuantity[2] / 10;
+                    m->elements[LARGEUR * y + x].vide->creeperQuantity[2] -= m->elements[LARGEUR * y + x].vide->creeperQuantity[2] / 10;
+                }
+                if (m->elements[LARGEUR * y + x].vide->creeperQuantity[3] >= 50)
+                {
+                    m->elements[LARGEUR * y + x].vide->creeperQuantity[1] += m->elements[LARGEUR * y + x].vide->creeperQuantity[3] / 10;
+                    m->elements[LARGEUR * y + x].vide->creeperQuantity[3] -= m->elements[LARGEUR * y + x].vide->creeperQuantity[3] / 10;
+                }
+
+            }
+
+        }
     }
     
 }

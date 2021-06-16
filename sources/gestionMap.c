@@ -2,7 +2,7 @@
 /* Kurīpāwārudo (inspiré du jeu Creeper World 2)             */
 /*-----------------------------------------------------------*/
 /* Module            : gestionMap.c                          */
-/* Numéro de version : 0.6.1                                 */
+/* Numéro de version : 0.7                                   */
 /* Date              : 18/05/2021                            */
 /* Auteurs           : Lilian CHARDON                        */
 /*************************************************************/
@@ -29,6 +29,9 @@ void remplirHasard (Map* m)
 
         if (gold < 3)
         {
+            detruireVide (m->elements[i].vide);
+            m->elements[i].vide = NULL;
+
             m->elements[i].type  = BLOCK;
             m->elements[i].block = creerBlock (GOLD, 0, i % LARGEUR, i / LARGEUR);
         }
@@ -36,15 +39,21 @@ void remplirHasard (Map* m)
         {
             stoneType = (rand() % 100 + 1);
 
-            if (stoneType <= 5) /*---------->*/ stoneType = 3;
-            else if (stoneType <= 30) /*---->*/ stoneType = 2;
-            else if (stoneType <= 100) /*--->*/ stoneType = 1;
+            if (stoneType <= 5) /*---------->*/ stoneType = STONE3;
+            else if (stoneType <= 30) /*---->*/ stoneType = STONE2;
+            else if (stoneType <= 100) /*--->*/ stoneType = STONE1;
+
+            detruireVide (m->elements[i].vide);
+            m->elements[i].vide = NULL;
 
             m->elements[i].type  = BLOCK;
             m->elements[i].block = creerBlock (STONE, stoneType, i % LARGEUR, i / LARGEUR);
         }
         else if (dirt <= 100)
         {
+            detruireVide (m->elements[i].vide);
+            m->elements[i].vide = NULL;
+
             m->elements[i].type  = BLOCK;
             m->elements[i].block = creerBlock (DIRT, 0, i % LARGEUR, i / LARGEUR);
         } 
@@ -54,8 +63,6 @@ void remplirHasard (Map* m)
         
         
         if (relief > 0 && i % LARGEUR == 0) /*--->*/ relief -= 25;
-
-        m->elements[i].cache = 0;
 
     }
 
@@ -72,10 +79,11 @@ void remplirHasard (Map* m)
 
             if (stackVoid > 3)
             {
-                m->elements[i].type = VIDE;
                 detruireBlock (m->elements[i].block);
                 m->elements[i].block = NULL;
 
+                m->elements[i].type = VIDE;
+                m->elements[i].vide = creerVide (i);
             }
         }
         
@@ -85,7 +93,9 @@ void remplirHasard (Map* m)
 
 void creerCaverne (Map* m, unsigned int pos, int randMoins)
 {
-    if (m && pos <= LARGEUR * HAUTEUR && m->elements[pos].type == BLOCK)
+    while (pos > LARGEUR * HAUTEUR) /*--->*/ pos = rand() % LARGEUR * HAUTEUR + 280;
+    
+    if (m && m->elements[pos].type == BLOCK)
     {
         int droite = rand() % 100 - randMoins;
         while (droite < 0) /*--->*/ droite = rand() % 100 - randMoins;
@@ -102,6 +112,7 @@ void creerCaverne (Map* m, unsigned int pos, int randMoins)
         detruireBlock (m->elements[pos].block);
         m->elements[pos].block = NULL;
         m->elements[pos].type = VIDE;
+        m->elements[pos].vide = creerVide (pos);
 
         randMoins += 5;
 
@@ -360,41 +371,103 @@ void visibilitee (Map* m, int x, int y)
 
 //---------------------------Gestion Block---------------------------//
 
-void casserBlock (Map* m, Coord* _bPos, int* _blockAcasser, int* _compte, int* _nb_besoin)
+void casserBlock 
+(
+    Map* m, 
+    Coord* _bPos, 
+    int* _blockAcasser, 
+    int* _compte, 
+    int* _nb_besoin, 
+    int* _erreur
+)
 {
     if (m)
     {
         int tempBAC       = *_blockAcasser;
         int temp_nbBesoin = *_nb_besoin;
 
+        int x, y;
+
         for (unsigned int i = 0; i < tempBAC; i++)
         {
+            x = _bPos[i].x;
+            y = _bPos[i].y;
             if (_compte[i] == 0)
             {
-                _compte[i] = testAccessibilitee (m, _bPos[i].x, _bPos[i].y);
+                _compte[i] = testAccessibilitee (m, x, y);
                 decache (m);
                 if (_compte[i] == 1) /*--->*/temp_nbBesoin++;
                 
             }
-            if (m->elements[LARGEUR * (int)_bPos[i].y + (int)_bPos[i].x].block->dirt != NULL && _compte[i] == 1)
+            if (m->elements[LARGEUR * y + x].block->dirt != NULL && _compte[i] == 1)
             {
                 if (m->elements[LARGEUR * SHIPY + SHIPX].entitee->ship->energy_quantity > 0)
                 {
-                    m->elements[LARGEUR * (int)_bPos[i].y + (int)_bPos[i].x].block->dirt->hardness --;
+                    m->elements[LARGEUR * y + x].block->dirt->hardness --;
                     m->elements[LARGEUR * SHIPY + SHIPX].entitee->ship->energy_quantity --;
                 }
                 else
                 {
-                    m->elements[LARGEUR * (int)_bPos[i].y + (int)_bPos[i].x].block->dirt->hardness -= m->elements[LARGEUR * SHIPY + SHIPX].entitee->ship->energy_efficient / temp_nbBesoin;
+                    m->elements[LARGEUR * y + x].block->dirt->hardness -= m->elements[LARGEUR * SHIPY + SHIPX].entitee->ship->energy_efficient / temp_nbBesoin;
                     m->elements[LARGEUR * SHIPY + SHIPX].entitee->ship->energy_quantity --;
                 }
                 
-                if (m->elements[LARGEUR * (int)_bPos[i].y + (int)_bPos[i].x].block->dirt->hardness <= 0)
+                if (m->elements[LARGEUR * y + x].block->dirt->hardness <= 0)
                 {
-                    detruireBlock (m->elements[LARGEUR * (int)_bPos[i].y + (int)_bPos[i].x].block);
+                    if (m->elements[LARGEUR * (y - 1) + x].type == ENTITY)
+                    {
+                        if (m->elements[LARGEUR * (y - 1) + x].entitee->type == BEACON)
+                        {
+                            if ((m->elements[LARGEUR * (y - 2) + x].type == VIDE     || m->elements[LARGEUR * (y - 2) + x].type == CURSOR)     && 
+                                (m->elements[LARGEUR * (y - 1) + x - 1].type == VIDE || m->elements[LARGEUR * (y - 1) + x - 1].type == CURSOR) && 
+                                (m->elements[LARGEUR * (y - 1) + x + 1].type == VIDE || m->elements[LARGEUR * (y - 1) + x + 1].type == CURSOR))
+                            {
+                                *_erreur = 10;
+                            }
+                                
+                        }
+                        else if (m->elements[LARGEUR * (y - 1) + x].entitee->type == REACTEUR || m->elements[LARGEUR * (y - 1) + x].entitee->type == MINER)
+                            *_erreur = 10;
+                        
+                    }
+                    if (m->elements[LARGEUR * (y + 1) + x].type == ENTITY)
+                        if (m->elements[LARGEUR * (y + 1) + x].entitee->type == BEACON)
+                            if ((m->elements[LARGEUR * (y + 2) + x].type == VIDE     || m->elements[LARGEUR * (y + 2) + x].type == CURSOR)     &&
+                                (m->elements[LARGEUR * (y + 1) + x - 1].type == VIDE || m->elements[LARGEUR * (y + 1) + x - 1].type == CURSOR) &&
+                                (m->elements[LARGEUR * (y + 1) + x + 1].type == VIDE || m->elements[LARGEUR * (y + 1) + x + 1].type == CURSOR))
+                            {
+                                *_erreur = 10;
+                            }
+                    
+                    if (m->elements[LARGEUR * y + x - 1].type == ENTITY)
+                        if (m->elements[LARGEUR * y + x - 1].entitee->type == BEACON)
+                            if ((m->elements[LARGEUR * (y - 1) + x - 1].type == VIDE || m->elements[LARGEUR * (y - 1) + x - 1].type == CURSOR) &&
+                                (m->elements[LARGEUR * (y + 1) + x - 1].type == VIDE || m->elements[LARGEUR * (y + 1) + x - 1].type == CURSOR) &&
+                                (m->elements[LARGEUR * y + x - 2].type == VIDE       || m->elements[LARGEUR * y + x - 2].type == CURSOR))
+                            {
+                                *_erreur = 10;
+                            }
+                            
+                    if (m->elements[LARGEUR * y + x + 1].type == ENTITY)
+                        if (m->elements[LARGEUR * y + x + 1].entitee->type == BEACON)
+                            if ((m->elements[LARGEUR * (y - 1) + x + 1].type == VIDE || m->elements[LARGEUR * (y - 1) + x + 1].type == CURSOR) && 
+                                (m->elements[LARGEUR * (y + 1) + x + 1].type == VIDE || m->elements[LARGEUR * (y + 1) + x + 1].type == CURSOR) &&
+                                (m->elements[LARGEUR * y + x + 2].type == VIDE       || m->elements[LARGEUR * y + x + 2].type == CURSOR))
+                            {
+                                *_erreur = 10;
+                            }
+                            
+                    
+                    if (*_erreur != 10)
+                    {
+                        detruireBlock (m->elements[LARGEUR * y + x].block);
+                        m->elements   [LARGEUR * y + x].block = NULL;
 
-                    m->elements[LARGEUR * (int)_bPos[i].y + (int)_bPos[i].x].block = NULL;
-                    m->elements[LARGEUR * (int)_bPos[i].y + (int)_bPos[i].x].type = VIDE;
+                        m->elements[LARGEUR * y + x].type = VIDE;
+                        m->elements[LARGEUR * y + x].vide = creerVide (LARGEUR * y + x);
+
+                    }
+                    else /*--->*/ m->elements[LARGEUR * y + x].block->dirt->hardness += 3;
 
                     _bPos[i] = _bPos[tempBAC - 1];
                     _bPos[tempBAC - 1] = (Coord){0, 0};
@@ -405,28 +478,86 @@ void casserBlock (Map* m, Coord* _bPos, int* _blockAcasser, int* _compte, int* _
                     tempBAC--;
                     temp_nbBesoin--;
                     i--;
+                    
                 }
 
             }
-            else if (m->elements[LARGEUR * (int)_bPos[i].y + (int)_bPos[i].x].block->stone != NULL && _compte[i] == 1)
+            else if (m->elements[LARGEUR * y + x].block->stone != NULL && _compte[i] == 1)
             {
                 if (m->elements[LARGEUR * SHIPY + SHIPX].entitee->ship->energy_quantity > 0)
                 {
-                    m->elements[LARGEUR * (int)_bPos[i].y + (int)_bPos[i].x].block->stone->hardness --;
+                    m->elements[LARGEUR * y + x].block->stone->hardness --;
                     m->elements[LARGEUR * SHIPY + SHIPX].entitee->ship->energy_quantity --;
                 }
                 else
                 {
-                    m->elements[LARGEUR * (int)_bPos[i].y + (int)_bPos[i].x].block->stone->hardness -= m->elements[LARGEUR * SHIPY + SHIPX].entitee->ship->energy_efficient / temp_nbBesoin;
+                    m->elements[LARGEUR * y + x].block->stone->hardness -= m->elements[LARGEUR * SHIPY + SHIPX].entitee->ship->energy_efficient / temp_nbBesoin;
                     m->elements[LARGEUR * SHIPY + SHIPX].entitee->ship->energy_quantity --;
                 }
 
-                if (m->elements[LARGEUR * (int)_bPos[i].y + (int)_bPos[i].x].block->stone->hardness <= 0)
+                if (m->elements[LARGEUR * y + x].block->stone->hardness <= 0)
                 {
-                    detruireBlock (m->elements[LARGEUR * (int)_bPos[i].y + (int)_bPos[i].x].block);
+                    if (m->elements[LARGEUR * (y - 1) + x].type == ENTITY)
+                    {
+                        if (m->elements[LARGEUR * (y - 1) + x].entitee->type == BEACON)
+                        {
+                            if ((m->elements[LARGEUR * (y - 2) + x].type == VIDE     || m->elements[LARGEUR * (y - 2) + x].type == CURSOR)     && 
+                                (m->elements[LARGEUR * (y - 1) + x - 1].type == VIDE || m->elements[LARGEUR * (y - 1) + x - 1].type == CURSOR) && 
+                                (m->elements[LARGEUR * (y - 1) + x + 1].type == VIDE || m->elements[LARGEUR * (y - 1) + x + 1].type == CURSOR))
+                            {
+                                *_erreur = 10;
+                            }
+                                
+                        }
+                        else if (m->elements[LARGEUR * (y - 1) + x].entitee->type == REACTEUR || m->elements[LARGEUR * (y - 1) + x].entitee->type == MINER)
+                            *_erreur = 10;
+                        
+                    }
+                    if (m->elements[LARGEUR * (y + 1) + x].type == ENTITY)
+                        if (m->elements[LARGEUR * (y + 1) + x].entitee->type == BEACON)
+                            if ((m->elements[LARGEUR * (y + 2) + x].type == VIDE     || m->elements[LARGEUR * (y + 2) + x].type == CURSOR)     &&
+                                (m->elements[LARGEUR * (y + 1) + x - 1].type == VIDE || m->elements[LARGEUR * (y + 1) + x - 1].type == CURSOR) &&
+                                (m->elements[LARGEUR * (y + 1) + x + 1].type == VIDE || m->elements[LARGEUR * (y + 1) + x + 1].type == CURSOR))
+                            {
+                                *_erreur = 10;
+                            }
+                    
+                    if (m->elements[LARGEUR * y + x - 1].type == ENTITY)
+                        if (m->elements[LARGEUR * y + x - 1].entitee->type == BEACON)
+                            if ((m->elements[LARGEUR * (y - 1) + x - 1].type == VIDE || m->elements[LARGEUR * (y - 1) + x - 1].type == CURSOR) &&
+                                (m->elements[LARGEUR * (y + 1) + x - 1].type == VIDE || m->elements[LARGEUR * (y + 1) + x - 1].type == CURSOR) &&
+                                (m->elements[LARGEUR * y + x - 2].type == VIDE       || m->elements[LARGEUR * y + x - 2].type == CURSOR))
+                            {
+                                *_erreur = 10;
+                            }
+                            
+                    if (m->elements[LARGEUR * y + x + 1].type == ENTITY)
+                        if (m->elements[LARGEUR * y + x + 1].entitee->type == BEACON)
+                            if ((m->elements[LARGEUR * (y - 1) + x + 1].type == VIDE || m->elements[LARGEUR * (y - 1) + x + 1].type == CURSOR) && 
+                                (m->elements[LARGEUR * (y + 1) + x + 1].type == VIDE || m->elements[LARGEUR * (y + 1) + x + 1].type == CURSOR) &&
+                                (m->elements[LARGEUR * y + x + 2].type == VIDE       || m->elements[LARGEUR * y + x + 2].type == CURSOR))
+                            {
+                                *_erreur = 10;
+                            }
+                        
+                    
+                    if (*_erreur != 10)
+                    {
+                        detruireBlock (m->elements[LARGEUR * y + x].block);
+                        m->elements   [LARGEUR * y + x].block = NULL;
 
-                    m->elements[LARGEUR * (int)_bPos[i].y + (int)_bPos[i].x].block = NULL;
-                    m->elements[LARGEUR * (int)_bPos[i].y + (int)_bPos[i].x].type = VIDE;
+                        m->elements[LARGEUR * y + x].type = VIDE;
+                        m->elements[LARGEUR * y + x].vide = creerVide (LARGEUR * y + x);
+                    }
+                    else
+                    {
+                        switch (m->elements[LARGEUR * y + x].block->stone->type)
+                        {
+                            case STONE1: m->elements[LARGEUR * y + x].block->stone->hardness += 7;  break;
+                            case STONE2: m->elements[LARGEUR * y + x].block->stone->hardness += 15; break;
+                            case STONE3: m->elements[LARGEUR * y + x].block->stone->hardness += 30; break;
+                        }
+                    }
 
                     _bPos[i] = _bPos[tempBAC - 1];
                     _bPos[tempBAC - 1] = (Coord){0, 0};
@@ -437,6 +568,7 @@ void casserBlock (Map* m, Coord* _bPos, int* _blockAcasser, int* _compte, int* _
                     tempBAC--;
                     temp_nbBesoin--;
                     i--;
+                    
                 }
 
             }
