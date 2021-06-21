@@ -14,16 +14,14 @@ Pour intéragir avec le jeu, les touches à utiliser sont :
     - s : déplacement bas.
     - w : déplacement haut.
 - Pour choisir une action, entrez z, il vous sera alors demandé de choisir une des 2 actions possible :
-    - a : destruction du block ou d'une structure.
-    - z : construction d'une structure :
-        - 1 : placement d'un réacteur (uniquement sur un sol)
-        - 2 : placement d'un mineur (uniquement sur des block d'or '▚')
-        - 3 : placement d'un bouclier (fonctionnalité non intégrée)
-        - 4 : placement d'un éclaireur (éclaircir les zones dans le brouillards de guerre)
-        - 5 : placement d'une bombe
+    - f : destruction du block ou d'une structure.
+    - c : mode développeur
+    - 1 : placement d'un réacteur (uniquement sur un sol)
+    - 2 : placement d'un mineur (uniquement sur des block d'or '▚')
+    - 3 : placement d'un bouclier (fonctionnalité non intégrée)
+    - 4 : placement d'un éclaireur (éclaircir les zones dans le brouillards de guerre)
+    - 5 : placement d'une bombe
 
-
-Le jeu n'est pas encore dynamique, il est nécessaire d'appuyer sur "entrée" pour que l'action se fasse.
 
 
 Il y a une notion d'énergie, chaque action coûte de l'énergie, il faut donc un certain temps pour que l'action se finalise.
