@@ -12,7 +12,7 @@
 
 //-----------------------------Gestion Mem Map-----------------------------//
 
-Map* creerCarte (double dimX, double dimY, char* nomDeLaCarte)
+Map* creerCarte (int dimX, int dimY, char* nomDeLaCarte)
 {
     Map* m = malloc (sizeof(Map));
 
@@ -34,17 +34,17 @@ Map* creerCarte (double dimX, double dimY, char* nomDeLaCarte)
                 m->dimX         = dimX;
                 m->dimY         = dimY;
                 m->nomDeLaCarte = nomDeLaCarte;
-                m->elements[LARGEUR * SHIPY + SHIPX].entitee = creerEntitee (LARGEUR / 2, 2, SHIP);
-                m->elements[LARGEUR * SHIPY + SHIPX].type = ENTITY;
+                m->elements[dimX * 2 + dimX / 2].entitee = creerEntitee (dimX / 2, 2, SHIP);
+                m->elements[dimX * 2 + dimX / 2].type = ENTITY;
 
-                for (unsigned int i = 0; i < LARGEUR * HAUTEUR; i++)
+                for (unsigned int i = 0; i < dimX * HAUTEUR; i++)
                 {    
                     m->elements[i].visibilitee = 0;
                     m->elements[i].cache       = 0;
                     m->elements[i].vide        = creerVide (i);
                 }
                 
-                visibilitee (m, m->elements[LARGEUR * SHIPY + SHIPX].entitee->ship->pos.x, m->elements[LARGEUR * SHIPY + SHIPX].entitee->ship->pos.y);
+                visibilitee (m, m->elements[dimX * 2 + dimX / 2].entitee->ship->pos.x, m->elements[dimX * 2 + dimX / 2].entitee->ship->pos.y);
 
             }
             else
@@ -340,7 +340,7 @@ Entity* creerEntitee (double x, double y, unsigned int type)
 
                 e->creeperSpawner->health = 100;
                 e->creeperSpawner->pulse  = 0.5;
-                e->creeperSpawner->power  = 250;
+                e->creeperSpawner->power  = 10000;
                 e->creeperSpawner->pos    = (Coord){x, y};
 
                 e->ship    = NULL;

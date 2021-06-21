@@ -17,6 +17,9 @@
 #include <stdlib.h>
 #include <time.h>
 #include <string.h>
+#include <SDL2/SDL.h>
+//#include <freetype2/ft2build.h>
+//#include FT_FREETYPE_H
 
 #define LARGEUR 35
 #define HAUTEUR 40
@@ -24,7 +27,12 @@
 #define SHIPY 2
 #define NB_CREEPERSPAWNER 3
 
+#define WINDOW_WIDTH  1050
+#define WINDOW_HEIGHT 1200
+
 char nomDeLaCarteBis[15];
+
+SDL_Renderer* renderer;
 
 typedef struct
 {

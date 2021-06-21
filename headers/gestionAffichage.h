@@ -24,4 +24,14 @@ void afficherErreur (int* _erreur);
 
 //--------------------------Affichage Graphique--------------------------//
 
+void afficherImage (int x, int y, char* nomFichier);
+
+void afficherBlock (Block* b);
+
+void afficherMouvementCurseur (int Key, Map* m, Coord* _jPos);
+
+void afficherEntitee (Entity* e);
+
+void afficherVide (Vide* v);
+
 #endif

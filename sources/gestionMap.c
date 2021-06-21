@@ -9,6 +9,7 @@
 
 #include "../headers/gestionMap.h"
 #include "../headers/gestionMem.h"
+#include "../headers/gestionAffichage.h"
 
 //----------------------------Gestion Map----------------------------//
 
@@ -135,43 +136,6 @@ int testAccessibilitee (Map* m, int x, int y)
             m->elements[LARGEUR * SHIPY + x].cache = 0;
             return 1;
         }
-        
-
-        /*
-        if (m->elements[LARGEUR * y + (x + 1)].type == ENTITY)
-        {
-            if (m->elements[LARGEUR * y + (x + 1)].entitee->type == 0)
-            {
-                m->elements[LARGEUR * y + x].cache = 0;
-                return 1;
-            }
-        }
-        else if (m->elements[LARGEUR * (y - 1) + x].type == ENTITY)
-        {
-            if (m->elements[LARGEUR * (y - 1) + x].entitee->type == 0)
-            {
-                m->elements[LARGEUR * y + x].cache = 0;
-                return 1;
-            }
-        }
-        else if (m->elements[LARGEUR * y + (x - 1)].type == ENTITY)
-        {
-            if (m->elements[LARGEUR * y + (x - 1)].entitee->type == 0)
-            {
-                m->elements[LARGEUR * y + x].cache = 0;
-                return 1;
-            }
-        }
-        else if (m->elements[LARGEUR * (y + 1) + x].type == ENTITY)
-        {
-            if (m->elements[LARGEUR * (y + 1) + x].entitee->type == 0)
-            {
-                m->elements[LARGEUR * y + x].cache = 0;
-                return 1;
-            }
-        }
-        */
-        
         else if (y == 2 && x > 17)
         {
             if (m->elements[LARGEUR * y + (x - 1)].type != BLOCK && m->elements[LARGEUR * y + (x - 1)].cache == 0 && (x - 1) >= 0 && testAccessibilitee (m, x - 1, y) == 1)
@@ -300,12 +264,39 @@ void visibilitee (Map* m, int x, int y)
                             if (i / LARGEUR < y)
                             {
                                 if (x - i % LARGEUR <= 7 && y - i / LARGEUR <= 7 && (x - i % LARGEUR) + (y - i / LARGEUR) < 12)
+                                {
                                     m->elements[i].visibilitee = 1;
+                                    if (m->elements[i].visibilitee == 1)
+                                    {
+                                        switch (m->elements[i].type)
+                                        {
+                                            case VIDE  : afficherVide    (m->elements[i].vide);    break;
+                                            case BLOCK : afficherBlock   (m->elements[i].block);   break;
+                                            case ENTITY: afficherEntitee (m->elements[i].entitee); break;
+                                        }
+
+                                    }
+
+                                }
+
                             }
                             else
                             {
                                 if (x - i % LARGEUR <= 7 && i / LARGEUR - y <= 7 && (x - i % LARGEUR) + (i / LARGEUR - y) < 12)
+                                {
                                     m->elements[i].visibilitee = 1;
+                                    if (m->elements[i].visibilitee == 1)
+                                    {
+                                        switch (m->elements[i].type)
+                                        {
+                                            case VIDE  : afficherVide    (m->elements[i].vide);    break;
+                                            case BLOCK : afficherBlock   (m->elements[i].block);   break;
+                                            case ENTITY: afficherEntitee (m->elements[i].entitee); break;
+                                        }
+
+                                    }
+
+                                }
                             }
                         }
                         else
@@ -313,12 +304,38 @@ void visibilitee (Map* m, int x, int y)
                             if (i / LARGEUR < y)
                             {
                                 if (i % LARGEUR - x <= 7 && y - i / LARGEUR <= 7 && (i % LARGEUR - x) + (y - i / LARGEUR) < 12)
+                                {
                                     m->elements[i].visibilitee = 1;
+                                    if (m->elements[i].visibilitee == 1)
+                                    {
+                                        switch (m->elements[i].type)
+                                        {
+                                            case VIDE  : afficherVide    (m->elements[i].vide);    break;
+                                            case BLOCK : afficherBlock   (m->elements[i].block);   break;
+                                            case ENTITY: afficherEntitee (m->elements[i].entitee); break;
+                                        }
+
+                                    }
+
+                                }
                             }
                             else
                             {
                                 if (i % LARGEUR - x <= 7 && i / LARGEUR - y <= 7 && (i % LARGEUR - x) + (i / LARGEUR - y) < 12)
+                                {
                                     m->elements[i].visibilitee = 1;
+                                    if (m->elements[i].visibilitee == 1)
+                                    {
+                                        switch (m->elements[i].type)
+                                        {
+                                            case VIDE  : afficherVide    (m->elements[i].vide);    break;
+                                            case BLOCK : afficherBlock   (m->elements[i].block);   break;
+                                            case ENTITY: afficherEntitee (m->elements[i].entitee); break;
+                                        }
+
+                                    }
+
+                                }
                             }
 
                         }
@@ -460,12 +477,13 @@ void casserBlock
                     
                     if (*_erreur != 10)
                     {
+                        afficherImage (m->elements[LARGEUR * y + x].block->dirt->pos.x, m->elements[LARGEUR * y + x].block->dirt->pos.y, "img/sol.bmp");
+                        
                         detruireBlock (m->elements[LARGEUR * y + x].block);
                         m->elements   [LARGEUR * y + x].block = NULL;
 
                         m->elements[LARGEUR * y + x].type = VIDE;
                         m->elements[LARGEUR * y + x].vide = creerVide (LARGEUR * y + x);
-
                     }
                     else /*--->*/ m->elements[LARGEUR * y + x].block->dirt->hardness += 3;
 
@@ -543,6 +561,8 @@ void casserBlock
                     
                     if (*_erreur != 10)
                     {
+                        afficherImage (m->elements[LARGEUR * y + x].block->stone->pos.x, m->elements[LARGEUR * y + x].block->stone->pos.y, "img/sol.bmp");
+
                         detruireBlock (m->elements[LARGEUR * y + x].block);
                         m->elements   [LARGEUR * y + x].block = NULL;
 

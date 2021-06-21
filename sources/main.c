@@ -13,11 +13,6 @@
 #include "../headers/gestionEntitee.h"
 #include "../headers/gestionFichier.h"
 
-/*
-#include <SDL2/SDL>
-#include <freetype2/ft2build.h>
-#include FT_FREETYPE_H
-*/
 
 int main (int argc, char** argv)
 {
@@ -66,16 +61,41 @@ int main (int argc, char** argv)
     }
 
     int sortie        = NB_CREEPERSPAWNER;
-    char MvtOrAction  = 0;
-    char action       = 0;
+
+    int affichageActu    = 0;
+    int affichageActuPre = 0;
+
+    int blockActu       = 0;
+    int blockActuPre    = 0;
+
+    int entitActu       = 0;
+    int entitActuPre    = 0;
+
+    int stockActu       = 0;
+    int stockActuPre    = 0;
+
+    int structActu      = 0;
+    int structActuPre   = 0;
+
+    int energieActu     = 0;
+    int energieActuPre  = 0;
+
+    int creepActu       = 0;
+    int creepActuPre    = 0;
+
+    int creepMove       = 0;
+    int creepMovePre    = 0;
+
+    int spawnActu       = 0;
+    int spawnActuPre[3] = {0};
 
     int blockAcasser  = 0;
     int entiteeAcreer = 0;
 
     int erreur        = 0;
     int nb_besoin     = 0;
-    int* compte       = malloc (sizeof(int));
-    int* compteE      = malloc (sizeof(int));
+    int* compte       = malloc (4);
+    int* compteE      = malloc (4);
 
     Coord* tabEntitee = malloc (sizeof(Coord));
     int nb_Entitee    = 0;
@@ -85,205 +105,368 @@ int main (int argc, char** argv)
     Coord ePos[20];
 
     carte->elements[LARGEUR * (int)jPos.y + (int)jPos.x].type = 3;
+
+    //-----------------affichage graphique-----------------//
+
+    if (SDL_Init (SDL_INIT_VIDEO) != 0)
+    {
+        fprintf (stderr, "Erreur d'inititalisation du mécanisme SDL : %s \n", SDL_GetError());
+
+        return EXIT_FAILURE;
+    }
+
+    SDL_Window* fenetre = SDL_CreateWindow (
+                                            "Exemple 1"             ,
+                                            SDL_WINDOWPOS_UNDEFINED ,
+                                            SDL_WINDOWPOS_UNDEFINED ,
+                                            WINDOW_WIDTH            ,
+                                            WINDOW_HEIGHT           ,
+                                            SDL_WINDOW_SHOWN
+                                            );
+    if (fenetre == NULL)
+    {
+        fprintf (stderr, "Erreur de création de la fenêtre : %s \n", SDL_GetError());
+        return EXIT_FAILURE;
+    }
+    
+    renderer = SDL_CreateRenderer (fenetre, -1, SDL_RENDERER_ACCELERATED);
+
+    SDL_Event event1;
+
+    for (unsigned int i = 0; i < LARGEUR * HAUTEUR; i++)
+    {
+        if (carte->elements[i].visibilitee == 1)
+        {
+            switch (carte->elements[i].type)
+            {
+                case VIDE : afficherImage (i % LARGEUR * 30, i / LARGEUR * 30, "img/sol.bmp"); break;
+
+                case BLOCK:
+                    switch (carte->elements[i].block->type)
+                    {
+                        case DIRT : afficherImage (i % LARGEUR * 30, i / LARGEUR * 30, "img/dirt.bmp"); break;
+                        
+                        case STONE:
+                            switch (carte->elements[i].block->stone->type)
+                            {
+                                case STONE1: afficherImage (i % LARGEUR * 30, i / LARGEUR * 30, "img/stone1.bmp"); break;
+                                case STONE2: afficherImage (i % LARGEUR * 30, i / LARGEUR * 30, "img/stone2.bmp"); break;
+                                case STONE3: afficherImage (i % LARGEUR * 30, i / LARGEUR * 30, "img/stone3.bmp"); break;
+                            }
+                            break;
+                        
+                        case GOLD : afficherImage (i % LARGEUR * 30, i / LARGEUR * 30, "img/gold.bmp"); break;
+                    }
+                    break;
+                    
+                
+                case ENTITY:
+                    afficherImage (i % LARGEUR * 30, i / LARGEUR * 30, "img/sol.bmp");
+                    switch (carte->elements[i].entitee->type)
+                    {
+                        case SHIP           : afficherImage (i % LARGEUR * 30, i / LARGEUR * 30, "img/ship.bmp");            break;
+                        case REACTEUR       : afficherImage (i % LARGEUR * 30, i / LARGEUR * 30, "img/reacteur.bmp");        break;
+                        case MINER          : afficherImage (i % LARGEUR * 30, i / LARGEUR * 30, "img/miner.bmp");           break;
+                        case BEACON         : afficherImage (i % LARGEUR * 30, i / LARGEUR * 30, "img/beacon.bmp");          break;
+                        case BOMBE          : afficherImage (i % LARGEUR * 30, i / LARGEUR * 30, "img/Bombe.bmp");           break;
+                        case CREEPERSPAWNER : afficherImage (i % LARGEUR * 30, i / LARGEUR * 30, "img/Creeper_Spawner.bmp"); break;
+                    }
+                    break;
+                
+                case CURSOR: 
+                    afficherImage (i % LARGEUR * 30, i / LARGEUR * 30, "img/sol.bmp");
+                    afficherImage (i % LARGEUR * 30, i / LARGEUR * 30, "img/curseur.bmp");
+                    break;
+            }
+
+        }
+        else /*--->*/ afficherImage (i % LARGEUR * 30, i / LARGEUR * 30, "img/brouillard.bmp");
+        
+    }
+
+    //-----------------------------------------------------//
     
     while (sortie != 0)
     {
-        afficherInterface (carte, tabEntitee, nb_Entitee);
-        afficherCarteV2   (carte);
-        afficherErreur    (&erreur);
-
-        scanf (" %c", &MvtOrAction);
-
-        switch (MvtOrAction)
+        affichageActu = SDL_GetTicks ();
+        if (affichageActu - affichageActuPre >= 1000)
         {
-            case 'a':
-                if (carte->elements[LARGEUR * (int)jPos.y + (int)jPos.x].block == NULL && carte->elements[LARGEUR * (int)jPos.y + (int)jPos.x].entitee == NULL)
-                    carte->elements[LARGEUR * (int)jPos.y + (int)jPos.x].type = 0;
-                jPos.x--;
-                carte->elements[LARGEUR * (int)jPos.y + (int)jPos.x].type = 3;
-
-                break;
-            case 's':
-                if (carte->elements[LARGEUR * (int)jPos.y + (int)jPos.x].block == NULL && carte->elements[LARGEUR * (int)jPos.y + (int)jPos.x].entitee == NULL)
-                    carte->elements[LARGEUR * (int)jPos.y + (int)jPos.x].type = 0;
-                jPos.y++;
-                carte->elements[LARGEUR * (int)jPos.y + (int)jPos.x].type = 3;
-
-                break;
-            case 'd':
-                if (carte->elements[LARGEUR * (int)jPos.y + (int)jPos.x].block == NULL && carte->elements[LARGEUR * (int)jPos.y + (int)jPos.x].entitee == NULL)
-                    carte->elements[LARGEUR * (int)jPos.y + (int)jPos.x].type = 0;
-                jPos.x++;
-                carte->elements[LARGEUR * (int)jPos.y + (int)jPos.x].type = 3;
-
-                break;
-            case 'w':
-                if (carte->elements[LARGEUR * (int)jPos.y + (int)jPos.x].block == NULL && carte->elements[LARGEUR * (int)jPos.y + (int)jPos.x].entitee == NULL)
-                    carte->elements[LARGEUR * (int)jPos.y + (int)jPos.x].type = 0;
-                jPos.y--;
-                carte->elements[LARGEUR * (int)jPos.y + (int)jPos.x].type = 3;
-                break;
-            case 'z':
-                scanf (" %c", &action);
-
-                switch (action)
-                {
-                    case 'a':
-                        
-                        if (carte->elements[LARGEUR * (int)jPos.y + (int)jPos.x].block != NULL)
-                        {
-                            if (carte->elements[LARGEUR * (int)jPos.y + (int)jPos.x].block->dirt != NULL || carte->elements[LARGEUR * (int)jPos.y + (int)jPos.x].block->stone != NULL)
-                            {
-                                if (blockAcasser < 20)
-                                {
-                                    bPos[blockAcasser] = jPos;
-                                    blockAcasser++;
-                                }
-                                else /*--->*/ erreur = 7;
-                                
-                            }
-                            
-                        }
-                        else if (carte->elements[LARGEUR * (int)jPos.y + (int)jPos.x].entitee != NULL && carte->elements[LARGEUR * (int)jPos.y + (int)jPos.x].entitee->ship == NULL)
-                        {
-                            if (carte->elements[LARGEUR * (int)jPos.y + (int)jPos.x].entitee->type == REACTEUR)
-                            //--▼----------------------------------------------------------------------------▼--*/
-                                carte->elements[LARGEUR * SHIPY + SHIPX].entitee->ship->energy_efficient -= 0.15;
-
-                            else if (carte->elements[LARGEUR * (int)jPos.y + (int)jPos.x].entitee->type == MINER)
-                            //--▼--------------------------------------------------------------------------▼--*/
-                                carte->elements[LARGEUR * SHIPY + SHIPX].entitee->ship->gold_efficient -= 0.15;
-                            
-                           
-
-                            for (unsigned int i = 0; i < nb_Entitee; i++)
-                            {
-                                if (tabEntitee[i].x == jPos.x && tabEntitee[i].y == jPos.y)
-                                {
-                                    for (unsigned int j = i; j < nb_Entitee; j++)
-                                    {
-                                        if (j == nb_Entitee - 1) /*--->*/ tabEntitee[j] = (Coord) {0, 0};
-                                        tabEntitee[j] = tabEntitee[j + 1];
-                                    }
-
-                                    nb_Entitee--;
-                                    
-                                    tabEntitee = (Coord*) realloc (tabEntitee, sizeof(Coord) * nb_Entitee);
-                                }
-                                
-                            }
-                            if (carte->elements[LARGEUR * (int)jPos.y + (int)jPos.x].entitee->type == BEACON)
-                            {
-                                carte->elements[LARGEUR * (int)jPos.y + (int)jPos.x].entitee->beacon->power_quantity = 0;
-                                visibilitee (carte, jPos.x, jPos.y);
-                            }
-                            detruireEntitee (carte->elements[LARGEUR * (int)jPos.y + (int)jPos.x].entitee);
-                            carte->elements[LARGEUR * (int)jPos.y + (int)jPos.x].entitee = NULL;
-                            carte->elements[LARGEUR * (int)jPos.y + (int)jPos.x].type = VIDE;
-                        }
-                        else erreur = 1;
-                        
-                        break;
-                    case 'z':
-                        if (carte->elements[LARGEUR * (int)jPos.y + (int)jPos.x].block != NULL || carte->elements[LARGEUR * (int)jPos.y + (int)jPos.x].entitee != NULL) 
-                        //--▼--------▼--*/
-                            erreur = 2;
-                        else
-                        {
-                            scanf (" %c", &MvtOrAction);
-                            if (entiteeAcreer <= 9)
-                            {
-                                ePos[entiteeAcreer] = jPos;
-                                ajouterStructure(carte, ePos[entiteeAcreer].x, ePos[entiteeAcreer].y, (int)MvtOrAction, &erreur);
-                                if (erreur == 0) /*--->*/ entiteeAcreer++;
-                            }
-                            else /*--->*/ erreur = 8;
-                        }
-                            
-                        break;
-                    case 'c':
-                        for (unsigned int i = 0; i < LARGEUR * HAUTEUR; i++)
-                        {
-                            carte->elements[i].visibilitee = 1;
-                        }
-                        break;
-                        
-                    default: erreur = 9; break;
-                }
-                break;
-
-            default: erreur = 9; break;
+            afficherInterface (carte, tabEntitee, nb_Entitee);
+            affichageActuPre = SDL_GetTicks ();
         }
-        if (carte->elements[LARGEUR * (int)jPos.y + (int)jPos.x].block != NULL) /*----->*/ carte->elements[LARGEUR * (int)jPos.y + (int)jPos.x].type = 1;
-        if (carte->elements[LARGEUR * (int)jPos.y + (int)jPos.x].entitee != NULL) /*--->*/ carte->elements[LARGEUR * (int)jPos.y + (int)jPos.x].type = 2;
+        
+        afficherErreur    (&erreur);
+        SDL_RenderPresent (renderer);
+        
+
+        while (SDL_PollEvent(&event1))
+        {
+            if (event1.type == SDL_KEYDOWN)
+            {
+                if (event1.key.keysym.sym == SDLK_c)
+                {
+                    for (unsigned int i = 0; i < LARGEUR * HAUTEUR; i++)
+                    {
+                        carte->elements[i].visibilitee = 1;
+                        switch (carte->elements[i].type)
+                        {
+                            case VIDE  : afficherVide    (carte->elements[i].vide);    break;
+                            case BLOCK : afficherBlock   (carte->elements[i].block);   break;
+                            case ENTITY: afficherEntitee (carte->elements[i].entitee); break;
+                        }
+                    }
+                }
+                else if (event1.key.keysym.sym == SDLK_f)
+                {
+                    if (carte->elements[LARGEUR * (int)jPos.y + (int)jPos.x].block != NULL)
+                    {
+                        if (carte->elements[LARGEUR * (int)jPos.y + (int)jPos.x].block->dirt != NULL || carte->elements[LARGEUR * (int)jPos.y + (int)jPos.x].block->stone != NULL)
+                        {
+                            if (blockAcasser < 20)
+                            {
+                                bPos[blockAcasser] = jPos;
+                                blockAcasser++;
+                            }
+                            else /*--->*/ erreur = 7;
+                            
+                        }
+                        
+                    }
+                    else if (carte->elements[LARGEUR * (int)jPos.y + (int)jPos.x].entitee != NULL && carte->elements[LARGEUR * (int)jPos.y + (int)jPos.x].entitee->ship == NULL)
+                    {
+                        if (carte->elements[LARGEUR * (int)jPos.y + (int)jPos.x].entitee->type == REACTEUR)
+                        //--▼----------------------------------------------------------------------------▼--*/
+                            carte->elements[LARGEUR * SHIPY + SHIPX].entitee->ship->energy_efficient -= 0.15;
+
+                        else if (carte->elements[LARGEUR * (int)jPos.y + (int)jPos.x].entitee->type == MINER)
+                        //--▼--------------------------------------------------------------------------▼--*/
+                            carte->elements[LARGEUR * SHIPY + SHIPX].entitee->ship->gold_efficient -= 0.15;
+                        
+                    
+
+                        for (unsigned int i = 0; i < nb_Entitee; i++)
+                        {
+                            if (tabEntitee[i].x == jPos.x && tabEntitee[i].y == jPos.y)
+                            {
+                                for (unsigned int j = i; j < nb_Entitee; j++)
+                                {
+                                    if (j == nb_Entitee - 1) /*--->*/ tabEntitee[j] = (Coord) {0, 0};
+                                    tabEntitee[j] = tabEntitee[j + 1];
+                                }
+
+                                nb_Entitee--;
+                                
+                                tabEntitee = (Coord*) realloc (tabEntitee, sizeof(Coord) * nb_Entitee);
+                            }
+                            
+                        }
+                        if (carte->elements[LARGEUR * (int)jPos.y + (int)jPos.x].entitee->type == BEACON)
+                        {
+                            carte->elements[LARGEUR * (int)jPos.y + (int)jPos.x].entitee->beacon->power_quantity = 0;
+                            visibilitee (carte, jPos.x, jPos.y);
+
+                            for (unsigned int i = 0; i < LARGEUR * HAUTEUR; i++)
+                            {
+                                if (carte->elements[i].visibilitee == 0)
+                                    afficherImage (i % LARGEUR * 30, i / LARGEUR * 30, "img/brouillard.bmp");
+                                
+                            }
+                            
+                        }
+
+                        detruireEntitee (carte->elements[LARGEUR * (int)jPos.y + (int)jPos.x].entitee);
+                        carte->elements[LARGEUR * (int)jPos.y + (int)jPos.x].entitee = NULL;
+                        carte->elements[LARGEUR * (int)jPos.y + (int)jPos.x].type = VIDE;
+                        afficherImage (jPos.x * 40, jPos.y * 40, "img/sol.bmp");
+
+                    }
+                    else erreur = 1;
+
+                }
+                else if (event1.key.keysym.sym == SDLK_a ||
+                         event1.key.keysym.sym == SDLK_s || 
+                         event1.key.keysym.sym == SDLK_d || 
+                         event1.key.keysym.sym == SDLK_w) /*--->*/ afficherMouvementCurseur (event1.key.keysym.sym, carte, &jPos);
+                
+                else if (event1.key.keysym.sym == SDLK_1 ||
+                         event1.key.keysym.sym == SDLK_2 ||
+                         event1.key.keysym.sym == SDLK_3 ||
+                         event1.key.keysym.sym == SDLK_4 ||
+                         event1.key.keysym.sym == SDLK_5)
+                {
+                    if (carte->elements[LARGEUR * (int)jPos.y + (int)jPos.x].block != NULL || carte->elements[LARGEUR * (int)jPos.y + (int)jPos.x].entitee != NULL) 
+                    //--▼--------▼--*/
+                        erreur = 2;
+                    else
+                    {
+                        if (entiteeAcreer <= 19)
+                        {
+                            ePos[entiteeAcreer] = jPos;
+                            ajouterStructure(carte, ePos[entiteeAcreer].x, ePos[entiteeAcreer].y, event1.key.keysym.sym, &erreur);
+                            if (erreur == 0)
+                            {
+                                entiteeAcreer++;
+                            }
+                        }
+                        else /*--->*/ erreur = 8;
+
+                    }
+                }
+                
+                else erreur = 9;
+
+            }
+            
+        
+        }
+        if (carte->elements[LARGEUR * (int)jPos.y + (int)jPos.x].block != NULL) /*----->*/ carte->elements[LARGEUR * (int)jPos.y + (int)jPos.x].type = BLOCK;
+        if (carte->elements[LARGEUR * (int)jPos.y + (int)jPos.x].entitee != NULL) /*--->*/ carte->elements[LARGEUR * (int)jPos.y + (int)jPos.x].type = ENTITY;
         
         if (blockAcasser > 0)
         {
-            compte = (int*) realloc (compte, sizeof(int) * blockAcasser);
+            compte = (int*) realloc (compte, 4 * blockAcasser);
             if (compte[blockAcasser - 1] != 1) /*--->*/ compte[blockAcasser - 1] = 0;
 
-            casserBlock 
-            (
-                carte,
-                bPos,
-                &blockAcasser,
-                compte,
-                &nb_besoin,
-                &erreur
-            );
+            blockActu = SDL_GetTicks ();
+
+            if (blockActu - blockActuPre >= 1000)
+            {
+                casserBlock
+                (
+                    carte,
+                    bPos,
+                    &blockAcasser,
+                    compte,
+                    &nb_besoin,
+                    &erreur
+                );
+                blockActuPre = SDL_GetTicks ();
+            }
+            
+            
         }
         
         if (entiteeAcreer > 0)
         {
-            compteE = (int*) realloc (compteE, sizeof(int) * entiteeAcreer);
-            if (compteE[entiteeAcreer - 1] != 1) /*--->*/ compteE[entiteeAcreer - 1] = 0;
+            compteE = (int*) realloc (compteE, 4 * entiteeAcreer);
+            if (compteE[entiteeAcreer - 1] == 0) /*--->*/ compteE[entiteeAcreer - 1] = 0;
 
-            tabEntitee = constructionStructure
-            (
-                carte,
-                ePos,
-                tabEntitee,
-                &entiteeAcreer,
-                compteE,
-                &nb_Entitee,
-                &nb_besoin
-            );
+            entitActu = SDL_GetTicks ();
+
+            if (entitActu - entitActuPre >= 1000)
+            {
+                tabEntitee = constructionStructure
+                (
+                    carte,
+                    ePos,
+                    tabEntitee,
+                    &entiteeAcreer,
+                    compteE,
+                    &nb_Entitee,
+                    &nb_besoin
+                );
+                entitActuPre = SDL_GetTicks ();
+            }
+            
         }
         
         visibilitee (carte, SHIPX, SHIPY);
 
 
-        remplirStock (carte);
-        tabEntitee = remplirEnergieStructure
-        (
-            carte,
-            tabEntitee,
-            &nb_Entitee,
-            &nb_besoin,
-            &sortie
-        );
-        viderEnergieStructure (carte, tabEntitee, nb_Entitee);
+        stockActu = SDL_GetTicks ();
+
+        if (stockActu - stockActuPre >= 1000)
+        {
+            remplirStock (carte);
+            stockActuPre = SDL_GetTicks ();
+        }
+
+
+        structActu = SDL_GetTicks ();
+        
+        if (structActu - structActuPre >= 1000)
+        {
+            tabEntitee = remplirEnergieStructure
+            (
+                carte,
+                tabEntitee,
+                &nb_Entitee,
+                &nb_besoin,
+                &sortie
+            );
+            structActuPre = SDL_GetTicks ();
+        }
+
+
+        energieActu = SDL_GetTicks ();
+        
+        if (energieActu - energieActuPre >= 1000)
+        {
+            viderEnergieStructure (carte, tabEntitee, nb_Entitee);
+            energieActuPre = SDL_GetTicks ();
+        }
+        
+        
+
+        
+        spawnActu = SDL_GetTicks ();
         
         for (unsigned int i = 0; i < 3; i++)
         {
             int x = cPos[i].x;
             int y = cPos[i].y;
 
-            if (carte->elements[LARGEUR * y + x].entitee)
+            if (carte->elements[LARGEUR * y + x].entitee && spawnActu - spawnActuPre[i] >= 1000 / carte->elements[LARGEUR * y + x].entitee->creeperSpawner->pulse)
+            {
                 carte->elements[LARGEUR * y + x].vide->creeperQuantity[0] += carte->elements[LARGEUR * y + x].entitee->creeperSpawner->power;
-
+                spawnActuPre[i] = SDL_GetTicks ();
+            }
+            
         }
         
-        mouvementCreeper (carte);
+        creepMove = SDL_GetTicks ();
+
+        if (creepMove - creepMovePre >= 300)
+        {
+            mouvementCreeper (carte, &sortie);
+            creepMovePre = SDL_GetTicks ();
+        }
+        
+
+        if (sortie == -1)
+        {
+            afficherInterface (carte, tabEntitee, nb_Entitee);
+            printf ("Vous avez perdu ! \n");
+            sortie++;
+        }
 
         if (sortie == 0)
         {
             afficherInterface (carte, tabEntitee, nb_Entitee);
-            afficherCarteV2   (carte);
             printf ("Vous avez gagné ! \n");
         }
 
+        creepActu = SDL_GetTicks ();
+        
+        if (creepActu - creepActuPre >= 300)
+        {
+            for (unsigned int i = 0; i < LARGEUR * HAUTEUR; i++)
+            {
+                if (carte->elements[i].type == VIDE && carte->elements[i].visibilitee == 1 && (carte->elements[i].vide->creeperQuantity[0] > 0 ||
+                                                                                               carte->elements[i].vide->creeperQuantity[1] > 0 ||
+                                                                                               carte->elements[i].vide->creeperQuantity[2] > 0 ||
+                                                                                               carte->elements[i].vide->creeperQuantity[3] > 0))
+                    afficherVide (carte->elements[i].vide);
+            }
+            creepActuPre = SDL_GetTicks ();
+        }
+
     }
+
+    SDL_DestroyRenderer (renderer);
+    SDL_DestroyWindow (fenetre);
+
+    SDL_Quit ();
 
     detruireCarte (carte);
     if (compte) /*------->*/ free (compte);
@@ -293,3 +476,7 @@ int main (int argc, char** argv)
 
     return 0;
 }
+
+/*
+                
+*/

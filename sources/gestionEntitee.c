@@ -10,6 +10,7 @@
 #include "../headers/gestionEntitee.h"
 #include "../headers/gestionMem.h"
 #include "../headers/gestionMap.h"
+#include "../headers/gestionAffichage.h"
 
 void ajouterStructure (Map* m, int x, int y, unsigned int type, int* erreur)
 {
@@ -74,12 +75,14 @@ Coord* constructionStructure
 
             if (_compteE[i] == 0)
             {
-                _compteE[i] = testAccessibilitee(m, _ePos[i].x, _ePos[i].y);
+                if (testAccessibilitee(m, _ePos[i].x, _ePos[i].y) == 1)
+                    _compteE[i] = 1;
+                
                 decache (m);
-                if (_compteE[i] == 1) /*--->*/ temp_nbBesoin++;
+                if (_compteE[i] != 0) /*--->*/ temp_nbBesoin++;
                 
             }
-            if (_compteE[i] == 1)
+            if (_compteE[i] != 0)
             {
                 switch (m->elements[LARGEUR * y + x].entitee->type)
                 {
@@ -99,6 +102,8 @@ Coord* constructionStructure
                         {
                             m->elements[LARGEUR * SHIPY + SHIPX].entitee->ship->energy_efficient += 0.15;
                             m->elements[LARGEUR * y + x].type = ENTITY;
+
+                            afficherEntitee (m->elements[LARGEUR * y + x].entitee);
 
                             _ePos[i] = _ePos[tempEAC - 1];
 
@@ -128,7 +133,8 @@ Coord* constructionStructure
                             m->elements[LARGEUR * SHIPY + SHIPX].entitee->ship->gold_efficient += 0.15;
                             m->elements[LARGEUR * y + x].type = ENTITY;
 
-
+                            afficherEntitee (m->elements[LARGEUR * y + x].entitee);
+                            
                             temp_nbEntitee++;
                             _tabEntitee = (Coord*) realloc (_tabEntitee, sizeof(Coord) * temp_nbEntitee);
                             _tabEntitee[temp_nbEntitee - 1] = _ePos[i];
@@ -161,6 +167,8 @@ Coord* constructionStructure
                         {
                             m->elements[LARGEUR * y + x].type = ENTITY;
 
+                            afficherEntitee (m->elements[LARGEUR * y + x].entitee);
+
                             _ePos[i] = _ePos[tempEAC - 1];
 
                             _compteE[i] = _compteE[tempEAC - 1];
@@ -189,6 +197,7 @@ Coord* constructionStructure
                         {
                             m->elements[LARGEUR * y + x].type = ENTITY;
 
+                            afficherEntitee (m->elements[LARGEUR * y + x].entitee);
 
                             temp_nbEntitee++;
                             _tabEntitee = (Coord*) realloc (_tabEntitee, sizeof(Coord) * temp_nbEntitee);
@@ -224,6 +233,7 @@ Coord* constructionStructure
                         {
                             m->elements[LARGEUR * y + x].type = ENTITY;
 
+                            afficherEntitee (m->elements[LARGEUR * y + x].entitee);
 
                             temp_nbEntitee++;
                             _tabEntitee = (Coord*) realloc (_tabEntitee, sizeof(Coord) * temp_nbEntitee);
@@ -313,7 +323,7 @@ Coord* remplirEnergieStructure
                         }
                         else
                         {
-                            m->elements[LARGEUR * y + x].entitee->miner->power_quantity += 1 / temp_nbBesoin;
+                            m->elements[LARGEUR * y + x].entitee->miner->power_quantity += m->elements[LARGEUR * SHIPY + SHIPX].entitee->ship->energy_efficient / temp_nbBesoin;
                             m->elements[LARGEUR * SHIPY + SHIPX].entitee->ship->energy_quantity --;
                         }
 
@@ -332,16 +342,18 @@ Coord* remplirEnergieStructure
                         }
                         else
                         {
-                            m->elements[LARGEUR * y + x].entitee->beacon->power_quantity += 1 / temp_nbBesoin;
+                            m->elements[LARGEUR * y + x].entitee->beacon->power_quantity += m->elements[LARGEUR * SHIPY + SHIPX].entitee->ship->energy_efficient / temp_nbBesoin;
                             m->elements[LARGEUR * SHIPY + SHIPX].entitee->ship->energy_quantity --;
                         }
 
                         temp_nbBesoin--;
                     }
 
-                    if (m->elements[LARGEUR * y + x].entitee->beacon->power_quantity > 0)
+                    if (m->elements[LARGEUR * y + x].entitee->beacon->power_quantity > 0 && m->elements[LARGEUR * y + x].entitee->beacon->power_quantity < 2)
+                    {
+                        printf ("test\n");
                         visibilitee (m, _tabEntitee[i].x, _tabEntitee[i].y);
-                    
+                    }
                     break;
                 
                 case 5:
@@ -354,7 +366,7 @@ Coord* remplirEnergieStructure
                         }
                         else
                         {
-                            m->elements[LARGEUR * y + x].entitee->bombe->power_quantity += 1 / temp_nbBesoin;
+                            m->elements[LARGEUR * y + x].entitee->bombe->power_quantity += m->elements[LARGEUR * SHIPY + SHIPX].entitee->ship->energy_efficient / temp_nbBesoin;
                             m->elements[LARGEUR * SHIPY + SHIPX].entitee->ship->energy_quantity --;
                         }
 
@@ -530,7 +542,7 @@ void effetDegats (Case* c, Entity* attaquant, Entity* victime)
     
 }
 
-void mouvementCreeper (Map* m)
+void mouvementCreeper (Map* m, int* _sortie)
 {
     if (m)
     {
@@ -538,30 +550,53 @@ void mouvementCreeper (Map* m)
         {
             int x = i % LARGEUR;
             int y = i / LARGEUR;
+            /*
+            if (m->elements[LARGEUR * y + x].type == ENTITY)
+            { 
+                if (m->elements[LARGEUR * y + x].entitee->ship && (m->elements[LARGEUR * y + x].vide->creeperQuantity[0] != 0 ||
+                                                                   m->elements[LARGEUR * y + x].vide->creeperQuantity[1] != 0 || 
+                                                                   m->elements[LARGEUR * y + x].vide->creeperQuantity[2] != 0 || 
+                                                                   m->elements[LARGEUR * y + x].vide->creeperQuantity[3] != 0))
+                {
+                    m->elements[LARGEUR * y + x].entitee->ship->health -= 10;
+                        if (m->elements[LARGEUR * y + x].entitee->ship->health == 0)
+                            *_sortie = -1;
+                }
+                else if ((m->elements[LARGEUR * y + x].entitee->reactor || m->elements[LARGEUR * y + x].entitee->miner || m->elements[LARGEUR * y + x].entitee->beacon || m->elements[LARGEUR * y + x].entitee->bombe) && 
+                                                                  (m->elements[LARGEUR * y + x].vide->creeperQuantity[0] != 0 ||
+                                                                   m->elements[LARGEUR * y + x].vide->creeperQuantity[1] != 0 || 
+                                                                   m->elements[LARGEUR * y + x].vide->creeperQuantity[2] != 0 || 
+                                                                   m->elements[LARGEUR * y + x].vide->creeperQuantity[3] != 0))
+                    detruireEntitee (m->elements[LARGEUR * y + x].entitee);
+                        
+            }
+            */ 
+            
 
         //----------------------Transfert Bas-----------------------//
+
             if (m->elements[LARGEUR * y + x].vide)
             {
                 if (m->elements[LARGEUR * (y + 1) + x].vide && (y + 1) < HAUTEUR)
                 {
-                    if (m->elements[LARGEUR * y + x].vide->creeperQuantity[2] >= 1)
+                    if (m->elements[LARGEUR * y + x].vide->creeperQuantity[2] >= 1 && m->elements[LARGEUR * (y + 1) + x].vide->creeperQuantity[0] < m->elements[LARGEUR * y + x].vide->creeperQuantity[2] * 1.2)
                     {
                         m->elements[LARGEUR * (y + 1) + x].vide->creeperQuantity[0] += m->elements[LARGEUR * y + x].vide->creeperQuantity[2] / 1.75;
                         m->elements[LARGEUR * y + x].vide->creeperQuantity[2]       -= m->elements[LARGEUR * y + x].vide->creeperQuantity[2] / 1.75;
                     }
-                    if (m->elements[LARGEUR * y + x].vide->creeperQuantity[3] >= 1)
+                    if (m->elements[LARGEUR * y + x].vide->creeperQuantity[3] >= 1 && m->elements[LARGEUR * (y + 1) + x].vide->creeperQuantity[1] < m->elements[LARGEUR * y + x].vide->creeperQuantity[3] * 1.2)
                     {
                         m->elements[LARGEUR * (y + 1) + x].vide->creeperQuantity[1] += m->elements[LARGEUR * y + x].vide->creeperQuantity[3] / 1.75;
                         m->elements[LARGEUR * y + x].vide->creeperQuantity[3]       -= m->elements[LARGEUR * y + x].vide->creeperQuantity[3] / 1.75;
                     }
                     
                 }
-                if (m->elements[LARGEUR * y + x].vide->creeperQuantity[0] >= 1)
+                if (m->elements[LARGEUR * y + x].vide->creeperQuantity[0] >= 1 && m->elements[LARGEUR * y + x].vide->creeperQuantity[2] < m->elements[LARGEUR * y + x].vide->creeperQuantity[0] * 1.2)
                 {
                     m->elements[LARGEUR * y + x].vide->creeperQuantity[2] += m->elements[LARGEUR * y + x].vide->creeperQuantity[0] / 1.75;
                     m->elements[LARGEUR * y + x].vide->creeperQuantity[0] -= m->elements[LARGEUR * y + x].vide->creeperQuantity[0] / 1.75;
                 }
-                if (m->elements[LARGEUR * y + x].vide->creeperQuantity[1] >= 1)
+                if (m->elements[LARGEUR * y + x].vide->creeperQuantity[1] >= 1 && m->elements[LARGEUR * y + x].vide->creeperQuantity[3] < m->elements[LARGEUR * y + x].vide->creeperQuantity[1] * 1.2)
                 {
                     m->elements[LARGEUR * y + x].vide->creeperQuantity[3] += m->elements[LARGEUR * y + x].vide->creeperQuantity[1] / 1.75;
                     m->elements[LARGEUR * y + x].vide->creeperQuantity[1] -= m->elements[LARGEUR * y + x].vide->creeperQuantity[1] / 1.75;
@@ -569,6 +604,7 @@ void mouvementCreeper (Map* m)
 
             }
             
+            int nb_Creep[4] = {0};
 
         //---------------------Transfert Gauche---------------------//
 
@@ -576,27 +612,49 @@ void mouvementCreeper (Map* m)
             {
                 if (m->elements[LARGEUR * y + x - 1].vide && (x - 1) >= 0)
                 {
-                    if (m->elements[LARGEUR * y + x].vide->creeperQuantity[0] >= 10)
+                    if (m->elements[LARGEUR * y + x].vide->creeperQuantity[0] >= 6 && m->elements[LARGEUR * y + x - 1].vide->creeperQuantity[1] < m->elements[LARGEUR * y + x].vide->creeperQuantity[0])
                     {
-                        m->elements[LARGEUR * y + x - 1].vide->creeperQuantity[1] += m->elements[LARGEUR * y + x].vide->creeperQuantity[0] / 5;
-                        m->elements[LARGEUR * y + x].vide->creeperQuantity[0]     -= m->elements[LARGEUR * y + x].vide->creeperQuantity[0] / 5;
+                        nb_Creep[0] += m->elements[LARGEUR * y + x].vide->creeperQuantity[0] / 3;
+                        m->elements[LARGEUR * y + x - 1].vide->creeperQuantity[1] += nb_Creep[0] / 2;
+                        m->elements[LARGEUR * y + x].vide->creeperQuantity[0]     -= nb_Creep[0] / 2;
                     }
-                    if (m->elements[LARGEUR * y + x].vide->creeperQuantity[2] >= 10)
+                    if (m->elements[LARGEUR * y + x].vide->creeperQuantity[2] >= 6 && m->elements[LARGEUR * y + x - 1].vide->creeperQuantity[3] < m->elements[LARGEUR * y + x].vide->creeperQuantity[2])
                     {
-                        m->elements[LARGEUR * y + x - 1].vide->creeperQuantity[3] += m->elements[LARGEUR * y + x].vide->creeperQuantity[2] / 5;
-                        m->elements[LARGEUR * y + x].vide->creeperQuantity[2]     -= m->elements[LARGEUR * y + x].vide->creeperQuantity[2] / 5;
+                        nb_Creep[2] += m->elements[LARGEUR * y + x].vide->creeperQuantity[2] / 3;
+                        m->elements[LARGEUR * y + x - 1].vide->creeperQuantity[3] += nb_Creep[2] / 2;
+                        m->elements[LARGEUR * y + x].vide->creeperQuantity[2]     -= nb_Creep[2] / 2;
                     }
                     
                 }
-                if (m->elements[LARGEUR * y + x].vide->creeperQuantity[1] >= 10)
+                if (m->elements[LARGEUR * y + x].vide->creeperQuantity[1] >= 6 && m->elements[LARGEUR * y + x].vide->creeperQuantity[0] < m->elements[LARGEUR * y + x].vide->creeperQuantity[1])
                 {
-                    m->elements[LARGEUR * y + x].vide->creeperQuantity[0] += m->elements[LARGEUR * y + x].vide->creeperQuantity[1] / 5;
-                    m->elements[LARGEUR * y + x].vide->creeperQuantity[1] -= m->elements[LARGEUR * y + x].vide->creeperQuantity[1] / 5;
+                    if (m->elements[LARGEUR * y + x + 1].vide && (x + 1) < LARGEUR)
+                    {
+                        nb_Creep[1] += m->elements[LARGEUR * y + x].vide->creeperQuantity[1] / 3;
+                        m->elements[LARGEUR * y + x].vide->creeperQuantity[0] += nb_Creep[1] / 2;
+                        m->elements[LARGEUR * y + x].vide->creeperQuantity[1] -= nb_Creep[1] / 2;
+                    }
+                    else
+                    {
+                        m->elements[LARGEUR * y + x].vide->creeperQuantity[0] += m->elements[LARGEUR * y + x].vide->creeperQuantity[1] / 3;
+                        m->elements[LARGEUR * y + x].vide->creeperQuantity[1] -= m->elements[LARGEUR * y + x].vide->creeperQuantity[1] / 3;
+                    }
+                    
                 }
-                if (m->elements[LARGEUR * y + x].vide->creeperQuantity[3] >= 10)
+                if (m->elements[LARGEUR * y + x].vide->creeperQuantity[3] >= 6 && m->elements[LARGEUR * y + x].vide->creeperQuantity[2] < m->elements[LARGEUR * y + x].vide->creeperQuantity[3])
                 {
-                    m->elements[LARGEUR * y + x].vide->creeperQuantity[2] += m->elements[LARGEUR * y + x].vide->creeperQuantity[3] / 5;
-                    m->elements[LARGEUR * y + x].vide->creeperQuantity[3] -= m->elements[LARGEUR * y + x].vide->creeperQuantity[3] / 5;
+                    if (m->elements[LARGEUR * y + x + 1].vide && (x + 1) < LARGEUR)
+                    {
+                        nb_Creep[3] += m->elements[LARGEUR * y + x].vide->creeperQuantity[3] / 3;
+                        m->elements[LARGEUR * y + x].vide->creeperQuantity[2] += nb_Creep[3] / 2;
+                        m->elements[LARGEUR * y + x].vide->creeperQuantity[3] -= nb_Creep[3] / 2;
+                    }
+                    else
+                    {
+                        m->elements[LARGEUR * y + x].vide->creeperQuantity[2] += m->elements[LARGEUR * y + x].vide->creeperQuantity[3] / 3;
+                        m->elements[LARGEUR * y + x].vide->creeperQuantity[3] -= m->elements[LARGEUR * y + x].vide->creeperQuantity[3] / 3;
+                    }
+                    
                 }
 
             }
@@ -608,27 +666,45 @@ void mouvementCreeper (Map* m)
             {
                 if (m->elements[LARGEUR * y + x + 1].vide && (x + 1) < LARGEUR)
                 {
-                    if (m->elements[LARGEUR * y + x].vide->creeperQuantity[1] >= 10)
+                    if (m->elements[LARGEUR * y + x].vide->creeperQuantity[1] >= 6 && m->elements[LARGEUR * y + x + 1].vide->creeperQuantity[0] < m->elements[LARGEUR * y + x].vide->creeperQuantity[1])
                     {
-                        m->elements[LARGEUR * y + x + 1].vide->creeperQuantity[0] += m->elements[LARGEUR * y + x].vide->creeperQuantity[1] / 5;
-                        m->elements[LARGEUR * y + x].vide->creeperQuantity[1]     -= m->elements[LARGEUR * y + x].vide->creeperQuantity[1] / 5;
+                        m->elements[LARGEUR * y + x + 1].vide->creeperQuantity[0] += nb_Creep[1] / 2;
+                        m->elements[LARGEUR * y + x].vide->creeperQuantity[1]     -= nb_Creep[1] / 2;
                     }
-                    if (m->elements[LARGEUR * y + x].vide->creeperQuantity[3] >= 10)
+                    if (m->elements[LARGEUR * y + x].vide->creeperQuantity[3] >= 6 && m->elements[LARGEUR * y + x + 1].vide->creeperQuantity[2] < m->elements[LARGEUR * y + x].vide->creeperQuantity[3])
                     {
-                        m->elements[LARGEUR * y + x + 1].vide->creeperQuantity[2] += m->elements[LARGEUR * y + x].vide->creeperQuantity[3] / 5;
-                        m->elements[LARGEUR * y + x].vide->creeperQuantity[3]     -= m->elements[LARGEUR * y + x].vide->creeperQuantity[3] / 5;
+                        m->elements[LARGEUR * y + x + 1].vide->creeperQuantity[2] += nb_Creep[3] / 2;
+                        m->elements[LARGEUR * y + x].vide->creeperQuantity[3]     -= nb_Creep[3] / 2;
                     }
                     
                 }
-                if (m->elements[LARGEUR * y + x].vide->creeperQuantity[0] >= 10)
+                if (m->elements[LARGEUR * y + x].vide->creeperQuantity[0] >= 6 && m->elements[LARGEUR * y + x].vide->creeperQuantity[1] < m->elements[LARGEUR * y + x].vide->creeperQuantity[0])
                 {
-                    m->elements[LARGEUR * y + x].vide->creeperQuantity[1] += m->elements[LARGEUR * y + x].vide->creeperQuantity[0] / 5;
-                    m->elements[LARGEUR * y + x].vide->creeperQuantity[0] -= m->elements[LARGEUR * y + x].vide->creeperQuantity[0] / 5;
+                    if (m->elements[LARGEUR * y + x - 1].vide && (x - 1) >= 0 && m->elements[LARGEUR * y + x].vide->creeperQuantity[3] < m->elements[LARGEUR * y + x].vide->creeperQuantity[2])
+                    {
+                        m->elements[LARGEUR * y + x].vide->creeperQuantity[1] += nb_Creep[0] / 2;
+                        m->elements[LARGEUR * y + x].vide->creeperQuantity[0] -= nb_Creep[0] / 2;
+                    }
+                    else
+                    {
+                        m->elements[LARGEUR * y + x].vide->creeperQuantity[1] += m->elements[LARGEUR * y + x].vide->creeperQuantity[0] / 3;
+                        m->elements[LARGEUR * y + x].vide->creeperQuantity[0] -= m->elements[LARGEUR * y + x].vide->creeperQuantity[0] / 3;
+                    }
+
                 }
-                if (m->elements[LARGEUR * y + x].vide->creeperQuantity[2] >= 10)
+                if (m->elements[LARGEUR * y + x].vide->creeperQuantity[2] >= 6)
                 {
-                    m->elements[LARGEUR * y + x].vide->creeperQuantity[3] += m->elements[LARGEUR * y + x].vide->creeperQuantity[2] / 5;
-                    m->elements[LARGEUR * y + x].vide->creeperQuantity[2] -= m->elements[LARGEUR * y + x].vide->creeperQuantity[2] / 5;
+                    if (m->elements[LARGEUR * y + x - 1].vide && (x - 1) >= 0)
+                    {
+                        m->elements[LARGEUR * y + x].vide->creeperQuantity[3] += nb_Creep[2] / 2;
+                        m->elements[LARGEUR * y + x].vide->creeperQuantity[2] -= nb_Creep[2] / 2;
+                    }
+                    else
+                    {
+                        m->elements[LARGEUR * y + x].vide->creeperQuantity[3] += m->elements[LARGEUR * y + x].vide->creeperQuantity[2] / 3;
+                        m->elements[LARGEUR * y + x].vide->creeperQuantity[2] -= m->elements[LARGEUR * y + x].vide->creeperQuantity[2] / 3;
+                    }
+                    
                 }
 
             }
@@ -639,27 +715,27 @@ void mouvementCreeper (Map* m)
             {
                 if (m->elements[LARGEUR * (y - 1) + x].vide && (y - 1) >= 0)
                 {
-                    if (m->elements[LARGEUR * y + x].vide->creeperQuantity[0] >= 50)
+                    if (m->elements[LARGEUR * y + x].vide->creeperQuantity[0] >= 10 && m->elements[LARGEUR * (y - 1) + x].vide->creeperQuantity[2] < m->elements[LARGEUR * y + x].vide->creeperQuantity[0] * 0.6)
                     {
-                        m->elements[LARGEUR * (y - 1) + x].vide->creeperQuantity[2] += m->elements[LARGEUR * y + x].vide->creeperQuantity[0] / 10;
-                        m->elements[LARGEUR * y + x].vide->creeperQuantity[0]       -= m->elements[LARGEUR * y + x].vide->creeperQuantity[0] / 10;
+                        m->elements[LARGEUR * (y - 1) + x].vide->creeperQuantity[2] += m->elements[LARGEUR * y + x].vide->creeperQuantity[0] / 5;
+                        m->elements[LARGEUR * y + x].vide->creeperQuantity[0]       -= m->elements[LARGEUR * y + x].vide->creeperQuantity[0] / 5;
                     }
-                    if (m->elements[LARGEUR * y + x].vide->creeperQuantity[1] >= 50)
+                    if (m->elements[LARGEUR * y + x].vide->creeperQuantity[1] >= 10 && m->elements[LARGEUR * (y - 1) + x].vide->creeperQuantity[3] < m->elements[LARGEUR * y + x].vide->creeperQuantity[1] * 0.6)
                     {
-                        m->elements[LARGEUR * (y - 1) + x].vide->creeperQuantity[3] += m->elements[LARGEUR * y + x].vide->creeperQuantity[1] / 10;
-                        m->elements[LARGEUR * y + x].vide->creeperQuantity[1]       -= m->elements[LARGEUR * y + x].vide->creeperQuantity[1] / 10;
+                        m->elements[LARGEUR * (y - 1) + x].vide->creeperQuantity[3] += m->elements[LARGEUR * y + x].vide->creeperQuantity[1] / 5;
+                        m->elements[LARGEUR * y + x].vide->creeperQuantity[1]       -= m->elements[LARGEUR * y + x].vide->creeperQuantity[1] / 5;
                     }
                     
                 }
-                if (m->elements[LARGEUR * y + x].vide->creeperQuantity[2] >= 50)
+                if (m->elements[LARGEUR * y + x].vide->creeperQuantity[2] >= 10 && m->elements[LARGEUR * y + x].vide->creeperQuantity[0] < m->elements[LARGEUR * y + x].vide->creeperQuantity[2] * 0.6)
                 {
-                    m->elements[LARGEUR * y + x].vide->creeperQuantity[0] += m->elements[LARGEUR * y + x].vide->creeperQuantity[2] / 10;
-                    m->elements[LARGEUR * y + x].vide->creeperQuantity[2] -= m->elements[LARGEUR * y + x].vide->creeperQuantity[2] / 10;
+                    m->elements[LARGEUR * y + x].vide->creeperQuantity[0] += m->elements[LARGEUR * y + x].vide->creeperQuantity[2] / 5;
+                    m->elements[LARGEUR * y + x].vide->creeperQuantity[2] -= m->elements[LARGEUR * y + x].vide->creeperQuantity[2] / 5;
                 }
-                if (m->elements[LARGEUR * y + x].vide->creeperQuantity[3] >= 50)
+                if (m->elements[LARGEUR * y + x].vide->creeperQuantity[3] >= 10 && m->elements[LARGEUR * y + x].vide->creeperQuantity[1] < m->elements[LARGEUR * y + x].vide->creeperQuantity[3] * 0.6)
                 {
-                    m->elements[LARGEUR * y + x].vide->creeperQuantity[1] += m->elements[LARGEUR * y + x].vide->creeperQuantity[3] / 10;
-                    m->elements[LARGEUR * y + x].vide->creeperQuantity[3] -= m->elements[LARGEUR * y + x].vide->creeperQuantity[3] / 10;
+                    m->elements[LARGEUR * y + x].vide->creeperQuantity[1] += m->elements[LARGEUR * y + x].vide->creeperQuantity[3] / 5;
+                    m->elements[LARGEUR * y + x].vide->creeperQuantity[3] -= m->elements[LARGEUR * y + x].vide->creeperQuantity[3] / 5;
                 }
 
             }

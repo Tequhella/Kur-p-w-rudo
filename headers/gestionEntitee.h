@@ -40,6 +40,6 @@ void ajouterSpawnerHasard (Case* c, unsigned int nb_Spawner);
 
 void effetDegats (Case* c, Entity* attaquant, Entity* victime);
 
-void mouvementCreeper (Map* m);
+void mouvementCreeper (Map* m, int* _sortie);
 
 #endif

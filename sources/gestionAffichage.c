@@ -388,3 +388,266 @@ void afficherErreur (int* _erreur)
 }
 
 //--------------------------Affichage Graphique--------------------------//
+
+void afficherImage (int x, int y, char* nomFichier)
+{
+    SDL_Surface* surface_image = SDL_LoadBMP (nomFichier);
+
+    if (surface_image)
+    {
+        SDL_Texture* image = SDL_CreateTextureFromSurface (renderer, surface_image);
+
+        if (image)
+        {
+            SDL_SetRenderTarget (renderer, image);
+
+            SDL_Rect r = (SDL_Rect){x, y};
+
+            SDL_QueryTexture (image, NULL, NULL, &(r.w), &(r.h));
+
+            SDL_RenderCopy (renderer, image, NULL, &r);
+            SDL_SetRenderTarget (renderer, NULL);
+            SDL_DestroyTexture (image);
+        }
+        else fprintf (stderr, "Erreur de création de la texture \n");
+
+        SDL_FreeSurface (surface_image);
+    }
+    else fprintf (stderr, "Erreur de chargement de l'image %s \n", nomFichier);
+    
+}
+
+void afficherMouvementCurseur (int Key, Map* m, Coord* _jPos)
+{
+    if (m)
+    {
+        int x = _jPos->x;
+        int y = _jPos->y;
+
+        if (m->elements[LARGEUR * y + x].block == NULL && m->elements[LARGEUR * y + x].entitee == NULL && m->elements[LARGEUR * y + x].visibilitee == 1)
+        {
+            m->elements[LARGEUR * y + x].type = VIDE;
+            afficherImage (x * 30, y * 30, "img/sol.bmp");
+        }
+        else if (m->elements[LARGEUR * y + x].block != NULL && m->elements[LARGEUR * y + x].visibilitee == 1)
+            afficherBlock (m->elements[LARGEUR * y + x].block);
+
+        else if (m->elements[LARGEUR * y + x].entitee != NULL && m->elements[LARGEUR * y + x].visibilitee == 1)
+            afficherEntitee (m->elements[LARGEUR * y + x].entitee);
+        
+        else
+            afficherImage (x * 30, y * 30, "img/brouillard.bmp");
+
+        switch (Key)
+        {
+            case SDLK_a:
+                x--;
+                afficherImage (x * 30, y * 30, "img/curseur.bmp");
+
+                m->elements[LARGEUR * y + x].type = 3;
+
+                break;
+            case SDLK_s:
+                y++;
+                afficherImage (x * 30, y * 30, "img/curseur.bmp");
+
+                m->elements[LARGEUR * y + x].type = 3;
+
+                break;
+            case SDLK_d:
+                x++;
+                afficherImage (x * 30, y * 30, "img/curseur.bmp");
+
+                m->elements[LARGEUR * y + x].type = 3;
+
+                break;
+            case SDLK_w:
+                y--;
+                afficherImage (x * 30, y * 30, "img/curseur.bmp");
+
+                m->elements[LARGEUR * y + x].type = 3;
+        }
+
+        _jPos->x = x;
+        _jPos->y = y;
+    }
+    
+}
+
+void afficherBlock (Block* b)
+{
+    switch (b->type)
+    {
+        case DIRT : afficherImage (b->dirt->pos.x * 30, b->dirt->pos.y * 30, "img/dirt.bmp"); break;
+        
+        case STONE:
+            switch (b->stone->type)
+            {
+                case STONE1: afficherImage (b->stone->pos.x * 30, b->stone->pos.y * 30, "img/stone1.bmp"); break;
+                case STONE2: afficherImage (b->stone->pos.x * 30, b->stone->pos.y * 30, "img/stone2.bmp"); break;
+                case STONE3: afficherImage (b->stone->pos.x * 30, b->stone->pos.y * 30, "img/stone3.bmp"); break;
+            }
+            break;
+        
+        case GOLD : afficherImage (b->gold->pos.x * 30, b->gold->pos.y * 30, "img/gold.bmp"); break;
+    }
+}
+
+void afficherEntitee (Entity* e)
+{
+    switch (e->type)
+    {
+        case SHIP : afficherImage (e->ship->pos.x * 30, e->ship->pos.y * 30,   "img/ship.bmp"); break;
+        case REACTEUR :
+            if (e->reactor->build <= 0)
+            {
+                afficherImage (e->reactor->pos.x * 30, e->reactor->pos.y * 30,               "img/sol.bmp");
+                afficherImage (e->reactor->pos.x * 30, e->reactor->pos.y * 30,               "img/reactor.bmp");
+            }
+            else /*--->*/ afficherImage (e->reactor->pos.x * 30, e->reactor->pos.y * 30,     "img/sol.bmp");
+            break;
+        case MINER :
+            if (e->miner->build <= 0)
+            {
+                afficherImage (e->miner->pos.x * 30, e->miner->pos.y * 30,                   "img/sol.bmp");
+                afficherImage (e->miner->pos.x * 30, e->miner->pos.y * 30,                   "img/miner.bmp");
+            }
+            else /*--->*/ afficherImage (e->miner->pos.x * 30, e->miner->pos.y * 30,     "img/sol.bmp");
+            break;
+        case SHIELD :
+            if (e->shield->build <= 0)
+            {
+                afficherImage (e->shield->pos.x * 30, e->shield->pos.y * 30,                 "img/sol.bmp");
+                afficherImage (e->shield->pos.x * 30, e->shield->pos.y * 30,                 "img/shield.bmp");
+            }
+            else /*--->*/ afficherImage (e->shield->pos.x * 30, e->shield->pos.y * 30,     "img/sol.bmp");
+            break;
+        case BEACON :
+            if (e->beacon->build <= 0)
+            {
+                afficherImage (e->beacon->pos.x * 30, e->beacon->pos.y * 30,                 "img/sol.bmp");
+                afficherImage (e->beacon->pos.x * 30, e->beacon->pos.y * 30,                 "img/beacon.bmp");
+            }
+            else /*--->*/ afficherImage (e->beacon->pos.x * 30, e->beacon->pos.y * 30,     "img/sol.bmp");
+            break;
+        case BOMBE:
+            if (e->bombe->build <= 0)
+            {
+                afficherImage (e->bombe->pos.x * 30, e->bombe->pos.y * 30,                   "img/sol.bmp");
+                afficherImage (e->bombe->pos.x * 30, e->bombe->pos.y * 30,                   "img/Bombe.bmp");
+            }
+            else /*--->*/ afficherImage (e->bombe->pos.x * 30, e->bombe->pos.y * 30,     "img/sol.bmp");
+            break;
+        case CREEPERSPAWNER :
+            afficherImage (e->creeperSpawner->pos.x * 30, e->creeperSpawner->pos.y * 30, "img/sol.bmp");
+            afficherImage (e->creeperSpawner->pos.x * 30, e->creeperSpawner->pos.y * 30, "img/Creeper_Spawner.bmp");
+            break;
+    }
+}
+
+void afficherVide (Vide* v)
+{
+//-----------------------Case 0-----------------------//
+
+    if (v->creeperQuantity[0] > 0 && v->creeperQuantity[0] < 50)
+        afficherImage (v->pos.x * 30, v->pos.y * 30, "img/Creeper1.bmp");
+
+    else if (v->creeperQuantity[0] >= 50 && v->creeperQuantity[0] < 200)
+        afficherImage (v->pos.x * 30, v->pos.y * 30, "img/Creeper2.bmp");
+
+    else if (v->creeperQuantity[0] >= 200 && v->creeperQuantity[0] < 800)
+        afficherImage (v->pos.x * 30, v->pos.y * 30, "img/Creeper3.bmp");
+
+    else if (v->creeperQuantity[0] >= 800 && v->creeperQuantity[0] < 2000)
+        afficherImage (v->pos.x * 30, v->pos.y * 30, "img/Creeper4.bmp");
+
+    else if (v->creeperQuantity[0] >= 2000 && v->creeperQuantity[0] < 6200)
+        afficherImage (v->pos.x * 30, v->pos.y * 30, "img/Creeper5.bmp");
+
+    else if (v->creeperQuantity[0] >= 6200 && v->creeperQuantity[0] < 12400)
+        afficherImage (v->pos.x * 30, v->pos.y * 30, "img/Creeper6.bmp");
+
+    else if (v->creeperQuantity[0] >= 12400)
+        afficherImage (v->pos.x * 30, v->pos.y * 30, "img/Creeper7.bmp");
+    else
+        afficherImage (v->pos.x * 30, v->pos.y * 30, "img/solMini.bmp");
+
+    
+//-----------------------Case 1-----------------------//
+
+    if (v->creeperQuantity[1] > 0 && v->creeperQuantity[1] < 50)
+        afficherImage (v->pos.x * 30 + 15, v->pos.y * 30, "img/Creeper1.bmp");
+
+    else if (v->creeperQuantity[1] >= 50 && v->creeperQuantity[1] < 200)
+        afficherImage (v->pos.x * 30 + 15, v->pos.y * 30, "img/Creeper2.bmp");
+
+    else if (v->creeperQuantity[1] >= 200 && v->creeperQuantity[1] < 800)
+        afficherImage (v->pos.x * 30 + 15, v->pos.y * 30, "img/Creeper3.bmp");
+
+    else if (v->creeperQuantity[1] >= 800 && v->creeperQuantity[1] < 2000)
+        afficherImage (v->pos.x * 30 + 15, v->pos.y * 30, "img/Creeper4.bmp");
+
+    else if (v->creeperQuantity[1] >= 2000 && v->creeperQuantity[1] < 6200)
+        afficherImage (v->pos.x * 30 + 15, v->pos.y * 30, "img/Creeper5.bmp");
+
+    else if (v->creeperQuantity[1] >= 6200 && v->creeperQuantity[1] < 12400)
+        afficherImage (v->pos.x * 30 + 15, v->pos.y * 30, "img/Creeper6.bmp");
+
+    else if (v->creeperQuantity[1] >= 12400)
+        afficherImage (v->pos.x * 30 + 15, v->pos.y * 30, "img/Creeper7.bmp");
+    else
+        afficherImage (v->pos.x * 30 + 15, v->pos.y * 30, "img/solMini.bmp");
+
+
+//-----------------------Case 2-----------------------//
+
+    if (v->creeperQuantity[2] > 0 && v->creeperQuantity[2] < 50)
+        afficherImage (v->pos.x * 30, v->pos.y * 30 + 15, "img/Creeper1.bmp");
+
+    else if (v->creeperQuantity[2] >= 50 && v->creeperQuantity[2] < 200)
+        afficherImage (v->pos.x * 30, v->pos.y * 30 + 15, "img/Creeper2.bmp");
+
+    else if (v->creeperQuantity[2] >= 200 && v->creeperQuantity[2] < 800)
+        afficherImage (v->pos.x * 30, v->pos.y * 30 + 15, "img/Creeper3.bmp");
+
+    else if (v->creeperQuantity[2] >= 800 && v->creeperQuantity[2] < 2000)
+        afficherImage (v->pos.x * 30, v->pos.y * 30 + 15, "img/Creeper4.bmp");
+
+    else if (v->creeperQuantity[2] >= 2000 && v->creeperQuantity[2] < 6200)
+        afficherImage (v->pos.x * 30, v->pos.y * 30 + 15, "img/Creeper5.bmp");
+
+    else if (v->creeperQuantity[2] >= 6200 && v->creeperQuantity[2] < 12400)
+        afficherImage (v->pos.x * 30, v->pos.y * 30 + 15, "img/Creeper6.bmp");
+
+    else if (v->creeperQuantity[2] >= 12400)
+        afficherImage (v->pos.x * 30, v->pos.y * 30 + 15, "img/Creeper7.bmp");
+    else
+        afficherImage (v->pos.x * 30, v->pos.y * 30 + 15, "img/solMini.bmp");
+
+
+//-----------------------Case 3-----------------------//
+
+    if (v->creeperQuantity[3] > 0 && v->creeperQuantity[3] < 50)
+        afficherImage (v->pos.x * 30 + 15, v->pos.y * 30 + 15, "img/Creeper1.bmp");
+
+    else if (v->creeperQuantity[3] >= 50 && v->creeperQuantity[3] < 200)
+        afficherImage (v->pos.x * 30 + 15, v->pos.y * 30 + 15, "img/Creeper2.bmp");
+
+    else if (v->creeperQuantity[3] >= 200 && v->creeperQuantity[3] < 800)
+        afficherImage (v->pos.x * 30 + 15, v->pos.y * 30 + 15, "img/Creeper3.bmp");
+
+    else if (v->creeperQuantity[3] >= 800 && v->creeperQuantity[3] < 2000)
+        afficherImage (v->pos.x * 30 + 15, v->pos.y * 30 + 15, "img/Creeper4.bmp");
+
+    else if (v->creeperQuantity[3] >= 2000 && v->creeperQuantity[3] < 6200)
+        afficherImage (v->pos.x * 30 + 15, v->pos.y * 30 + 15, "img/Creeper5.bmp");
+
+    else if (v->creeperQuantity[3] >= 6200 && v->creeperQuantity[3] < 12400)
+        afficherImage (v->pos.x * 30 + 15, v->pos.y * 30 + 15, "img/Creeper6.bmp");
+
+    else if (v->creeperQuantity[3] >= 12400)
+        afficherImage (v->pos.x * 30 + 15, v->pos.y * 30 + 15, "img/Creeper7.bmp");
+    else
+        afficherImage (v->pos.x * 30 + 15, v->pos.y * 30 + 15, "img/solMini.bmp");
+
+}

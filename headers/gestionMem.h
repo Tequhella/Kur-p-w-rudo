@@ -14,7 +14,7 @@
 
 //-----------------------------Gestion Map-----------------------------//
 
-Map* creerCarte (double dimX, double dimY, char* nomDeLaCarte);
+Map* creerCarte (int dimX, int dimY, char* nomDeLaCarte);
 
 void detruireCarte (Map* m);
 
