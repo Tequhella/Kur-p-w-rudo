@@ -30,7 +30,7 @@ void afficherBlock (Block* b);
 
 void afficherMouvementCurseur (int Key, Map* m, Coord* _jPos);
 
-void afficherEntitee (Entity* e);
+void afficherEntitee (Case* c, int pos);
 
 void afficherVide (Vide* v);
 

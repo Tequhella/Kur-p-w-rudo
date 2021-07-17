@@ -272,7 +272,7 @@ void visibilitee (Map* m, int x, int y)
                                         {
                                             case VIDE  : afficherVide    (m->elements[i].vide);    break;
                                             case BLOCK : afficherBlock   (m->elements[i].block);   break;
-                                            case ENTITY: afficherEntitee (m->elements[i].entitee); break;
+                                            case ENTITY: afficherEntitee (m->elements, i);         break;
                                         }
 
                                     }
@@ -291,7 +291,7 @@ void visibilitee (Map* m, int x, int y)
                                         {
                                             case VIDE  : afficherVide    (m->elements[i].vide);    break;
                                             case BLOCK : afficherBlock   (m->elements[i].block);   break;
-                                            case ENTITY: afficherEntitee (m->elements[i].entitee); break;
+                                            case ENTITY: afficherEntitee (m->elements, i);         break;
                                         }
 
                                     }
@@ -312,7 +312,7 @@ void visibilitee (Map* m, int x, int y)
                                         {
                                             case VIDE  : afficherVide    (m->elements[i].vide);    break;
                                             case BLOCK : afficherBlock   (m->elements[i].block);   break;
-                                            case ENTITY: afficherEntitee (m->elements[i].entitee); break;
+                                            case ENTITY: afficherEntitee (m->elements, i);         break;
                                         }
 
                                     }
@@ -330,7 +330,7 @@ void visibilitee (Map* m, int x, int y)
                                         {
                                             case VIDE  : afficherVide    (m->elements[i].vide);    break;
                                             case BLOCK : afficherBlock   (m->elements[i].block);   break;
-                                            case ENTITY: afficherEntitee (m->elements[i].entitee); break;
+                                            case ENTITY: afficherEntitee (m->elements, i);         break;
                                         }
 
                                     }

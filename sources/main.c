@@ -191,7 +191,7 @@ int main (int argc, char** argv)
         affichageActu = SDL_GetTicks ();
         if (affichageActu - affichageActuPre >= 1000)
         {
-            afficherInterface (carte, tabEntitee, nb_Entitee);
+            //afficherInterface (carte, tabEntitee, nb_Entitee);
             affichageActuPre = SDL_GetTicks ();
         }
         
@@ -212,7 +212,7 @@ int main (int argc, char** argv)
                         {
                             case VIDE  : afficherVide    (carte->elements[i].vide);    break;
                             case BLOCK : afficherBlock   (carte->elements[i].block);   break;
-                            case ENTITY: afficherEntitee (carte->elements[i].entitee); break;
+                            case ENTITY: afficherEntitee (carte->elements, i);         break;
                         }
                     }
                 }
@@ -316,6 +316,14 @@ int main (int argc, char** argv)
                 else erreur = 9;
 
             }
+            else if (event1.type == SDL_WINDOWEVENT)
+            {
+                if (event1.window.event == SDL_WINDOWEVENT_CLOSE)
+                {
+                    sortie = -2;
+                }
+                
+            }
             
         
         }
@@ -416,7 +424,7 @@ int main (int argc, char** argv)
             int x = cPos[i].x;
             int y = cPos[i].y;
 
-            if (carte->elements[LARGEUR * y + x].entitee && spawnActu - spawnActuPre[i] >= 1000 / carte->elements[LARGEUR * y + x].entitee->creeperSpawner->pulse)
+            if (carte->elements[LARGEUR * y + x].entitee && spawnActu - spawnActuPre[i] >= 1000 * carte->elements[LARGEUR * y + x].entitee->creeperSpawner->pulse)
             {
                 carte->elements[LARGEUR * y + x].vide->creeperQuantity[0] += carte->elements[LARGEUR * y + x].entitee->creeperSpawner->power;
                 spawnActuPre[i] = SDL_GetTicks ();
@@ -426,37 +434,42 @@ int main (int argc, char** argv)
         
         creepMove = SDL_GetTicks ();
 
-        if (creepMove - creepMovePre >= 300)
+        if (creepMove - creepMovePre >= 200)
         {
             mouvementCreeper (carte, &sortie);
             creepMovePre = SDL_GetTicks ();
         }
         
-
-        if (sortie == -1)
-        {
-            afficherInterface (carte, tabEntitee, nb_Entitee);
-            printf ("Vous avez perdu ! \n");
-            sortie++;
-        }
-
         if (sortie == 0)
         {
             afficherInterface (carte, tabEntitee, nb_Entitee);
             printf ("Vous avez gagné ! \n");
         }
+        else if (sortie == -1)
+        {
+            afficherInterface (carte, tabEntitee, nb_Entitee);
+            printf ("Vous avez perdu ! \n");
+            sortie++;
+        }
+        else if (sortie == -2)
+            sortie += 2;
 
         creepActu = SDL_GetTicks ();
         
-        if (creepActu - creepActuPre >= 300)
+        if (creepActu - creepActuPre >= 100)
         {
             for (unsigned int i = 0; i < LARGEUR * HAUTEUR; i++)
             {
-                if (carte->elements[i].type == VIDE && carte->elements[i].visibilitee == 1 && (carte->elements[i].vide->creeperQuantity[0] > 0 ||
+                if ((carte->elements[i].type == VIDE || carte->elements[i].type == ENTITY) && carte->elements[i].visibilitee == 1 && (carte->elements[i].vide->creeperQuantity[0] > 0 ||
                                                                                                carte->elements[i].vide->creeperQuantity[1] > 0 ||
                                                                                                carte->elements[i].vide->creeperQuantity[2] > 0 ||
                                                                                                carte->elements[i].vide->creeperQuantity[3] > 0))
+                {
                     afficherVide (carte->elements[i].vide);
+                    if (carte->elements[i].entitee)
+                        afficherEntitee (carte->elements, i);
+                    
+                }
             }
             creepActuPre = SDL_GetTicks ();
         }
@@ -464,7 +477,7 @@ int main (int argc, char** argv)
     }
 
     SDL_DestroyRenderer (renderer);
-    SDL_DestroyWindow (fenetre);
+    SDL_DestroyWindow   (fenetre);
 
     SDL_Quit ();
 

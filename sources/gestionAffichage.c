@@ -433,7 +433,7 @@ void afficherMouvementCurseur (int Key, Map* m, Coord* _jPos)
             afficherBlock (m->elements[LARGEUR * y + x].block);
 
         else if (m->elements[LARGEUR * y + x].entitee != NULL && m->elements[LARGEUR * y + x].visibilitee == 1)
-            afficherEntitee (m->elements[LARGEUR * y + x].entitee);
+            afficherEntitee (m->elements, LARGEUR * y + x);
         
         else
             afficherImage (x * 30, y * 30, "img/brouillard.bmp");
@@ -493,54 +493,54 @@ void afficherBlock (Block* b)
     }
 }
 
-void afficherEntitee (Entity* e)
+void afficherEntitee (Case* c, int pos)
 {
-    switch (e->type)
+    switch (c[pos].entitee->type)
     {
-        case SHIP : afficherImage (e->ship->pos.x * 30, e->ship->pos.y * 30,   "img/ship.bmp"); break;
+        case SHIP : afficherImage (c[pos].entitee->ship->pos.x * 30, c[pos].entitee->ship->pos.y * 30,   "img/ship.bmp"); break;
         case REACTEUR :
-            if (e->reactor->build <= 0)
+            if (c[pos].entitee->reactor->build <= 0)
             {
-                afficherImage (e->reactor->pos.x * 30, e->reactor->pos.y * 30,               "img/sol.bmp");
-                afficherImage (e->reactor->pos.x * 30, e->reactor->pos.y * 30,               "img/reactor.bmp");
+                afficherVide  (c[pos].vide);
+                afficherImage (c[pos].entitee->reactor->pos.x * 30, c[pos].entitee->reactor->pos.y * 30,               "img/reactor.bmp");
             }
-            else /*--->*/ afficherImage (e->reactor->pos.x * 30, e->reactor->pos.y * 30,     "img/sol.bmp");
+            else /*--->*/ afficherVide  (c[pos].vide);
             break;
         case MINER :
-            if (e->miner->build <= 0)
+            if (c[pos].entitee->miner->build <= 0)
             {
-                afficherImage (e->miner->pos.x * 30, e->miner->pos.y * 30,                   "img/sol.bmp");
-                afficherImage (e->miner->pos.x * 30, e->miner->pos.y * 30,                   "img/miner.bmp");
+                afficherVide  (c[pos].vide);
+                afficherImage (c[pos].entitee->miner->pos.x * 30, c[pos].entitee->miner->pos.y * 30,                   "img/miner.bmp");
             }
-            else /*--->*/ afficherImage (e->miner->pos.x * 30, e->miner->pos.y * 30,     "img/sol.bmp");
+            else /*--->*/ afficherVide  (c[pos].vide);
             break;
         case SHIELD :
-            if (e->shield->build <= 0)
+            if (c[pos].entitee->shield->build <= 0)
             {
-                afficherImage (e->shield->pos.x * 30, e->shield->pos.y * 30,                 "img/sol.bmp");
-                afficherImage (e->shield->pos.x * 30, e->shield->pos.y * 30,                 "img/shield.bmp");
+                afficherVide  (c[pos].vide);
+                afficherImage (c[pos].entitee->shield->pos.x * 30, c[pos].entitee->shield->pos.y * 30,                 "img/shield.bmp");
             }
-            else /*--->*/ afficherImage (e->shield->pos.x * 30, e->shield->pos.y * 30,     "img/sol.bmp");
+            else /*--->*/ afficherVide  (c[pos].vide);
             break;
         case BEACON :
-            if (e->beacon->build <= 0)
+            if (c[pos].entitee->beacon->build <= 0)
             {
-                afficherImage (e->beacon->pos.x * 30, e->beacon->pos.y * 30,                 "img/sol.bmp");
-                afficherImage (e->beacon->pos.x * 30, e->beacon->pos.y * 30,                 "img/beacon.bmp");
+                afficherVide  (c[pos].vide);
+                afficherImage (c[pos].entitee->beacon->pos.x * 30, c[pos].entitee->beacon->pos.y * 30,                 "img/beacon.bmp");
             }
-            else /*--->*/ afficherImage (e->beacon->pos.x * 30, e->beacon->pos.y * 30,     "img/sol.bmp");
+            else /*--->*/ afficherVide  (c[pos].vide);
             break;
         case BOMBE:
-            if (e->bombe->build <= 0)
+            if (c[pos].entitee->bombe->build <= 0)
             {
-                afficherImage (e->bombe->pos.x * 30, e->bombe->pos.y * 30,                   "img/sol.bmp");
-                afficherImage (e->bombe->pos.x * 30, e->bombe->pos.y * 30,                   "img/Bombe.bmp");
+                afficherVide  (c[pos].vide);
+                afficherImage (c[pos].entitee->bombe->pos.x * 30, c[pos].entitee->bombe->pos.y * 30,                   "img/Bombe.bmp");
             }
-            else /*--->*/ afficherImage (e->bombe->pos.x * 30, e->bombe->pos.y * 30,     "img/sol.bmp");
+            else /*--->*/ afficherVide  (c[pos].vide);
             break;
         case CREEPERSPAWNER :
-            afficherImage (e->creeperSpawner->pos.x * 30, e->creeperSpawner->pos.y * 30, "img/sol.bmp");
-            afficherImage (e->creeperSpawner->pos.x * 30, e->creeperSpawner->pos.y * 30, "img/Creeper_Spawner.bmp");
+            afficherVide  (c[pos].vide);
+            afficherImage (c[pos].entitee->creeperSpawner->pos.x * 30, c[pos].entitee->creeperSpawner->pos.y * 30, "img/Creeper_Spawner.bmp");
             break;
     }
 }
@@ -549,25 +549,25 @@ void afficherVide (Vide* v)
 {
 //-----------------------Case 0-----------------------//
 
-    if (v->creeperQuantity[0] > 0 && v->creeperQuantity[0] < 50)
+    if (v->creeperQuantity[0] > 0 && v->creeperQuantity[0] < 1000)
         afficherImage (v->pos.x * 30, v->pos.y * 30, "img/Creeper1.bmp");
 
-    else if (v->creeperQuantity[0] >= 50 && v->creeperQuantity[0] < 200)
+    else if (v->creeperQuantity[0] >= 1000 && v->creeperQuantity[0] < 6000)
         afficherImage (v->pos.x * 30, v->pos.y * 30, "img/Creeper2.bmp");
 
-    else if (v->creeperQuantity[0] >= 200 && v->creeperQuantity[0] < 800)
+    else if (v->creeperQuantity[0] >= 6000 && v->creeperQuantity[0] < 10000)
         afficherImage (v->pos.x * 30, v->pos.y * 30, "img/Creeper3.bmp");
 
-    else if (v->creeperQuantity[0] >= 800 && v->creeperQuantity[0] < 2000)
+    else if (v->creeperQuantity[0] >= 10000 && v->creeperQuantity[0] < 65000)
         afficherImage (v->pos.x * 30, v->pos.y * 30, "img/Creeper4.bmp");
 
-    else if (v->creeperQuantity[0] >= 2000 && v->creeperQuantity[0] < 6200)
+    else if (v->creeperQuantity[0] >= 65000 && v->creeperQuantity[0] < 200000)
         afficherImage (v->pos.x * 30, v->pos.y * 30, "img/Creeper5.bmp");
 
-    else if (v->creeperQuantity[0] >= 6200 && v->creeperQuantity[0] < 12400)
+    else if (v->creeperQuantity[0] >= 200000 && v->creeperQuantity[0] < 1000000)
         afficherImage (v->pos.x * 30, v->pos.y * 30, "img/Creeper6.bmp");
 
-    else if (v->creeperQuantity[0] >= 12400)
+    else if (v->creeperQuantity[0] >= 1000000)
         afficherImage (v->pos.x * 30, v->pos.y * 30, "img/Creeper7.bmp");
     else
         afficherImage (v->pos.x * 30, v->pos.y * 30, "img/solMini.bmp");
@@ -575,25 +575,25 @@ void afficherVide (Vide* v)
     
 //-----------------------Case 1-----------------------//
 
-    if (v->creeperQuantity[1] > 0 && v->creeperQuantity[1] < 50)
+    if (v->creeperQuantity[1] > 0 && v->creeperQuantity[1] < 1000)
         afficherImage (v->pos.x * 30 + 15, v->pos.y * 30, "img/Creeper1.bmp");
 
-    else if (v->creeperQuantity[1] >= 50 && v->creeperQuantity[1] < 200)
+    else if (v->creeperQuantity[1] >= 1000 && v->creeperQuantity[1] < 6000)
         afficherImage (v->pos.x * 30 + 15, v->pos.y * 30, "img/Creeper2.bmp");
 
-    else if (v->creeperQuantity[1] >= 200 && v->creeperQuantity[1] < 800)
+    else if (v->creeperQuantity[1] >= 6000 && v->creeperQuantity[1] < 10000)
         afficherImage (v->pos.x * 30 + 15, v->pos.y * 30, "img/Creeper3.bmp");
 
-    else if (v->creeperQuantity[1] >= 800 && v->creeperQuantity[1] < 2000)
+    else if (v->creeperQuantity[1] >= 10000 && v->creeperQuantity[1] < 65000)
         afficherImage (v->pos.x * 30 + 15, v->pos.y * 30, "img/Creeper4.bmp");
 
-    else if (v->creeperQuantity[1] >= 2000 && v->creeperQuantity[1] < 6200)
+    else if (v->creeperQuantity[1] >= 65000 && v->creeperQuantity[1] < 200000)
         afficherImage (v->pos.x * 30 + 15, v->pos.y * 30, "img/Creeper5.bmp");
 
-    else if (v->creeperQuantity[1] >= 6200 && v->creeperQuantity[1] < 12400)
+    else if (v->creeperQuantity[1] >= 200000 && v->creeperQuantity[1] < 1000000)
         afficherImage (v->pos.x * 30 + 15, v->pos.y * 30, "img/Creeper6.bmp");
 
-    else if (v->creeperQuantity[1] >= 12400)
+    else if (v->creeperQuantity[1] >= 1000000)
         afficherImage (v->pos.x * 30 + 15, v->pos.y * 30, "img/Creeper7.bmp");
     else
         afficherImage (v->pos.x * 30 + 15, v->pos.y * 30, "img/solMini.bmp");
@@ -601,25 +601,25 @@ void afficherVide (Vide* v)
 
 //-----------------------Case 2-----------------------//
 
-    if (v->creeperQuantity[2] > 0 && v->creeperQuantity[2] < 50)
+    if (v->creeperQuantity[2] > 0 && v->creeperQuantity[2] < 1000)
         afficherImage (v->pos.x * 30, v->pos.y * 30 + 15, "img/Creeper1.bmp");
 
-    else if (v->creeperQuantity[2] >= 50 && v->creeperQuantity[2] < 200)
+    else if (v->creeperQuantity[2] >= 1000 && v->creeperQuantity[2] < 6000)
         afficherImage (v->pos.x * 30, v->pos.y * 30 + 15, "img/Creeper2.bmp");
 
-    else if (v->creeperQuantity[2] >= 200 && v->creeperQuantity[2] < 800)
+    else if (v->creeperQuantity[2] >= 6000 && v->creeperQuantity[2] < 10000)
         afficherImage (v->pos.x * 30, v->pos.y * 30 + 15, "img/Creeper3.bmp");
 
-    else if (v->creeperQuantity[2] >= 800 && v->creeperQuantity[2] < 2000)
+    else if (v->creeperQuantity[2] >= 10000 && v->creeperQuantity[2] < 65000)
         afficherImage (v->pos.x * 30, v->pos.y * 30 + 15, "img/Creeper4.bmp");
 
-    else if (v->creeperQuantity[2] >= 2000 && v->creeperQuantity[2] < 6200)
+    else if (v->creeperQuantity[2] >= 65000 && v->creeperQuantity[2] < 200000)
         afficherImage (v->pos.x * 30, v->pos.y * 30 + 15, "img/Creeper5.bmp");
 
-    else if (v->creeperQuantity[2] >= 6200 && v->creeperQuantity[2] < 12400)
+    else if (v->creeperQuantity[2] >= 200000 && v->creeperQuantity[2] < 1000000)
         afficherImage (v->pos.x * 30, v->pos.y * 30 + 15, "img/Creeper6.bmp");
 
-    else if (v->creeperQuantity[2] >= 12400)
+    else if (v->creeperQuantity[2] >= 1000000)
         afficherImage (v->pos.x * 30, v->pos.y * 30 + 15, "img/Creeper7.bmp");
     else
         afficherImage (v->pos.x * 30, v->pos.y * 30 + 15, "img/solMini.bmp");
@@ -627,25 +627,25 @@ void afficherVide (Vide* v)
 
 //-----------------------Case 3-----------------------//
 
-    if (v->creeperQuantity[3] > 0 && v->creeperQuantity[3] < 50)
+    if (v->creeperQuantity[3] > 0 && v->creeperQuantity[3] < 1000)
         afficherImage (v->pos.x * 30 + 15, v->pos.y * 30 + 15, "img/Creeper1.bmp");
 
-    else if (v->creeperQuantity[3] >= 50 && v->creeperQuantity[3] < 200)
+    else if (v->creeperQuantity[3] >= 1000 && v->creeperQuantity[3] < 6000)
         afficherImage (v->pos.x * 30 + 15, v->pos.y * 30 + 15, "img/Creeper2.bmp");
 
-    else if (v->creeperQuantity[3] >= 200 && v->creeperQuantity[3] < 800)
+    else if (v->creeperQuantity[3] >= 6000 && v->creeperQuantity[3] < 10000)
         afficherImage (v->pos.x * 30 + 15, v->pos.y * 30 + 15, "img/Creeper3.bmp");
 
-    else if (v->creeperQuantity[3] >= 800 && v->creeperQuantity[3] < 2000)
+    else if (v->creeperQuantity[3] >= 10000 && v->creeperQuantity[3] < 65000)
         afficherImage (v->pos.x * 30 + 15, v->pos.y * 30 + 15, "img/Creeper4.bmp");
 
-    else if (v->creeperQuantity[3] >= 2000 && v->creeperQuantity[3] < 6200)
+    else if (v->creeperQuantity[3] >= 65000 && v->creeperQuantity[3] < 200000)
         afficherImage (v->pos.x * 30 + 15, v->pos.y * 30 + 15, "img/Creeper5.bmp");
 
-    else if (v->creeperQuantity[3] >= 6200 && v->creeperQuantity[3] < 12400)
+    else if (v->creeperQuantity[3] >= 200000 && v->creeperQuantity[3] < 1000000)
         afficherImage (v->pos.x * 30 + 15, v->pos.y * 30 + 15, "img/Creeper6.bmp");
 
-    else if (v->creeperQuantity[3] >= 12400)
+    else if (v->creeperQuantity[3] >= 1000000)
         afficherImage (v->pos.x * 30 + 15, v->pos.y * 30 + 15, "img/Creeper7.bmp");
     else
         afficherImage (v->pos.x * 30 + 15, v->pos.y * 30 + 15, "img/solMini.bmp");

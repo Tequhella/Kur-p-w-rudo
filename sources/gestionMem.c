@@ -339,8 +339,8 @@ Entity* creerEntitee (double x, double y, unsigned int type)
                 e->creeperSpawner = malloc (sizeof(CreeperSpawner));
 
                 e->creeperSpawner->health = 100;
-                e->creeperSpawner->pulse  = 0.5;
-                e->creeperSpawner->power  = 10000;
+                e->creeperSpawner->pulse  = 1;
+                e->creeperSpawner->power  = 20000;
                 e->creeperSpawner->pos    = (Coord){x, y};
 
                 e->ship    = NULL;
