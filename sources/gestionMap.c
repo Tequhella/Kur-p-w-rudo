@@ -2,7 +2,7 @@
 /* Kurīpāwārudo (inspiré du jeu Creeper World 2)             */
 /*-----------------------------------------------------------*/
 /* Module            : gestionMap.c                          */
-/* Numéro de version : 0.7                                   */
+/* Numéro de version : 0.8.2                                 */
 /* Date              : 18/05/2021                            */
 /* Auteurs           : Lilian CHARDON                        */
 /*************************************************************/
@@ -94,7 +94,8 @@ void remplirHasard (Map* m)
 
 void creerCaverne (Map* m, unsigned int pos, int randMoins)
 {
-    while (pos > LARGEUR * HAUTEUR) /*--->*/ pos = rand() % LARGEUR * HAUTEUR + 280;
+    
+    while (pos > LARGEUR * HAUTEUR || m->elements[pos].type != BLOCK) /*--->*/ pos = rand() % LARGEUR * HAUTEUR + 280;
     
     if (m && m->elements[pos].type == BLOCK)
     {

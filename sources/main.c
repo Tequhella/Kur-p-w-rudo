@@ -2,7 +2,7 @@
 /* Kurīpāwārudo (inspiré du jeu Creeper World 2)             */
 /*-----------------------------------------------------------*/
 /* Module            : main.c                                */
-/* Numéro de version : 0.7                                   */
+/* Numéro de version : 0.8.2                                 */
 /* Date              : 27/05/2021                            */
 /* Auteurs           : Lilian CHARDON                        */
 /*************************************************************/
@@ -18,10 +18,12 @@ int main (int argc, char** argv)
 {
     srand (time(NULL));
 
-    char yesno;
-
-    Map* carte = NULL;
+    char yesno;         // écoute l'utilisateur pour choisir une action.
+    Map* carte = NULL;  // la carte sur laquelle on joue (pas encore créé pour l'instant).
     
+    /*
+    * On demande à l'utilisateur s'il veut charger une carte prédéfinie.
+    */
     printf ("Voulez-vous charger une carte déjà enregistrée ? (y/n) ");
     scanf ("%s", &yesno);
     if (yesno == 'y')
@@ -31,66 +33,74 @@ int main (int argc, char** argv)
         
     }
 
-    yesno = 0;
+    yesno = 0;  // valorisation à 0 pour vider l'ancienne réponse.
 
+
+    /*
+    * Si la carte n'a pas été chargé, on la créé à partir de rien.
+    */
     if (carte == NULL)
     {
+        // On demande à l'utilsateur s'il veut sauvegarder la carte.
         printf ("Voulez-vous sauvegarder cette map ? (y/n) ");
         scanf ("%s", &yesno);
         if (yesno == 'y')
         {
             carte = sauvegarderCarte (carte);
             char temp[15];
-            for (unsigned int i = 0; i < 15; i++)
-                temp[i] = carte->nomDeLaCarte[i];
+            for (unsigned int i = 0; i < 15; i++)   // Le nom de la carte ne se charge pas correctement,
+                temp[i] = carte->nomDeLaCarte[i];   // on le sauvegarde dans un tempon pour le récupérer ensuite.
                 
             carte->nomDeLaCarte = temp;
         }
         else
         {
+            // On créé la carte normalement, avec les dimensions le nom de la carte choisie.
             carte = creerCarte(LARGEUR, HAUTEUR, "newMap");
 
+            // On rempli la carte des blocks de manière aléatoirement.
             remplirHasard (carte);
-            creerCaverne  (carte, rand() % LARGEUR * HAUTEUR + 280, 0);
-            creerCaverne  (carte, rand() % LARGEUR * HAUTEUR + 280, 0);
-            creerCaverne  (carte, rand() % LARGEUR * HAUTEUR + 280, 0);
-            creerCaverne  (carte, rand() % LARGEUR * HAUTEUR + 280, 0);
+
+            // On créé plusieurs cavernes aléatoires.
+            for (unsigned int i = 0; i < 4; i++)
+                creerCaverne  (carte, rand() % LARGEUR * HAUTEUR + 280, 0);
+
+            // On ajoute les producteurs de creeper.
             ajouterSpawnerHasard(carte->elements, NB_CREEPERSPAWNER);
         }
 
     }
 
-    int sortie        = NB_CREEPERSPAWNER;
+    int sortie           = NB_CREEPERSPAWNER,
+        affichageActu    = 0,
+        affichageActuPre = 0;
 
-    int affichageActu    = 0;
-    int affichageActuPre = 0;
+    int blockActu       = 0,
+        blockActuPre    = 0,
+        blockAcasser    = 0;
 
-    int blockActu       = 0;
-    int blockActuPre    = 0;
+    int entitActu       = 0,
+        entitActuPre    = 0,
+        entiteeAcreer   = 0;
 
-    int entitActu       = 0;
-    int entitActuPre    = 0;
+    int stockActu       = 0,
+        stockActuPre    = 0,
+        structActu      = 0,
+        structActuPre   = 0;
 
-    int stockActu       = 0;
-    int stockActuPre    = 0;
+    int energieActu     = 0,
+        energieActuPre  = 0;
 
-    int structActu      = 0;
-    int structActuPre   = 0;
+    int creepActu       = 0,
+        creepActuPre    = 0,
+        creepMove       = 0,
+        creepMovePre    = 0;
 
-    int energieActu     = 0;
-    int energieActuPre  = 0;
+    int spawnActu       = 0,
+        spawnActuPre[3] = {0};
 
-    int creepActu       = 0;
-    int creepActuPre    = 0;
-
-    int creepMove       = 0;
-    int creepMovePre    = 0;
-
-    int spawnActu       = 0;
-    int spawnActuPre[3] = {0};
-
-    int blockAcasser  = 0;
-    int entiteeAcreer = 0;
+    
+    
 
     int erreur        = 0;
     int nb_besoin     = 0;
@@ -318,11 +328,7 @@ int main (int argc, char** argv)
             }
             else if (event1.type == SDL_WINDOWEVENT)
             {
-                if (event1.window.event == SDL_WINDOWEVENT_CLOSE)
-                {
-                    sortie = -2;
-                }
-                
+                if (event1.window.event == SDL_WINDOWEVENT_CLOSE) /*--->*/ sortie = -2;
             }
             
         
@@ -426,7 +432,10 @@ int main (int argc, char** argv)
 
             if (carte->elements[LARGEUR * y + x].entitee && spawnActu - spawnActuPre[i] >= 1000 * carte->elements[LARGEUR * y + x].entitee->creeperSpawner->pulse)
             {
-                carte->elements[LARGEUR * y + x].vide->creeperQuantity[0] += carte->elements[LARGEUR * y + x].entitee->creeperSpawner->power;
+                carte->elements[LARGEUR * y + x].vide->creeperQuantity[0] += carte->elements[LARGEUR * y + x].entitee->creeperSpawner->power / 4;
+                carte->elements[LARGEUR * y + x].vide->creeperQuantity[1] += carte->elements[LARGEUR * y + x].entitee->creeperSpawner->power / 4;
+                carte->elements[LARGEUR * y + x].vide->creeperQuantity[2] += carte->elements[LARGEUR * y + x].entitee->creeperSpawner->power / 4;
+                carte->elements[LARGEUR * y + x].vide->creeperQuantity[3] += carte->elements[LARGEUR * y + x].entitee->creeperSpawner->power / 4;
                 spawnActuPre[i] = SDL_GetTicks ();
             }
             
@@ -456,7 +465,7 @@ int main (int argc, char** argv)
 
         creepActu = SDL_GetTicks ();
         
-        if (creepActu - creepActuPre >= 100)
+        if (creepActu - creepActuPre >= 200)
         {
             for (unsigned int i = 0; i < LARGEUR * HAUTEUR; i++)
             {

@@ -2,7 +2,7 @@
 /* Kurīpāwārudo (inspiré du jeu Creeper World 2)             */
 /*-----------------------------------------------------------*/
 /* Module            : gestionMem.c                          */
-/* Numéro de version : 0.7                                   */
+/* Numéro de version : 0.8.2                                 */
 /* Date              : 18/05/2021                            */
 /* Auteurs           : Lilian CHARDON                        */
 /*************************************************************/
@@ -340,7 +340,7 @@ Entity* creerEntitee (double x, double y, unsigned int type)
 
                 e->creeperSpawner->health = 100;
                 e->creeperSpawner->pulse  = 1;
-                e->creeperSpawner->power  = 20000;
+                e->creeperSpawner->power  = 200000;
                 e->creeperSpawner->pos    = (Coord){x, y};
 
                 e->ship    = NULL;

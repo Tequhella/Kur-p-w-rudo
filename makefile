@@ -1,5 +1,5 @@
 all: main.o gestionMem.o gestionMap.o gestionAffichage.o gestionEntitee.o gestionFichier.o
-	gcc main.o gestionMem.o gestionMap.o gestionAffichage.o gestionEntitee.o gestionFichier.o -o Jeu-v0-8-1 -lSDL2
+	gcc main.o gestionMem.o gestionMap.o gestionAffichage.o gestionEntitee.o gestionFichier.o -o Jeu-v0-8-2 -lSDL2
 
 main.o:
 	gcc -c sources/main.c -o main.o

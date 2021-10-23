@@ -2,7 +2,7 @@
 /* Kurīpāwārudo (inspiré du jeu Creeper World 2)             */
 /*-----------------------------------------------------------*/
 /* Module            : gestionAffichage.c                    */
-/* Numéro de version : 0.7                                   */
+/* Numéro de version : 0.8.2                                 */
 /* Date              : 18/05/2021                            */
 /* Auteurs           : Lilian CHARDON                        */
 /*************************************************************/
@@ -558,17 +558,20 @@ void afficherVide (Vide* v)
     else if (v->creeperQuantity[0] >= 6000 && v->creeperQuantity[0] < 10000)
         afficherImage (v->pos.x * 30, v->pos.y * 30, "img/Creeper3.bmp");
 
-    else if (v->creeperQuantity[0] >= 10000 && v->creeperQuantity[0] < 65000)
+    else if (v->creeperQuantity[0] >= 10000 && v->creeperQuantity[0] < 70000)
         afficherImage (v->pos.x * 30, v->pos.y * 30, "img/Creeper4.bmp");
 
-    else if (v->creeperQuantity[0] >= 65000 && v->creeperQuantity[0] < 200000)
+    else if (v->creeperQuantity[0] >= 70000 && v->creeperQuantity[0] < 200000)
         afficherImage (v->pos.x * 30, v->pos.y * 30, "img/Creeper5.bmp");
 
     else if (v->creeperQuantity[0] >= 200000 && v->creeperQuantity[0] < 1000000)
         afficherImage (v->pos.x * 30, v->pos.y * 30, "img/Creeper6.bmp");
 
-    else if (v->creeperQuantity[0] >= 1000000)
+    else if (v->creeperQuantity[0] >= 1000000 && v->creeperQuantity[0] < 5000000)
         afficherImage (v->pos.x * 30, v->pos.y * 30, "img/Creeper7.bmp");
+
+    else if (v->creeperQuantity[0] >= 5000000)
+        afficherImage (v->pos.x * 30, v->pos.y * 30, "img/Creeper8.bmp");
     else
         afficherImage (v->pos.x * 30, v->pos.y * 30, "img/solMini.bmp");
 
@@ -584,17 +587,20 @@ void afficherVide (Vide* v)
     else if (v->creeperQuantity[1] >= 6000 && v->creeperQuantity[1] < 10000)
         afficherImage (v->pos.x * 30 + 15, v->pos.y * 30, "img/Creeper3.bmp");
 
-    else if (v->creeperQuantity[1] >= 10000 && v->creeperQuantity[1] < 65000)
+    else if (v->creeperQuantity[1] >= 10000 && v->creeperQuantity[1] < 70000)
         afficherImage (v->pos.x * 30 + 15, v->pos.y * 30, "img/Creeper4.bmp");
 
-    else if (v->creeperQuantity[1] >= 65000 && v->creeperQuantity[1] < 200000)
+    else if (v->creeperQuantity[1] >= 70000 && v->creeperQuantity[1] < 200000)
         afficherImage (v->pos.x * 30 + 15, v->pos.y * 30, "img/Creeper5.bmp");
 
     else if (v->creeperQuantity[1] >= 200000 && v->creeperQuantity[1] < 1000000)
         afficherImage (v->pos.x * 30 + 15, v->pos.y * 30, "img/Creeper6.bmp");
 
-    else if (v->creeperQuantity[1] >= 1000000)
+    else if (v->creeperQuantity[1] >= 1000000 && v->creeperQuantity[1] < 5000000)
         afficherImage (v->pos.x * 30 + 15, v->pos.y * 30, "img/Creeper7.bmp");
+
+    else if (v->creeperQuantity[1] >= 5000000)
+        afficherImage (v->pos.x * 30 + 15, v->pos.y * 30, "img/Creeper8.bmp");
     else
         afficherImage (v->pos.x * 30 + 15, v->pos.y * 30, "img/solMini.bmp");
 
@@ -610,17 +616,20 @@ void afficherVide (Vide* v)
     else if (v->creeperQuantity[2] >= 6000 && v->creeperQuantity[2] < 10000)
         afficherImage (v->pos.x * 30, v->pos.y * 30 + 15, "img/Creeper3.bmp");
 
-    else if (v->creeperQuantity[2] >= 10000 && v->creeperQuantity[2] < 65000)
+    else if (v->creeperQuantity[2] >= 10000 && v->creeperQuantity[2] < 70000)
         afficherImage (v->pos.x * 30, v->pos.y * 30 + 15, "img/Creeper4.bmp");
 
-    else if (v->creeperQuantity[2] >= 65000 && v->creeperQuantity[2] < 200000)
+    else if (v->creeperQuantity[2] >= 70000 && v->creeperQuantity[2] < 200000)
         afficherImage (v->pos.x * 30, v->pos.y * 30 + 15, "img/Creeper5.bmp");
 
     else if (v->creeperQuantity[2] >= 200000 && v->creeperQuantity[2] < 1000000)
         afficherImage (v->pos.x * 30, v->pos.y * 30 + 15, "img/Creeper6.bmp");
 
-    else if (v->creeperQuantity[2] >= 1000000)
+    else if (v->creeperQuantity[2] >= 1000000  && v->creeperQuantity[2] < 5000000)
         afficherImage (v->pos.x * 30, v->pos.y * 30 + 15, "img/Creeper7.bmp");
+
+    else if (v->creeperQuantity[2] >= 5000000)
+        afficherImage (v->pos.x * 30, v->pos.y * 30 + 15, "img/Creeper8.bmp");
     else
         afficherImage (v->pos.x * 30, v->pos.y * 30 + 15, "img/solMini.bmp");
 
@@ -636,17 +645,20 @@ void afficherVide (Vide* v)
     else if (v->creeperQuantity[3] >= 6000 && v->creeperQuantity[3] < 10000)
         afficherImage (v->pos.x * 30 + 15, v->pos.y * 30 + 15, "img/Creeper3.bmp");
 
-    else if (v->creeperQuantity[3] >= 10000 && v->creeperQuantity[3] < 65000)
+    else if (v->creeperQuantity[3] >= 10000 && v->creeperQuantity[3] < 70000)
         afficherImage (v->pos.x * 30 + 15, v->pos.y * 30 + 15, "img/Creeper4.bmp");
 
-    else if (v->creeperQuantity[3] >= 65000 && v->creeperQuantity[3] < 200000)
+    else if (v->creeperQuantity[3] >= 70000 && v->creeperQuantity[3] < 200000)
         afficherImage (v->pos.x * 30 + 15, v->pos.y * 30 + 15, "img/Creeper5.bmp");
 
     else if (v->creeperQuantity[3] >= 200000 && v->creeperQuantity[3] < 1000000)
         afficherImage (v->pos.x * 30 + 15, v->pos.y * 30 + 15, "img/Creeper6.bmp");
 
-    else if (v->creeperQuantity[3] >= 1000000)
+    else if (v->creeperQuantity[3] >= 1000000  && v->creeperQuantity[3] < 5000000)
         afficherImage (v->pos.x * 30 + 15, v->pos.y * 30 + 15, "img/Creeper7.bmp");
+
+    else if (v->creeperQuantity[3] >= 5000000)
+        afficherImage (v->pos.x * 30 + 15, v->pos.y * 30 + 15, "img/Creeper8.bmp");
     else
         afficherImage (v->pos.x * 30 + 15, v->pos.y * 30 + 15, "img/solMini.bmp");
 
