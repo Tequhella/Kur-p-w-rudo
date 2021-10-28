@@ -8,40 +8,33 @@ using namespace std ;
 class Block
 {
     public:
-
-        typedef struct
-        {
-            double x;
-            double y;
-        }
-        Coord ;
-        
+  
         typedef struct str_dirt
         {
-            Coord pos ;
+            double* hardness ;
         }
         Dirt ;
 
         typedef struct str_stone
         {
-            unsigned int type ;
-            double       hardness ;
-            Coord        pos ;
+            unsigned int* type ;
+            double*       hardness ;
         }
         Stone ;
 
         typedef struct str_gold
         {
-            unsigned int type ;
-            unsigned int quantity ;
-            Coord pos ;
+            unsigned int* quantity ;
         }
         Gold ;
+
     /*************************************************************************
     *                       Constructeur & Destructeur                       *
     *************************************************************************/
 
-        Block (unsigned int type, unsigned int typeStone, double posX, double posY) ;
+        Block () ;
+
+        Block (unsigned int type, unsigned int typeStone) ;
 
         ~Block () ;
 
@@ -54,6 +47,8 @@ class Block
         ////////////
         unsigned int getType () ;
 
+        unsigned int getStoneType () ;
+
         Dirt* getDirt () ;
 
         Stone* getStone () ;
@@ -62,10 +57,10 @@ class Block
     
     private:
 
-        unsigned int type ;
-        Dirt*        dirt ;
-        Stone*       stone ;
-        Gold*        gold ;
+        unsigned int type  = 0 ;
+        Dirt*        dirt  = nullptr ;
+        Stone*       stone = nullptr ;
+        Gold*        gold  = nullptr ;
 } ;
 
 #endif

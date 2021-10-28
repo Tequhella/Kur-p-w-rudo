@@ -19,5 +19,7 @@ int main ()
 
     mapHasard.~Carte () ;
 
+    std::cout << sizeof(Case) << std::endl ;
+
     return 0;
 }

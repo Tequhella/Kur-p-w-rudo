@@ -1,30 +1,39 @@
 /*************************************************************/
 /* Kurīpāwārudo (inspiré du jeu Creeper World 2)             */
 /*-----------------------------------------------------------*/
-/* Module            : block.c                               */
-/* Numéro de version : 0.1                                   */
+/* Module            : block.cpp                             */
+/* Numéro de version : 0.2                                   */
 /* Branche           : Branch-CPP                            */
 /* Date              : 23/10/2021                            */
 /* Auteurs           : Lilian CHARDON                        */
 /*************************************************************/
 
 #include "../headers/block.h"
-#include "../headers/type.h"
 
 /*************************************************************************
 *                       Constructeur & Destructeur                       *
 *************************************************************************/
 
-Block::Block (unsigned int type, unsigned int typeStone, double posX, double posY)
+Block::Block ()
+{
+
+}
+
+Block::Block (unsigned int type, unsigned int typeStone)
 {
     switch (type)
     {
     case 1:
+        // Création bloc de terre.
         dirt = new Dirt ;
         if (dirt) 
         {
-            type      = type ;
-            dirt->pos = (Coord) {posX, posY} ;
+            cout << sizeof(type) << endl ;
+            cout << sizeof(this->type) << endl ;
+            this->type = type ;
+            gold       = nullptr ;
+            stone      = nullptr ;
+            *(dirt->hardness) = 3 ;
         }
         else
         {
@@ -34,12 +43,20 @@ Block::Block (unsigned int type, unsigned int typeStone, double posX, double pos
         
         break ;
     case 2:
+        // Création bloc de roche.
         stone = new Stone ;
         if (stone)
         {
-            type        = type ;
-            stone->type = typeStone ;
-            stone->pos  = (Coord) {posX, posY} ;
+            this->type     = type ;
+            dirt           = nullptr ;
+            gold           = nullptr ;
+            *(stone->type) = typeStone ;
+            switch (typeStone)
+            {
+                case 1: *(stone->hardness) = 6  ; break ;
+                case 2: *(stone->hardness) = 12 ; break ;
+                case 3: *(stone->hardness) = 24 ; break ;
+            }
         }
         else
         {
@@ -49,12 +66,14 @@ Block::Block (unsigned int type, unsigned int typeStone, double posX, double pos
         
         break ;
     case 3:
+        // Création bloc de minerai.
         gold = new Gold ;
         if (gold)
         {
-            type           = type ;
-            gold->quantity = 200 ;
-            gold->pos      = (Coord) {posX, posY} ;
+            this->type        = type ;
+            dirt              = nullptr ;
+            stone             = nullptr ;
+            *(gold->quantity) = 200 ;
         }
         else
         {
@@ -70,16 +89,19 @@ Block::~Block ()
 {
     if (dirt)
     {
+        // Destruction bloc de terre.
         delete dirt ;
         dirt = nullptr ;
     }
     else if (stone)
     {
+        // Destruction bloc de roche.
         delete stone ;
         stone = nullptr ;
     }
     else if (gold)
     {
+        // Destruction bloc de minerai.
         delete gold ;
         gold = nullptr ;
     }
@@ -101,6 +123,11 @@ Block::~Block ()
 unsigned int Block::getType ()
 {
     return type ;
+}
+
+unsigned int Block::getStoneType ()
+{
+    return *(stone->type) ;
 }
 
 Block::Dirt* Block::getDirt ()

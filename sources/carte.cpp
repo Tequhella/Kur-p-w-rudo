@@ -1,15 +1,14 @@
 /*************************************************************/
 /* Kurīpāwārudo (inspiré du jeu Creeper World 2)             */
 /*-----------------------------------------------------------*/
-/* Module            : carte.c                               */
-/* Numéro de version : 0.1                                   */
+/* Module            : carte.cpp                             */
+/* Numéro de version : 0.2                                   */
 /* Branche           : Branch-CPP                            */
 /* Date              : 23/10/2021                            */
 /* Auteurs           : Lilian CHARDON                        */
 /*************************************************************/
 
 #include "../headers/carte.h"
-#include "../headers/type.h"
 
 /*************************************************************************
 *                       Constructeur & Destructeur                       *
@@ -26,8 +25,8 @@ Carte::Carte (int dimX, int dimY, char nomDeLaCarte)
     }
     else
     {
-        elements = (Case*) calloc (dimX * dimY, sizeof(Case)) ;
-
+        elements = new Case [sizeof(Case) * dimX * dimY] ;
+        
         if (elements)
         {
             this->dimX         = dimX ;
@@ -48,8 +47,8 @@ Carte::~Carte ()
 {
     if (elements)
     {
-        for (unsigned int i = 0; i < dimX * dimY; i++) /*--->*/ this->elements[i].block.~Block () ;
-        free (elements);
+        for (unsigned int i = 0; i < dimX * dimY; i++) /*--->*/ this->elements[i].getBlock ()->~Block () ;
+        this->elements->~Case() ;
         elements = nullptr;
     }
     else
@@ -67,7 +66,7 @@ Carte::~Carte ()
 
 void Carte::remplirHasard ()
 {
-    std::srand (1792) ;
+    std::srand (std::time(nullptr)) ;
 
     int dirt ;
     int stone ;
@@ -78,17 +77,22 @@ void Carte::remplirHasard ()
         dirt  = rand()%40+1 ;
         stone = rand()%40+1 ;
         gold  = rand()%40+1 ;
+
+        this->elements[i].setPos (i % LARGEUR, i / LARGEUR) ;
         
         if (i >= 5 * LARGEUR)
         {
-            elements[i].type = BLOCK ;
-
-            if (gold < 2) /*---------->*/ elements[i].block = Block (GOLD, 0, i % LARGEUR, i / LARGEUR) ;
-            else if (stone < 10) /*--->*/ elements[i].block = Block (STONE, rand()%3+1, i % LARGEUR, i / LARGEUR) ;
-            else if (dirt <= 40) /*--->*/ elements[i].block = Block (DIRT, 0, i % LARGEUR, i / LARGEUR) ;
+            this->elements[i].setTypeElement (BLOCK) ;
+            
+            if (gold < 2) /*---------->*/ this->elements[i].setBlock (GOLD, 0) ;
+            else if (stone < 10) /*--->*/ this->elements[i].setBlock (STONE, rand()%3+1) ;
+            else if (dirt <= 40) /*--->*/ this->elements[i].setBlock (DIRT, 0) ;
             
         }
-        std::cout << elements[i].type << std::endl ;
+        if (elements[i].getTypeElement() == STONE)
+        {
+            cout << this->elements[i].getBlock()->getStoneType() << endl;
+        }
 
     }
 }
@@ -122,17 +126,17 @@ void Carte::afficherCarte () const
             }
             else
             {
-                if (j == 0 || j == LARGEUR + 1) /*--->*/ cout << "║";
+                if (j == 0 || j == LARGEUR + 1) /*--->*/ cout << "║" ;
                 else
                 {
-                    if (elements[k].type == 0) /*--->*/ cout << " ";
+                    if (elements[k].getTypeElement() == 0) /*---->*/ cout << " " ;
                     else
                     {
-                        switch (elements[k].block.getType())
+                        switch (elements[k].getBlock()->getType())
                         {
                             case 1: cout << "░"; break ;
                             case 2:
-                                switch (elements[k].block.getStone()->type)
+                                switch (elements[k].getBlock()->getStoneType())
                                 {
                                     case 1: cout << "▒"; break ;
                                     case 2: cout << "▓"; break ;
@@ -143,7 +147,7 @@ void Carte::afficherCarte () const
                         }
                     }
                     
-                    k++;
+                    k++ ;
 
                 }
                 
@@ -170,7 +174,7 @@ unsigned int Carte::getDimY ()
     return dimY ;
 }
 
-Carte::Case* Carte::getElement ()
+Case* Carte::getElement ()
 {
     return elements ;
 }

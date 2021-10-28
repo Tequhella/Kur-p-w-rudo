@@ -2,6 +2,7 @@
 #define DEF_CARTE
 
 #include "block.h"
+#include "case.h"
 
 using namespace std ;
 
@@ -9,16 +10,11 @@ class Carte
 {
     public:
     
-        typedef union Case
-        {
-            unsigned int type ;
-            Block        block ;
-        }
-        Case ;
     /*************************************************************************
     *                       Constructeur & Destructeur                       *
     *************************************************************************/
         Carte (int dimX, int dimY, char nomDeLaCarte) ;
+        
         ~Carte () ;
 
     /*************************************************************************
