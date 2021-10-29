@@ -8,25 +8,6 @@ using namespace std ;
 class Block
 {
     public:
-  
-        typedef struct str_dirt
-        {
-            double* hardness ;
-        }
-        Dirt ;
-
-        typedef struct str_stone
-        {
-            unsigned int* type ;
-            double*       hardness ;
-        }
-        Stone ;
-
-        typedef struct str_gold
-        {
-            unsigned int* quantity ;
-        }
-        Gold ;
 
     /*************************************************************************
     *                       Constructeur & Destructeur                       *
@@ -49,18 +30,16 @@ class Block
 
         unsigned int getStoneType () ;
 
-        Dirt* getDirt () ;
+        double getHardness () ;
 
-        Stone* getStone () ;
-
-        Gold* getGold () ;
+        int getGold_quantity () ;
     
     private:
 
-        unsigned int type  = 0 ;
-        Dirt*        dirt  = nullptr ;
-        Stone*       stone = nullptr ;
-        Gold*        gold  = nullptr ;
+        unsigned int type          = 0 ;
+        unsigned int stoneType     = 0 ;
+        double       hardness      = 0 ;
+        int          gold_quantity = 0 ;
 } ;
 
 #endif

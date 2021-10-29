@@ -27,6 +27,8 @@ class Case
     *                                 Méthode                                *
     *************************************************************************/
 
+        void detruireBlock () ;
+
         ////////////
         // Getter //
         ////////////
@@ -48,7 +50,7 @@ class Case
 
     private:
 
-        unsigned int type ;
+        unsigned int type = 0;
         Block        block ;
         Coord        pos ;
 } ;

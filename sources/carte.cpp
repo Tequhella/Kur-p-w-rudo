@@ -47,9 +47,10 @@ Carte::~Carte ()
 {
     if (elements)
     {
-        for (unsigned int i = 0; i < dimX * dimY; i++) /*--->*/ this->elements[i].getBlock ()->~Block () ;
-        this->elements->~Case() ;
+        for (unsigned int i = 0; i < dimX * dimY; i++) /*--->*/ this->elements[i].detruireBlock() ;
+        delete[] this->elements ;
         elements = nullptr;
+        cout << "Désallocation de la carte reussi." << endl;
     }
     else
     {
@@ -57,7 +58,6 @@ Carte::~Carte ()
         exit (-1);
     }
 
-    cout << "Désallocation de la carte reussi." << endl;
 }
     
 /*************************************************************************
@@ -88,10 +88,6 @@ void Carte::remplirHasard ()
             else if (stone < 10) /*--->*/ this->elements[i].setBlock (STONE, rand()%3+1) ;
             else if (dirt <= 40) /*--->*/ this->elements[i].setBlock (DIRT, 0) ;
             
-        }
-        if (elements[i].getTypeElement() == STONE)
-        {
-            cout << this->elements[i].getBlock()->getStoneType() << endl;
         }
 
     }
