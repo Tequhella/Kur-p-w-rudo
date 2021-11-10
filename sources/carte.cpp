@@ -47,14 +47,14 @@ Carte::~Carte ()
 {
     if (elements)
     {
-        for (unsigned int i = 0; i < dimX * dimY; i++) /*--->*/ this->elements[i].detruireBlock() ;
+        for (unsigned int i = 0; i < dimX * dimY; i++) /*--->*/ this->elements[i].detruireElement(this->elements[i].getTypeElement()) ;
         delete[] this->elements ;
         elements = nullptr;
         cout << "Désallocation de la carte reussi." << endl;
     }
     else
     {
-        perror ("Erreur dans l'allocation des elements de la carte. \n");
+        std::cerr << "Erreur allocation des éléments de la carte." << std::endl;
         exit (-1);
     }
 
@@ -71,26 +71,82 @@ void Carte::remplirHasard ()
     int dirt ;
     int stone ;
     int gold ;
+    int relief = 200; /* variable se démécrantant à chaque ligne pour
+                         creer un relief */
 
     for (unsigned int i = 0; i < LARGEUR * HAUTEUR; i++)
     {
-        dirt  = rand()%40+1 ;
-        stone = rand()%40+1 ;
-        gold  = rand()%40+1 ;
+        dirt  = (rand() % 100 + 1) + relief ;
+        stone = (rand() % 100 + 1) + relief ;
+        gold  = (rand() % 100 + 1) + relief ;
 
         this->elements[i].setPos (i % LARGEUR, i / LARGEUR) ;
         
-        if (i >= 5 * LARGEUR)
+        if (gold < 3)
         {
             this->elements[i].setTypeElement (BLOCK) ;
-            
-            if (gold < 2) /*---------->*/ this->elements[i].setBlock (GOLD, 0) ;
-            else if (stone < 10) /*--->*/ this->elements[i].setBlock (STONE, rand()%3+1) ;
-            else if (dirt <= 40) /*--->*/ this->elements[i].setBlock (DIRT, 0) ;
-            
+            this->elements[i].setBlock (GOLD, 0) ;
+        }
+        else if (stone < 21)
+        {
+            int stoneType = (rand() % 100 + 1) ;
+
+            if (stoneType <= 5) /*---------->*/ stoneType = STONE3;
+            else if (stoneType <= 30) /*---->*/ stoneType = STONE2;
+            else if (stoneType <= 100) /*--->*/ stoneType = STONE1;
+
+            this->elements[i].setTypeElement (BLOCK) ;
+            this->elements[i].setBlock (STONE, stoneType) ;
+        }
+        else if (dirt <= 100)
+        {
+            this->elements[i].setTypeElement (BLOCK) ;
+            this->elements[i].setBlock (DIRT, 0) ;
+        }
+        else if (this->elements[i].getTypeElement() == BLOCK);
+        else if (this->elements[i].getTypeElement() == ENTITY);
+        else
+        {
+            this->elements[i].setTypeElement(VIDE) ;
+            this->elements[i].creerVide() ;
         }
 
+        if (relief > 0 && i % LARGEUR == 0) /*--->*/ relief -= 25;
+
     }
+}
+
+void Carte::creerCaverne (unsigned int pos, int randMoins)
+{
+    
+    while (pos > LARGEUR * HAUTEUR || this->elements[pos].getTypeElement() != BLOCK) /*--->*/ pos = rand() % LARGEUR * HAUTEUR + 280;
+    
+    if (this->elements[pos].getTypeElement() == BLOCK)
+    {
+        int droite = rand() % 100 - randMoins;
+        while (droite < 0) /*--->*/ droite = rand() % 100 - randMoins;
+        
+        int bas    = rand() % 100 - randMoins;
+        while (bas < 0) /*------>*/ bas = rand() % 100 - randMoins;
+
+        int gauche = rand() % 100 - randMoins;
+        while (gauche < 0) /*--->*/ gauche = rand() % 100 - randMoins;
+
+        int haut   = rand() % 100 - randMoins;
+        while (haut < 0) /*----->*/ haut = rand() % 100 - randMoins;
+
+        this->elements[pos].detruireElement (BLOCK) ;
+        this->elements[pos].setTypeElement (VIDE) ;
+        this->elements[pos].creerVide() ;
+
+        randMoins += 5;
+
+        if (droite > 30 && this->elements[pos + 1].getTypeElement() == BLOCK) /*--------->*/ creerCaverne (pos + 1, randMoins);
+        if (bas > 30 && this->elements[pos + LARGEUR].getTypeElement() == BLOCK) /*------>*/ creerCaverne (pos + LARGEUR, randMoins);
+        if (gauche > 30 && this->elements[pos - 1].getTypeElement() == BLOCK) /*--------->*/ creerCaverne (pos - 1, randMoins);
+        if (bas > 30 && this->elements[pos - LARGEUR].getTypeElement() == BLOCK) /*------>*/ creerCaverne (pos - LARGEUR, randMoins);
+    }
+    
 }
 
 void Carte::afficherCarte () const
@@ -125,18 +181,18 @@ void Carte::afficherCarte () const
                 if (j == 0 || j == LARGEUR + 1) /*--->*/ cout << "║" ;
                 else
                 {
-                    if (elements[k].getTypeElement() == 0) /*---->*/ cout << " " ;
+                    if (elements[k].getTypeElement() == VIDE) /*---->*/ cout << " " ;
                     else
                     {
                         switch (elements[k].getBlock()->getType())
                         {
-                            case 1: cout << "░"; break ;
-                            case 2:
+                            case DIRT: cout << "░"; break ;
+                            case STONE:
                                 switch (elements[k].getBlock()->getStoneType())
                                 {
-                                    case 1: cout << "▒"; break ;
-                                    case 2: cout << "▓"; break ;
-                                    case 3: cout << "█"; break ;
+                                    case STONE1: cout << "▒"; break ;
+                                    case STONE2: cout << "▓"; break ;
+                                    case STONE3: cout << "█"; break ;
                                 }
                                 break ;
                             case 3: cout << "▚"; break ;

@@ -23,6 +23,8 @@ class Carte
 
         void remplirHasard () ;
 
+        void creerCaverne (unsigned int pos, int randMoins) ;
+
         void afficherCarte () const ;
 
         ////////////

@@ -24,9 +24,18 @@ Case::~Case ()
 *                                 Méthode                                *
 *************************************************************************/
 
-void Case::detruireBlock ()
+void Case::detruireElement (unsigned int type)
 {
-    block.~Block() ;
+    switch (type)
+    {
+        case VIDE : vide.~Vide() ;   break ;
+        case BLOCK: block.~Block() ; break ;
+    }
+}
+
+void Case::creerVide ()
+{
+    vide = Vide() ;
 }
 
 ////////////
@@ -50,6 +59,7 @@ Case::Coord Case::getCoord ()
 ////////////
 // Setter //
 ////////////
+
 void Case::setTypeElement (unsigned int type)
 {
     this->type = type ;

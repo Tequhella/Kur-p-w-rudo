@@ -17,14 +17,30 @@
 #define LARGEUR 30
 #define HAUTEUR 45
 
-#define VIDE  0
-#define BLOCK 1
+enum
+{
+    VIDE,
+    BLOCK,
+    ENTITY,
+    CURSOR
+};
 
 #define DIRT  1
 #define STONE 2
-    #define STONE1 1
-    #define STONE2 2
-    #define STONE3 3
+enum
+{
+    STONE1,
+    STONE2,
+    STONE3
+};
 #define GOLD  3
+
+#define SHIP           0
+#define REACTEUR       1
+#define MINER          2
+#define SHIELD         3
+#define BEACON         4
+#define BOMBE          5
+#define CREEPERSPAWNER 9
 
 #endif

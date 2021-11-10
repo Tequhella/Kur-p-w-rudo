@@ -3,6 +3,7 @@
 
 #include "type.h"
 #include "block.h"
+#include "vide.h"
 
 class Case
 {
@@ -27,11 +28,14 @@ class Case
     *                                 Méthode                                *
     *************************************************************************/
 
-        void detruireBlock () ;
+        void detruireElement (unsigned int type) ;
+
+        void creerVide () ;
 
         ////////////
         // Getter //
         ////////////
+
         unsigned int getTypeElement () ;
 
         Block* getBlock () ;
@@ -42,6 +46,7 @@ class Case
         ////////////
         // Setter //
         ////////////
+
         void setTypeElement (unsigned int type) ;
 
         void setBlock (unsigned int type, unsigned int typeStone) ;
@@ -52,6 +57,7 @@ class Case
 
         unsigned int type = 0;
         Block        block ;
+        Vide         vide ;
         Coord        pos ;
 } ;
 

@@ -1,27 +1,21 @@
 /*************************************************************/
 /* Kurīpāwārudo (inspiré du jeu Creeper World 2)             */
 /*-----------------------------------------------------------*/
-/* Module            : main.c                                */
-/* Numéro de version : 0.1                                   */
+/* Module            : vide.cpp                              */
+/* Numéro de version : 0.2                                   */
 /* Branche           : Branch-CPP                            */
 /* Date              : 23/10/2021                            */
 /* Auteurs           : Lilian CHARDON                        */
 /*************************************************************/
 
-#include "../headers/carte.h"
+#include "../headers/vide.h"
 
-int main ()
+Vide::Vide ()
 {
-    Carte mapHasard = Carte(LARGEUR, HAUTEUR, *("test")) ;
 
-    mapHasard.remplirHasard () ;
+}
+
+Vide::~Vide ()
+{
     
-    for (int i = 0; i < 4; i++)
-        mapHasard.creerCaverne (rand() % LARGEUR * HAUTEUR + 280, 0) ;
-
-    mapHasard.afficherCarte () ;
-
-    mapHasard.~Carte () ;
-
-    return 0;
 }
