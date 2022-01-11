@@ -1,42 +1,42 @@
 /*************************************************************/
 /* Kurīpāwārudo (inspiré du jeu Creeper World 2)             */
 /*-----------------------------------------------------------*/
-/* Module            : block.h                               */
+/* Module            : entitee.h                             */
 /* Numéro de version : 0.3                                   */
 /* Branche           : Branch-CPP                            */
 /* Date              : 11/01/2022                            */
 /* Auteurs           : Lilian CHARDON                        */
 /*************************************************************/
 
-#ifndef DEF_BLOCK
-#define DEF_BLOCK
+#ifndef DEF_ENTITEE
+#define DEF_ENTITEE
 
 #include "type.h"
 
-using namespace std ;
-
-class Block
+class Entitee
 {
     public:
+
+        int vie ;
 
     /*************************************************************************
     *                       Constructeur & Destructeur                       *
     *************************************************************************/
+        
+        /*
+        * Constructeur de la classe Entitee.
+        */
+        Entitee(unsigned int type, Coord* coord) ;
 
         /*
-        * Constrcuteur de la classe Block.
+        * Constructeur par défaut de la classe Entitée.
         */
-        Block (unsigned int type, unsigned int typeRoche) ;
+        Entitee() ;
 
         /*
-        * Constructeur par défaut de la classe Block.
+        * Destructeur de la classe Entitee.
         */
-        Block () ;
-
-        /*
-        * Destrcuteur de la classe Block.
-        */
-        ~Block () ;
+        ~Entitee() ;
 
     /*************************************************************************
     *                                 Méthode                                *
@@ -46,24 +46,27 @@ class Block
         // Getter //
         ////////////
 
-        // Getter getType, récupère l'indicateur du type block.
-        unsigned int getType () ;
+        // Getter getType, récupère l'indicateur du type de l'entitée.
+        unsigned int getType() ;
 
-        // Getter getRocheType, récupère l'indicateur du type de roche.
-        unsigned int getRocheType () ;
+        // Getter getConstr, récupère le nombre de point de construction de l'entitee.
+        double getConstr() ;
 
-        // Getter getSoliditee, récupère la soliditée restante avant de se casser.
-        double getSoliditee () ;
 
-        // Getter getMinerai_quantitee, récupère la quantitee de minerai.
-        int getMinerai_quantitee () ;
-    
+        ////////////
+        // Setter //
+        ////////////
+
+        // Getter getType, récupère l'indicateur du type de l'entitée.
+        void setType(unsigned int type) ;
+
     private:
 
-        unsigned int type              = 0 ;
-        unsigned int rocheType         = 0 ;
-        double       soliditee         = 0 ;
-        int          minerai_quantitee = 0 ;
-} ;
+        unsigned int type ;
+        double       constr ; // Point de construction.
+        Coord        coord ;
+
+
+};
 
 #endif

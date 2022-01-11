@@ -2,8 +2,9 @@
 /* Kurīpāwārudo (inspiré du jeu Creeper World 2)             */
 /*-----------------------------------------------------------*/
 /* Module            : type.h                                */
-/* Numéro de version : 0.1                                   */
-/* Date              : 16/03/2021                            */
+/* Numéro de version : 0.3                                   */
+/* Branche           : Branch-CPP                            */
+/* Date              : 11/01/2022                            */
 /* Auteurs           : Lilian CHARDON                        */
 /*************************************************************/
 
@@ -13,34 +14,46 @@
 #include <iostream>
 #include <cstdlib>
 #include <ctime>
+#include <memory>
 
 #define LARGEUR 30
 #define HAUTEUR 45
+
+typedef struct
+{
+    double x;
+    double y;
+}
+Coord ;
 
 enum
 {
     VIDE,
     BLOCK,
-    ENTITY,
-    CURSOR
+    ENTITEE,
+    CURSEUR
 };
 
-#define DIRT  1
-#define STONE 2
+#define TERRE  1
+#define ROCHE 2
 enum
 {
-    STONE1,
-    STONE2,
-    STONE3
+    ROCHE1,
+    ROCHE2,
+    ROCHE3
 };
-#define GOLD  3
+#define MINERAI  3
 
-#define SHIP           0
-#define REACTEUR       1
-#define MINER          2
-#define SHIELD         3
-#define BEACON         4
-#define BOMBE          5
-#define CREEPERSPAWNER 9
+enum
+{
+    VAISSEAU,
+    REACTEUR,
+    MINEUR,
+    BOUCLIER,
+    PHARE,
+    BOMBE,
+    CREEPER_EMETTEUR
+};
+
 
 #endif

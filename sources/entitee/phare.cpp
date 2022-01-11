@@ -1,24 +1,25 @@
 /*************************************************************/
 /* Kurīpāwārudo (inspiré du jeu Creeper World 2)             */
 /*-----------------------------------------------------------*/
-/* Module            : vide.cpp                              */
+/* Module            : phare.cpp                             */
 /* Numéro de version : 0.3                                   */
 /* Branche           : Branch-CPP                            */
 /* Date              : 11/01/2022                            */
 /* Auteurs           : Lilian CHARDON                        */
 /*************************************************************/
 
-#include "../headers/vide.h"
+#include "../../headers/entitee/phare.h"
 
-Vide::Vide ()
+Phare::Phare()
 {
-    creeperQuantity[0] = 0 ;
-    creeperQuantity[1] = 0 ;
-    creeperQuantity[2] = 0 ;
-    creeperQuantity[3] = 0 ;
+    portee           = 6 ;
+    energieQuantitee = 0 ;
+    energieMax       = 20 ;
+    
+    this->vie        = 5 ;
 }
 
-Vide::~Vide ()
+Phare::~Phare()
 {
-    
+
 }

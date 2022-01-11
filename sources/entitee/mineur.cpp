@@ -1,24 +1,24 @@
 /*************************************************************/
 /* Kurīpāwārudo (inspiré du jeu Creeper World 2)             */
 /*-----------------------------------------------------------*/
-/* Module            : vide.cpp                              */
+/* Module            : mineur.cpp                            */
 /* Numéro de version : 0.3                                   */
 /* Branche           : Branch-CPP                            */
 /* Date              : 11/01/2022                            */
 /* Auteurs           : Lilian CHARDON                        */
 /*************************************************************/
 
-#include "../headers/vide.h"
+#include "../../headers/entitee/mineur.h"
 
-Vide::Vide ()
+Mineur::Mineur()
 {
-    creeperQuantity[0] = 0 ;
-    creeperQuantity[1] = 0 ;
-    creeperQuantity[2] = 0 ;
-    creeperQuantity[3] = 0 ;
+    energieMax       = 20 ;
+    energieQuantitee = 0 ;
+
+    this->vie = 10 ;
 }
 
-Vide::~Vide ()
+Mineur::~Mineur()
 {
-    
+
 }

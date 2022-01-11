@@ -1,24 +1,21 @@
 /*************************************************************/
 /* Kurīpāwārudo (inspiré du jeu Creeper World 2)             */
 /*-----------------------------------------------------------*/
-/* Module            : vide.cpp                              */
+/* Module            : bouclier.cpp                          */
 /* Numéro de version : 0.3                                   */
 /* Branche           : Branch-CPP                            */
 /* Date              : 11/01/2022                            */
 /* Auteurs           : Lilian CHARDON                        */
 /*************************************************************/
 
-#include "../headers/vide.h"
+#include "../../headers/entitee/bouclier.h"
 
-Vide::Vide ()
+Bouclier::Bouclier()
 {
-    creeperQuantity[0] = 0 ;
-    creeperQuantity[1] = 0 ;
-    creeperQuantity[2] = 0 ;
-    creeperQuantity[3] = 0 ;
+    this->vie = 40 ;
 }
 
-Vide::~Vide ()
+Bouclier::~Bouclier()
 {
-    
+
 }

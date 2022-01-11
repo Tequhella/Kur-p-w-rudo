@@ -1,24 +1,36 @@
 /*************************************************************/
 /* Kurīpāwārudo (inspiré du jeu Creeper World 2)             */
 /*-----------------------------------------------------------*/
-/* Module            : vide.cpp                              */
+/* Module            : reacteur.h                            */
 /* Numéro de version : 0.3                                   */
 /* Branche           : Branch-CPP                            */
 /* Date              : 11/01/2022                            */
 /* Auteurs           : Lilian CHARDON                        */
 /*************************************************************/
 
-#include "../headers/vide.h"
+#ifndef DEF_REACTEUR
+#define DEF_REACTEUR
 
-Vide::Vide ()
-{
-    creeperQuantity[0] = 0 ;
-    creeperQuantity[1] = 0 ;
-    creeperQuantity[2] = 0 ;
-    creeperQuantity[3] = 0 ;
-}
+#include "../entitee.h"
 
-Vide::~Vide ()
+class Reacteur : public Entitee
 {
-    
-}
+    public:
+
+        /*
+        * Constructeur de la classe Reacteur.
+        */
+        Reacteur() ;
+
+        /*
+        * Destructeur de la classe Reacteur.
+        */
+        ~Reacteur() ;
+
+    private:
+
+        double emissionEnergie ;
+
+};
+
+#endif

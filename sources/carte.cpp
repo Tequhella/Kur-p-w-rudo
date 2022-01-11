@@ -4,11 +4,15 @@
 /* Module            : carte.cpp                             */
 /* Numéro de version : 0.2                                   */
 /* Branche           : Branch-CPP                            */
-/* Date              : 23/10/2021                            */
+/* Date              : 11/01/2022                            */
 /* Auteurs           : Lilian CHARDON                        */
 /*************************************************************/
 
 #include "../headers/carte.h"
+#include "../headers/type.h"
+#include "../headers/case.h"
+#include "../headers/block.h"
+#include "../headers/entitee.h"
 
 /*************************************************************************
 *                       Constructeur & Destructeur                       *
@@ -29,13 +33,18 @@ Carte::Carte (int dimX, int dimY, char nomDeLaCarte)
         
         if (elements)
         {
-            this->dimX         = dimX ;
-            this->dimY         = dimY ;
+            this->dimX = dimX ;
+            this->dimY = dimY ;
+            
             this->nomDeLaCarte = nomDeLaCarte ;
+            
+            elements[LARGEUR * 2 + LARGEUR / 2].setTypeElement(ENTITEE) ;
+            elements[LARGEUR * 2 + LARGEUR / 2].setCoord(LARGEUR / 2, 2);
+            elements[LARGEUR * 2 + LARGEUR / 2].setEntitee(VAISSEAU) ;
         }
         else
         {
-            perror ("Erreur d'allocation du tableau d'elements. \n") ;
+            cerr << "Erreur allocation des éléments de la carte." << endl ;
             exit (-1) ;
         }
         
@@ -49,12 +58,12 @@ Carte::~Carte ()
     {
         for (unsigned int i = 0; i < dimX * dimY; i++) /*--->*/ this->elements[i].detruireElement(this->elements[i].getTypeElement()) ;
         delete[] this->elements ;
-        elements = nullptr;
-        cout << "Désallocation de la carte reussi." << endl;
+        this->elements = nullptr ;
+        cout << "Désallocation de la carte reussi." << endl ;
     }
     else
     {
-        std::cerr << "Erreur allocation des éléments de la carte." << std::endl;
+        cerr << "Erreur allocation des éléments de la carte." << endl ;
         exit (-1);
     }
 
@@ -68,43 +77,42 @@ void Carte::remplirHasard ()
 {
     std::srand (std::time(nullptr)) ;
 
-    int dirt ;
-    int stone ;
-    int gold ;
+    int terre ;
+    int roche ;
+    int minerai ;
     int relief = 200; /* variable se démécrantant à chaque ligne pour
                          creer un relief */
 
     for (unsigned int i = 0; i < LARGEUR * HAUTEUR; i++)
     {
-        dirt  = (rand() % 100 + 1) + relief ;
-        stone = (rand() % 100 + 1) + relief ;
-        gold  = (rand() % 100 + 1) + relief ;
+        terre   = (rand() % 100 + 1) + relief ;
+        roche   = (rand() % 100 + 1) + relief ;
+        minerai = (rand() % 100 + 1) + relief ;
 
-        this->elements[i].setPos (i % LARGEUR, i / LARGEUR) ;
+        this->elements[i].setCoord (i % LARGEUR, i / LARGEUR) ;
         
-        if (gold < 3)
+        if (minerai < 3)
         {
             this->elements[i].setTypeElement (BLOCK) ;
-            this->elements[i].setBlock (GOLD, 0) ;
+            this->elements[i].setBlock (MINERAI, 0) ;
         }
-        else if (stone < 21)
+        else if (roche < 21)
         {
-            int stoneType = (rand() % 100 + 1) ;
+            int rocheType = (rand() % 100 + 1) ;
 
-            if (stoneType <= 5) /*---------->*/ stoneType = STONE3;
-            else if (stoneType <= 30) /*---->*/ stoneType = STONE2;
-            else if (stoneType <= 100) /*--->*/ stoneType = STONE1;
+            if (rocheType <= 5) /*---------->*/ rocheType = ROCHE3;
+            else if (rocheType <= 30) /*---->*/ rocheType = ROCHE2;
+            else if (rocheType <= 100) /*--->*/ rocheType = ROCHE1;
 
             this->elements[i].setTypeElement (BLOCK) ;
-            this->elements[i].setBlock (STONE, stoneType) ;
+            this->elements[i].setBlock (ROCHE, rocheType) ;
         }
-        else if (dirt <= 100)
+        else if (terre <= 100)
         {
             this->elements[i].setTypeElement (BLOCK) ;
-            this->elements[i].setBlock (DIRT, 0) ;
+            this->elements[i].setBlock (TERRE, 0) ;
         }
-        else if (this->elements[i].getTypeElement() == BLOCK);
-        else if (this->elements[i].getTypeElement() == ENTITY);
+        else if (this->elements[i].getTypeElement() == ENTITEE) ;
         else
         {
             this->elements[i].setTypeElement(VIDE) ;
@@ -181,22 +189,50 @@ void Carte::afficherCarte () const
                 if (j == 0 || j == LARGEUR + 1) /*--->*/ cout << "║" ;
                 else
                 {
-                    if (elements[k].getTypeElement() == VIDE) /*---->*/ cout << " " ;
-                    else
+                    switch (elements[k].getTypeElement())
                     {
-                        switch (elements[k].getBlock()->getType())
-                        {
-                            case DIRT: cout << "░"; break ;
-                            case STONE:
-                                switch (elements[k].getBlock()->getStoneType())
-                                {
-                                    case STONE1: cout << "▒"; break ;
-                                    case STONE2: cout << "▓"; break ;
-                                    case STONE3: cout << "█"; break ;
-                                }
-                                break ;
-                            case 3: cout << "▚"; break ;
-                        }
+                        case VIDE : cout << " " ; break ;
+                        case BLOCK:
+                            switch (elements[k].getBlock()->getType())
+                            {
+                                case TERRE: cout << "░"; break ;
+                                case ROCHE:
+                                    switch (elements[k].getBlock()->getRocheType())
+                                    {
+                                        case ROCHE1: cout << "▒"; break ;
+                                        case ROCHE2: cout << "▓"; break ;
+                                        case ROCHE3: cout << "█"; break ;
+                                    }
+                                    break ;
+                                case MINERAI: cout << "▚"; break ;
+                            }
+                            break ;
+                        case ENTITEE:
+                            switch (elements[k].getEntitee()->getType())
+                            {
+                                case VAISSEAU: cout << "◈" ; break ;
+                                case REACTEUR:
+                                    if (elements[k].getEntitee()->getConstr() <= 0) /*--->*/ cout << "◬" ;
+                                    else /*--->*/ cout << " " ;
+                                    break ;
+                                case MINEUR:
+                                    if (elements[k].getEntitee()->getConstr() <= 0) /*--->*/ cout << "◭" ;
+                                    else /*--->*/ cout << " " ;
+                                    break ;
+                                case BOUCLIER:
+                                    if (elements[k].getEntitee()->getConstr() <= 0) /*--->*/ cout << "◩" ;
+                                    else /*--->*/ cout << " " ;
+                                    break ;
+                                case PHARE:
+                                    if (elements[k].getEntitee()->getConstr() <= 0) /*--->*/ cout << "◉" ;
+                                    else /*--->*/ cout << " " ;
+                                    break ;
+                                case BOMBE:
+                                    if (elements[k].getEntitee()->getConstr() <= 0) /*--->*/ cout << "◘" ;
+                                    else /*--->*/ cout << " " ;
+                                    break ;
+                                case CREEPER_EMETTEUR: cout << "◎" ; break ;
+                            }
                     }
                     
                     k++ ;

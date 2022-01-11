@@ -1,24 +1,39 @@
 /*************************************************************/
 /* Kurīpāwārudo (inspiré du jeu Creeper World 2)             */
 /*-----------------------------------------------------------*/
-/* Module            : vide.cpp                              */
+/* Module            : bombe.h                               */
 /* Numéro de version : 0.3                                   */
 /* Branche           : Branch-CPP                            */
 /* Date              : 11/01/2022                            */
 /* Auteurs           : Lilian CHARDON                        */
 /*************************************************************/
 
-#include "../headers/vide.h"
+#ifndef DEF_BOMBE
+#define DEF_BOMBE
 
-Vide::Vide ()
-{
-    creeperQuantity[0] = 0 ;
-    creeperQuantity[1] = 0 ;
-    creeperQuantity[2] = 0 ;
-    creeperQuantity[3] = 0 ;
-}
+#include "../entitee.h"
 
-Vide::~Vide ()
+class Bombe : public Entitee
 {
-    
-}
+    public:
+
+        /*
+        * Constructeur de la classe Bombe.
+        */
+        Bombe() ;
+
+        /*
+        * Destructeur de la classe Bombe.
+        */
+        ~Bombe() ;
+
+    private:
+
+        int    portee ;
+        double energieQuantitee ;
+        double energieMax ;
+        double degat ;
+
+};
+
+#endif
