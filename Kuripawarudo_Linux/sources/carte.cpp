@@ -2,7 +2,7 @@
 /* Kurīpāwārudo (inspiré du jeu Creeper World 2)             */
 /*-----------------------------------------------------------*/
 /* Module            : carte.cpp                             */
-/* Numéro de version : 0.2                                   */
+/* Numéro de version : 0.3.1                                 */
 /* Branche           : Branch-CPP                            */
 /* Date              : 11/01/2022                            */
 /* Auteurs           : Lilian CHARDON                        */
@@ -155,6 +155,20 @@ void Carte::creerCaverne (unsigned int pos, int randMoins)
         if (bas > 30 && this->elements[pos - LARGEUR].getTypeElement() == BLOCK) /*------>*/ creerCaverne (pos - LARGEUR, randMoins);
     }
     
+}
+
+void Carte::creerEnnemie (int nbEnnemie)
+{
+    int pos = 0;
+
+    for (int i = 0; i < nbEnnemie; i++)
+    {
+        while (elements[pos].getTypeElement() != VIDE || pos < 350) /*--->*/ pos = rand() % (LARGEUR * HAUTEUR) + 1;
+
+        elements[pos].setTypeElement(ENTITEE);
+        elements[pos].setEntitee(CREEPER_EMETTEUR);
+        elements[pos].getEntitee()->setId(i);
+    }
 }
 
 void Carte::afficherCarte () const

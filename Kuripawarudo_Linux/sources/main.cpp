@@ -2,7 +2,7 @@
 /* Kurīpāwārudo (inspiré du jeu Creeper World 2)             */
 /*-----------------------------------------------------------*/
 /* Module            : main.c                                */
-/* Numéro de version : 0.3                                   */
+/* Numéro de version : 0.3.1                                 */
 /* Branche           : Branch-CPP                            */
 /* Date              : 11/01/2022                            */
 /* Auteurs           : Lilian CHARDON                        */
@@ -13,16 +13,18 @@
 
 int main ()
 {
-    Carte mapHasard = Carte(LARGEUR, HAUTEUR, *("test")) ;
+    Carte mapHasard = Carte(LARGEUR, HAUTEUR, *("test"));
 
-    mapHasard.remplirHasard () ;
+    mapHasard.remplirHasard ();
 
     for (int i = 0; i < 4; i++)
-        mapHasard.creerCaverne (rand() % LARGEUR * HAUTEUR + 280, 0) ;
+        mapHasard.creerCaverne (rand() % LARGEUR * HAUTEUR + 280, 0);
 
-    mapHasard.afficherCarte () ;
+    mapHasard.creerEnnemie(3);
 
-    mapHasard.~Carte () ;
+    mapHasard.afficherCarte();
+
+    mapHasard.~Carte ();
 
     return 0;
 }

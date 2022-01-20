@@ -2,7 +2,7 @@
 /* Kurīpāwārudo (inspiré du jeu Creeper World 2)             */
 /*-----------------------------------------------------------*/
 /* Module            : case.h                                */
-/* Numéro de version : 0.3                                   */
+/* Numéro de version : 0.3.1                                 */
 /* Branche           : Branch-CPP                            */
 /* Date              : 11/01/2022                            */
 /* Auteurs           : Lilian CHARDON                        */
@@ -81,16 +81,16 @@ class Case
         // Setter //
         ////////////
 
-        // Setter setTypeElement, initialise l'indicateur de type.
+        // Setter setTypeElement, met à jour l'indicateur de type.
         void setTypeElement (unsigned int type) ;
 
-        // Setter setBlock, initialise un block.
+        // Setter setBlock, met à jour un block.
         void setBlock (unsigned int type, unsigned int typeStone) ;
 
-        // Setter setEntitee, initialise une entitée.
+        // Setter setEntitee, met à jour une entitée.
         void setEntitee (unsigned int type) ;
 
-        // Setter setCoord, initialise les coordonnées.
+        // Setter setCoord, met à jour les coordonnées.
         void setCoord (unsigned int x, unsigned int y) ;
 
     private:

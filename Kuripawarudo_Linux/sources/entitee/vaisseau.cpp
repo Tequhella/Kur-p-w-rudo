@@ -12,6 +12,7 @@
 
 Vaisseau::Vaisseau()
 {
+    this->id = 0;
     energieReserve     = 20 ;
     energieQuantitee   = energieReserve ;
     energieEfficacitee = 1 ;
