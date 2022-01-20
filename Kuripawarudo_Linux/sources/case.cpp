@@ -35,9 +35,20 @@ void Case::detruireElement (unsigned int type)
 {
     switch (type)
     {
-        case VIDE:    if (vide) /*------>*/ delete vide ;  vide      = nullptr ; break ;
-        case BLOCK:   if (block) /*----->*/ delete block ; block     = nullptr ; break ;
-        case ENTITEE: if (entitee) /*--->*/ delete entitee ; entitee = nullptr ; break ;
+        case VIDE:  if (vide) /*---->*/ delete vide ;  vide  = nullptr ; break ;
+        case BLOCK: if (block) /*--->*/ delete block ; block = nullptr ; break ;
+        case ENTITEE:
+            if (entitee)
+            {
+                delete entitee ;
+                entitee = nullptr ;
+            }
+            if (vide)
+            {
+                delete vide ;
+                vide = nullptr ;
+            }
+            break ;
     }
 }
 

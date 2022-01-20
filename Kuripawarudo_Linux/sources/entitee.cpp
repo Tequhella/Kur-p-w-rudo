@@ -60,5 +60,5 @@ void Entitee::setType(unsigned int type)
 
 void Entitee::setId(unsigned int id)
 {
-    this->id;
+    this->id = id;
 }
