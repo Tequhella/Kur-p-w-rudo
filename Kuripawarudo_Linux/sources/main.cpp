@@ -11,20 +11,31 @@
 #include "../headers/carte.h"
 #include "../headers/type.h"
 
+/**
+ * Créez une carte avec un nombre aléatoire de grottes et un nombre aléatoire d'ennemis
+ * 
+ * @return Rien.
+ */
 int main ()
 {
-    Carte mapHasard = Carte(LARGEUR, HAUTEUR, *("test"));
+	/* Création d'un nouvel objet de type Carte. */
+	Carte mapHasard = Carte(LARGEUR, HAUTEUR, "test");
 
-    mapHasard.remplirHasard ();
+	/* Remplit la carte avec des éléments aléatoires. */
+	mapHasard.remplirHasard();
 
-    for (int i = 0; i < 4; i++)
-        mapHasard.creerCaverne (rand() % LARGEUR * HAUTEUR + 280, 0);
+	/* Il crée 4 grottes. */
+	for (int i = 0; i < 4; i++)
+		mapHasard.creerCaverne (rand() % LARGEUR * HAUTEUR + 280, 0);
 
-    mapHasard.creerEnnemie(3);
+	/* Créer 3 ennemies */
+	mapHasard.creerEnnemie(3);
 
-    mapHasard.afficherCarte();
+	/* Appel de la fonction `afficherCarte()` depuis la classe `Carte`. */
+	mapHasard.afficherCarte();
 
-    mapHasard.~Carte ();
+	/* Détruit l'objet `mapHasard`. */
+	mapHasard.~Carte ();
 
-    return 0;
+	return 0;
 }

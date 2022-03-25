@@ -24,84 +24,92 @@
 class Block ;
 class Vide ;
 class Entitee ;
+class Curseur;
 
+/* La classe Case est utilisée pour créer une case dans la carte */
 class Case
 {
-    public:
+	public:
 
-    /*************************************************************************
-    *                       Constructeur & Destructeur                       *
-    *************************************************************************/
+	/*************************************************************************
+	*                       Constructeur & Destructeur                       *
+	*************************************************************************/
 
-        /*
-        * Constructeur de la classe Case.
-        */
-        Case () ;
+		/*
+		* Constructeur de la classe Case.
+		*/
+		Case () ;
 
-        /*
-        * Destructeur de la classe Case.
-        */
-        ~Case () ;
+		/*
+		* Destructeur de la classe Case.
+		*/
+		~Case () ;
 
-    /*************************************************************************
-    *                                 Méthode                                *
-    *************************************************************************/
+	/*************************************************************************
+	*                                 Méthode                                *
+	*************************************************************************/
 
-        /*
-        * Méthode detruireElement, permet de détruire l'élément selon le type que c'est.
-        */
-        void detruireElement (unsigned int type) ;
+		/*
+		* Méthode detruireElement, permet de détruire l'élément selon le type que c'est.
+		*/
+		void detruireElement (unsigned int type) ;
 
-        /*
-        * Méthode creerVide, crée une case de vide.
-        */
-        void creerVide() ;
+		/*
+		* Méthode creerVide, crée une case de vide.
+		*/
+		void creerVide() ;
 
-        ////////////
-        // Getter //
-        ////////////
+		/*
+		* Méthode creerCurseur, crée un curseur.
+		*/
+		void creerCurseur() ;
 
-        // Getter getTypeElement, permet de récupérer l'indicateur du type de l'élément.
-        unsigned int getTypeElement() ;
+		////////////
+		// Getter //
+		////////////
 
-        // Getter getVide, récupère la case de vide (ainsi sa quantité de creeper).
-        Vide* getVide() ;
+		// Getter getTypeElement, permet de récupérer l'indicateur du type de l'élément.
+		unsigned int getTypeElement() ;
 
-        // Getter getBlock, récupère le block de la case.
-        Block* getBlock() ;
+		// Getter getVide, récupère la case de vide (ainsi sa quantité de creeper).
+		Vide* getVide() ;
 
-        // Getter getEntitee, récupère l'entitée de la case.
-        Entitee* getEntitee() ;
+		// Getter getBlock, récupère le block de la case.
+		Block* getBlock() ;
 
-        // Getter getCoord, récupère les coordonnées de la case (x, y) ;
-        Coord getCoord() ;
+		// Getter getEntitee, récupère l'entitée de la case.
+		Entitee* getEntitee() ;
+
+		// Getter getCoord, récupère les coordonnées de la case (x, y) ;
+		Coord getCoord() ;
 
 
-        ////////////
-        // Setter //
-        ////////////
+		////////////
+		// Setter //
+		////////////
 
-        // Setter setTypeElement, met à jour l'indicateur de type.
-        void setTypeElement (unsigned int type) ;
+		// Setter setTypeElement, met à jour l'indicateur de type.
+		void setTypeElement (unsigned int type) ;
 
-        // Setter setBlock, met à jour un block.
-        void setBlock (unsigned int type, unsigned int typeStone) ;
+		// Setter setBlock, met à jour un block.
+		void setBlock (unsigned int type, unsigned int typeStone) ;
 
-        // Setter setEntitee, met à jour une entitée.
-        void setEntitee (unsigned int type) ;
+		// Setter setEntitee, met à jour une entitée.
+		void setEntitee (unsigned int type) ;
 
-        // Setter setCoord, met à jour les coordonnées.
-        void setCoord (unsigned int x, unsigned int y) ;
+		// Setter setCoord, met à jour les coordonnées.
+		void setCoord (unsigned int x, unsigned int y) ;
 
-    private:
+	private:
 
-        unsigned int type ;
-        Vide*        vide ;
-        Block*       block ;
-        Coord        coord ;
+		unsigned int type ;
+		Vide*        vide ;
+		Block*       block ;
+		Curseur*	 curseur;
+		Coord        coord ;
 
-        unsigned int* entiteeType ;
-        Entitee*      entitee ;
+		unsigned int* entiteeType ;
+		Entitee*      entitee ;
 } ;
 
 #endif

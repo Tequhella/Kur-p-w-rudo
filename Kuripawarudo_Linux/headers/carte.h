@@ -16,6 +16,7 @@ using namespace std ;
 
 class Case;
 
+/* La classe Carte est une classe qui contient une grille d'objets Case */
 class Carte
 {
     public:
@@ -27,7 +28,7 @@ class Carte
         /*
         * Constructeur de la classe Carte.
         */
-        Carte (int dimX, int dimY, char nomDeLaCarte) ;
+        Carte (int dimX, int dimY, char* nomDeLaCarte) ;
         
         /*
         * Destructeur de la classe Carte.
@@ -83,7 +84,7 @@ class Carte
 
         unsigned int dimX, dimY ;
         Case*        elements ; // Propriété elements : tableau des éléments de la carte.
-        char         nomDeLaCarte ;
+        char*        nomDeLaCarte ;
 } ;
 
 #endif

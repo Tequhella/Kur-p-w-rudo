@@ -10,6 +10,9 @@
 
 #include "../headers/vide.h"
 
+/**
+ * Le constructeur crée un nouvel objet de type Vide et initialise le tableau creeperQuantity à 0
+ */
 Vide::Vide ()
 {
     creeperQuantity[0] = 0 ;

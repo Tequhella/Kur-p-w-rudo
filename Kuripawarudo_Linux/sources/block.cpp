@@ -14,11 +14,14 @@
 *                       Constructeur & Destructeur                       *
 *************************************************************************/
 
-Block::Block ()
-{
+Block::Block (){}
 
-}
-
+/**
+ * Créer un nouveau bloc du type spécifié
+ * 
+ * @param type Le type de bloc.
+ * @param rocheType 1, 2 ou 3
+ */
 Block::Block (unsigned int type, unsigned int rocheType)
 {
     switch (type)
@@ -50,10 +53,7 @@ Block::Block (unsigned int type, unsigned int rocheType)
 
 }
 
-Block::~Block ()
-{
-    
-}
+Block::~Block (){}
 
 /*************************************************************************
 *                                 Méthode                                *
@@ -63,21 +63,41 @@ Block::~Block ()
 // Getter //
 ////////////
 
+/**
+ * Renvoie le type du bloc
+ * 
+ * @return Le type de bloc.
+ */
 unsigned int Block::getType ()
 {
     return type ;
 }
 
+/**
+ * Renvoie le type Roche du bloc
+ * 
+ * @return La valeur de la variable rocheType.
+ */
 unsigned int Block::getRocheType ()
 {
     return rocheType ;
 }
 
+/**
+ * La fonction retourne la valeur de la variable soliditee
+ * 
+ * @return La valeur de solidité.
+ */
 double Block::getSoliditee ()
 {
     return soliditee ;
 }
 
+/**
+ * La fonction retourne la valeur de la variable minerai_quantitee
+ * 
+ * @return La quantité minerale du bloc.
+ */
 int Block::getMinerai_quantitee ()
 {
     return minerai_quantitee ;

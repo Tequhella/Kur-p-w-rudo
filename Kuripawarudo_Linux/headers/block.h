@@ -15,6 +15,7 @@
 
 using namespace std ;
 
+/* La classe Block est utilisée pour représenter un bloc dans la carte */
 class Block
 {
     public:

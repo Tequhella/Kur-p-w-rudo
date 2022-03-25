@@ -13,6 +13,7 @@
 
 #include "type.h"
 
+/* La classe Entitee est une classe qui représente une entité dans le jeu */
 class Entitee
 {
     public:
@@ -25,6 +26,7 @@ class Entitee
         * Constructeur de la classe Entitee.
         */
         Entitee(unsigned int type, Coord* coord) ;
+
 
         /*
         * Constructeur par défaut de la classe Entitée.
@@ -44,10 +46,10 @@ class Entitee
         // Getter //
         ////////////
 
-        // Getter getType, récupère l'indicateur du type de l'entitée.
+        /* Renvoie le type de l'entité. */
         unsigned int getType() ;
 
-        // Getter getConstr, récupère le nombre de point de construction de l'entitee.
+        /* Renvoie le nombre de points de construction de l'entité. */
         double getConstr() ;
 
 
@@ -55,10 +57,10 @@ class Entitee
         // Setter //
         ////////////
 
-        // Setter setType, met à jour l'indicateur du type de l'entitée.
+        /* Mise à jour du type de l'entité. */
         void setType(unsigned int type) ;
 
-        // Setter setType, met à jour l'identifiant de l'entitée.
+        /* Une méthode setter qui définit l'identifiant de l'entité. */
         void setId(unsigned int id);
 
     private:
