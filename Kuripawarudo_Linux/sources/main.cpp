@@ -34,6 +34,19 @@ int main ()
 	/* Appel de la fonction `afficherCarte()` depuis la classe `Carte`. */
 	mapHasard.afficherCarte();
 
+	Case* element = mapHasard.getElement(LARGEUR * 3 + LARGEUR / 2);
+
+	/* Enregistre les coordonnées du Curseur du tableau de case */
+	Coord coord = element->getCoord();
+
+	/* Boucle en condition la touche est C est pressée, et réaffiche la carte et demande l'action déplacement au joueur*/
+	while (getch() != 'c')
+	{
+		mapHasard.afficherCarte();
+		
+		/* Déplacement du curseur */
+		mapHasard.getElement(LARGEUR * coord.y + coord.x).getCurseur().deplacement();
+	}
 	/* Détruit l'objet `mapHasard`. */
 	mapHasard.~Carte ();
 

@@ -80,6 +80,9 @@ class Case
 		// Getter getEntitee, récupère l'entitée de la case.
 		Entitee* getEntitee() ;
 
+		// Getter getEntitee, récupère le curseur.
+		Curseur* getCurseur() ;
+
 		// Getter getCoord, récupère les coordonnées de la case (x, y) ;
 		Coord getCoord() ;
 
@@ -106,7 +109,7 @@ class Case
 		Vide*        vide ;
 		Block*       block ;
 		Curseur*	 curseur;
-		Coord        coord ;
+		Coord*       coord ;
 
 		unsigned int* entiteeType ;
 		Entitee*      entitee ;

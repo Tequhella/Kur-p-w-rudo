@@ -22,8 +22,10 @@
  */
 Entitee::Entitee(unsigned int type, Coord* coord)
 {
-    this->type  = type ;
-    this->coord = *coord;
+    this->type   = type;
+    this->coord  = *coord;
+    this->vie    = 0;
+    this->constr = 0;
 }
 
 Entitee::Entitee(){}

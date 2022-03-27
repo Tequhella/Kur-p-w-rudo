@@ -22,16 +22,7 @@ constexpr auto HAUTEUR = 45;
 
 /**
  * Un Coord est une structure qui a deux membres à virgule flottante double précision, x et y.
- * 
- * /*
- * C++
- * *//*
- * struct typedef
- * {
- *     double X;
- *     double y;
- * }
- * Coord ;
+ * Il est utilisé pour représenter les coordonnées d'une entité.
  * 
  * Coord GetCoord(vide)
  * {

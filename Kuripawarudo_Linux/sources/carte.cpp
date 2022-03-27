@@ -92,13 +92,10 @@ Carte::~Carte ()
  */
 void Carte::remplirHasard ()
 {
-	std::srand (std::time(nullptr)) ;
-
-	int terre ;
-	int roche ;
-	int minerai ;
-	int relief = 200; /* variable se démécrantant à chaque ligne pour
-						 creer un relief */
+	int terre 	= 0 ;
+	int roche 	= 0 ;
+	int minerai = 0 ;
+	int relief  = 200; // variable se démécrantant à chaque ligne pour creer un relief
 
 	for (unsigned int i = 0; i < LARGEUR * HAUTEUR; i++)
 	{
@@ -117,9 +114,9 @@ void Carte::remplirHasard ()
 		{
 			int rocheType = (rand() % 100 + 1) ;
 
-			if (rocheType <= 5) /*---------->*/ rocheType = ROCHE3;
-			else if (rocheType <= 30) /*---->*/ rocheType = ROCHE2;
-			else if (rocheType <= 100) /*--->*/ rocheType = ROCHE1;
+			if (rocheType <= 5) /*---------->*/ rocheType = ROCHE3 ;
+			else if (rocheType <= 30) /*---->*/ rocheType = ROCHE2 ;
+			else if (rocheType <= 100) /*--->*/ rocheType = ROCHE1 ;
 
 			this->elements[i].setTypeElement (BLOCK) ;
 			this->elements[i].setBlock (ROCHE, rocheType) ;
@@ -321,15 +318,14 @@ unsigned int Carte::getDimY ()
 }
 
 /**
- * Renvoyer l'élément de la carte
+ * Renvoie l'élément de la carte
  * 
- * @return Le tableau des éléments.
+ * @return L'élément de la carte.
  */
-Case* Carte::getElement ()
+Case* Carte::getElement (unsigned int pos)
 {
-	return elements ;
+	return &elements[pos];
 }
-
 /**
  * Renvoyer le nom de la carte
  * 

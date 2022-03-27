@@ -23,6 +23,7 @@ Case::Case ()
     block   = nullptr ;
     entitee = nullptr ;
     curseur = nullptr ;
+    coord   = nullptr ;
 
     type = 0 ;
 }
@@ -98,9 +99,24 @@ Block* Case::getBlock()
     return block ;
 }
 
+/**
+ * Renvoye l'entitée.
+ * 
+ * @return L'entitée de la case.
+ */
 Entitee* Case::getEntitee()
 {
     return entitee ;
+}
+
+/**
+ * Retourne le curseur.
+ * 
+ * @return Le curseur de la case.
+ */
+Curseur* Case::getCurseur()
+{
+    return curseur ;
 }
 
 /**
@@ -110,7 +126,7 @@ Entitee* Case::getEntitee()
  */
 Coord Case::getCoord()
 {
-    return coord ;
+    return *coord ;
 }
 
 ////////////
@@ -183,5 +199,5 @@ void Case::setEntitee (unsigned int type)
  */
 void Case::setCoord (unsigned int x, unsigned int y)
 {
-    coord = (Coord) {(double) x, (double) y} ;
+    *coord = (Coord) {(double) x, (double) y} ;
 }

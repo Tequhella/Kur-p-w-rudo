@@ -16,7 +16,7 @@
  */
 Curseur::Curseur()
 {
-	coord((Coord) { LARGEUR / 2, 3 });
+	*coord = (Coord) { LARGEUR / 2, 3};
 }
 
 Curseur::~Curseur(){}
@@ -26,7 +26,7 @@ Curseur::~Curseur(){}
  * 
  * @return Les coordonnées du curseur.
  */
-Coord Curseur::getCoord()
+Coord* Curseur::getCoord()
 {
 	return coord;
 }
@@ -38,5 +38,29 @@ Coord Curseur::getCoord()
  */
 void Curseur::setCoord(Coord coord)
 {
-	this->coord = coord;
+	this->coord = &coord;
+}
+
+/**
+ * Déplace le curseur en fonction de la touche appuyée.
+ */
+void Curseur::deplacement()
+{
+	char touche = 0;
+	std::cin >> touche;
+	switch (touche)
+	{
+		case 'w':
+			coord->y--;
+			break;
+		case 's':
+			coord->y++;
+			break;
+		case 'a':
+			coord->x--;
+			break;
+		case 'd':
+			coord->x++;
+			break;
+	}
 }

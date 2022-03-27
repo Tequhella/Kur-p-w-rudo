@@ -46,7 +46,7 @@ class Curseur
 		////////////
 
 		// Getter getCoord, récupère les coordonnées du curseur.
-		Coord getCoord();
+		Coord* getCoord();
 
 		////////////
 		// Setter //
@@ -57,7 +57,7 @@ class Curseur
 
 	private:
 		
-		Coord coord;
+		Coord* coord;
 };
 
 #endif

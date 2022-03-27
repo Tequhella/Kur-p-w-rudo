@@ -71,7 +71,7 @@ class Carte
         unsigned int getDimY () ;
         
         // Getter getElement, récupère le tableau d'éléments.
-        Case* getElement () ;
+        Case* getElement (unsigned int pos) ;
 
         // Getter getNomDeLaCarte, récupère le nom de la carte.
         char* getNomDeLaCarte () ;
