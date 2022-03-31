@@ -14,9 +14,9 @@
  * Le constructeur de la classe Curseur crée un nouvel objet Curseur et initialise sa variable membre
  * coord à la valeur de l'objet Coord {LARGEUR / 2, 3}
  */
-Curseur::Curseur()
+Curseur::Curseur(Coord* coord)
 {
-	*coord = (Coord) { LARGEUR / 2, 3};
+	this->coord = coord;
 }
 
 Curseur::~Curseur(){}
@@ -44,11 +44,10 @@ void Curseur::setCoord(Coord coord)
 /**
  * Déplace le curseur en fonction de la touche appuyée.
  */
-void Curseur::deplacement()
+void Curseur::deplacement(char* touche)
 {
-	char touche = 0;
 	std::cin >> touche;
-	switch (touche)
+	switch (*touche)
 	{
 		case 'w':
 			coord->y--;

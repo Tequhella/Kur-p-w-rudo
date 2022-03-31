@@ -20,12 +20,23 @@ class Vide
     /*************************************************************************
     *                       Constructeur & Destructeur                       *
     *************************************************************************/
+
         Vide () ;
 
         ~Vide () ;
+
+    /*************************************************************************
+     *                                Méthode                                *
+     * ***********************************************************************/
+        
+        int getCreeperQuantity(uint8_t placement);
+
+        void setCreeperQuantity(int creeperQuantity, uint8_t placement);
+
+        void addCreeper(int creeperQuantity, uint8_t placement);
         
     private:
-        unsigned int creeperQuantity[4] ;
+        int creeperQuantity[4] ;
 };
 
 #endif

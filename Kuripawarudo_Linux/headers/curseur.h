@@ -25,7 +25,7 @@ class Curseur
 		/*
 		* Constructeur de la classe Curseur.
 		*/
-		Curseur();
+		Curseur(Coord* coord);
 
 		/*
 		* Destructeur de la classe Curseur.
@@ -39,7 +39,7 @@ class Curseur
 		/*
 		* Méthode deplacement, déplace le curseur.
 		*/
-		void deplacement();
+		void deplacement(char* touche);
 
 		////////////
 		// Getter //

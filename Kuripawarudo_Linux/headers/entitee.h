@@ -25,7 +25,7 @@ class Entitee
         /*
         * Constructeur de la classe Entitee.
         */
-        Entitee(unsigned int type, Coord* coord) ;
+        Entitee(uint8_t type, Coord* coord) ;
 
 
         /*
@@ -47,7 +47,7 @@ class Entitee
         ////////////
 
         /* Renvoie le type de l'entité. */
-        unsigned int getType() ;
+        uint8_t getType() ;
 
         /* Renvoie le nombre de points de construction de l'entité. */
         double getConstr() ;
@@ -58,21 +58,21 @@ class Entitee
         ////////////
 
         /* Mise à jour du type de l'entité. */
-        void setType(unsigned int type) ;
+        void setType(uint8_t type) ;
 
         /* Une méthode setter qui définit l'identifiant de l'entité. */
         void setId(unsigned int id);
 
     private:
 
-        unsigned int type ;
+        uint8_t      type ;
         double       constr ; // Point de construction.
         Coord        coord ;
 
     protected:
 
         unsigned int id;
-        int vie;
+        uint8_t      vie;
 
 };
 

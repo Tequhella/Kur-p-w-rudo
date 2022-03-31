@@ -29,10 +29,10 @@ class Bombe : public Entitee
 
     private:
 
-        int    portee ;
-        double energieQuantitee ;
-        double energieMax ;
-        double degat ;
+        uint8_t portee ;
+        double  energieQuantitee ;
+        double  energieMax ;
+        double  degat ;
 
 };
 

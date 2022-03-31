@@ -23,7 +23,7 @@ Vaisseau::Vaisseau()
 
     portee = 6 ;
 
-    this->vie = 200 ;
+    this->vie = 255 ;
 }
 
 Vaisseau::~Vaisseau()

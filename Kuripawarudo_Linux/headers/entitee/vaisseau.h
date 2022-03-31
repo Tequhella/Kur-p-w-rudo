@@ -29,14 +29,14 @@ class Vaisseau : public Entitee
 
     private:
 
-        double energieQuantitee ;
-        double energieReserve ;
-        double energieEfficacitee ;
+        double  energieQuantitee ;
+        double  energieReserve ;
+        double  energieEfficacitee ;
         /*double energieVitesse ;*/
-        double mineraiQuantitee ;
-        double mineraiReserve ;
-        double mineraiEfficacitee ;
-        int    portee ;
+        double  mineraiQuantitee ;
+        double  mineraiReserve ;
+        double  mineraiEfficacitee ;
+        uint8_t portee ;
 
 };
 

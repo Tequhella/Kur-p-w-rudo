@@ -13,15 +13,37 @@
 /**
  * Le constructeur crée un nouvel objet de type Vide et initialise le tableau creeperQuantity à 0
  */
-Vide::Vide ()
+Vide::Vide() : creeperQuantity{0}
 {
-    creeperQuantity[0] = 0 ;
-    creeperQuantity[1] = 0 ;
-    creeperQuantity[2] = 0 ;
-    creeperQuantity[3] = 0 ;
+
 }
 
-Vide::~Vide ()
+Vide::~Vide(){}
+
+/**
+ * Renvoie le nombre de creepers dans la case
+ * 
+ * @return Le nombre de creepers dans la case.
+ */
+int Vide::getCreeperQuantity(uint8_t placement)
 {
-    
+    return creeperQuantity[placement];
+}
+
+/**
+ * Définit le nombre de creepers dans la case.
+ * 
+ * @param creeperQuantity Le nombre de creepers dans la case.
+ */
+void Vide::setCreeperQuantity(int creeperQuantity, uint8_t placement)
+{
+    this->creeperQuantity[placement] = creeperQuantity;
+}
+
+/**
+ * Ajoute un creeper dans la case.
+ */
+void Vide::addCreeper(int creeperQuantity, uint8_t placement)
+{
+    this->creeperQuantity[placement] += creeperQuantity;
 }

@@ -9,7 +9,32 @@
 /*************************************************************/
 
 #include "../headers/carte.h"
+#include "../headers/case.h"
+#include "../headers/curseur.h"
+#include "../headers/vide.h"
+#include "../headers/block.h"
+#include "../headers/entitee.h"
 #include "../headers/type.h"
+
+/*
+ * Fonction permettant d'afficher la taille de toutes les classes.
+ */
+void afficherTaille()
+{
+	std::cout << "Carte : " << sizeof(Carte) << std::endl;
+	std::cout << "Case : " << sizeof(Case) << std::endl;
+	std::cout << "Curseur : " << sizeof(Curseur) << std::endl;
+	std::cout << "Vide : " << sizeof(Vide) << std::endl;
+	std::cout << "Block : " << sizeof(Block) << std::endl;
+	std::cout << "Entitee : " << sizeof(Entitee) << std::endl;
+	std::cout << "Reacteur : " << sizeof(Reacteur) << std::endl;
+	std::cout << "Mineur : " << sizeof(Mineur) << std::endl;
+	std::cout << "Bouclier : " << sizeof(Bouclier) << std::endl;
+	std::cout << "Phare : " << sizeof(Phare) << std::endl;
+	std::cout << "Bombe : " << sizeof(Bombe) << std::endl;
+	std::cout << "CreeperEmetteur : " << sizeof(CreeperEmetteur) << std::endl;
+}
+
 
 /**
  * Créez une carte avec un nombre aléatoire de grottes et un nombre aléatoire d'ennemis
@@ -31,24 +56,26 @@ int main ()
 	/* Créer 3 ennemies */
 	mapHasard.creerEnnemie(3);
 
-	/* Appel de la fonction `afficherCarte()` depuis la classe `Carte`. */
-	mapHasard.afficherCarte();
-
 	Case* element = mapHasard.getElement(LARGEUR * 3 + LARGEUR / 2);
 
 	/* Enregistre les coordonnées du Curseur du tableau de case */
-	Coord coord = element->getCoord();
+	Coord* coord = (element->getCoord());
+
+	char c = 0;
+
+	afficherTaille();
 
 	/* Boucle en condition la touche est C est pressée, et réaffiche la carte et demande l'action déplacement au joueur*/
-	while (getch() != 'c')
-	{
-		mapHasard.afficherCarte();
+	//while (c != 'c')
+	//{
+		/* Affichage de la carte. */
+	//	mapHasard.afficherCarte();
 		
 		/* Déplacement du curseur */
-		mapHasard.getElement(LARGEUR * coord.y + coord.x).getCurseur().deplacement();
-	}
+	//	mapHasard.getElement(LARGEUR * coord->y + coord->x)->getCurseur()->deplacement(&c);
+	//}
 	/* Détruit l'objet `mapHasard`. */
-	mapHasard.~Carte ();
+	mapHasard.~Carte();
 
 	return 0;
 }

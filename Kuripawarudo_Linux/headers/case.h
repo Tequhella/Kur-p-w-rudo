@@ -52,7 +52,7 @@ class Case
 		/*
 		* Méthode detruireElement, permet de détruire l'élément selon le type que c'est.
 		*/
-		void detruireElement (unsigned int type) ;
+		void detruireElement (uint8_t type) ;
 
 		/*
 		* Méthode creerVide, crée une case de vide.
@@ -62,14 +62,14 @@ class Case
 		/*
 		* Méthode creerCurseur, crée un curseur.
 		*/
-		void creerCurseur() ;
+		void creerCurseur(Coord* coord) ;
 
 		////////////
 		// Getter //
 		////////////
 
 		// Getter getTypeElement, permet de récupérer l'indicateur du type de l'élément.
-		unsigned int getTypeElement() ;
+		uint8_t getTypeElement() ;
 
 		// Getter getVide, récupère la case de vide (ainsi sa quantité de creeper).
 		Vide* getVide() ;
@@ -84,7 +84,7 @@ class Case
 		Curseur* getCurseur() ;
 
 		// Getter getCoord, récupère les coordonnées de la case (x, y) ;
-		Coord getCoord() ;
+		Coord* getCoord() ;
 
 
 		////////////
@@ -92,27 +92,27 @@ class Case
 		////////////
 
 		// Setter setTypeElement, met à jour l'indicateur de type.
-		void setTypeElement (unsigned int type) ;
+		void setTypeElement (uint8_t type) ;
 
 		// Setter setBlock, met à jour un block.
-		void setBlock (unsigned int type, unsigned int typeStone) ;
+		void setBlock (uint8_t type, uint8_t typeStone) ;
 
 		// Setter setEntitee, met à jour une entitée.
-		void setEntitee (unsigned int type) ;
+		void setEntitee (uint8_t type) ;
 
 		// Setter setCoord, met à jour les coordonnées.
-		void setCoord (unsigned int x, unsigned int y) ;
+		void setCoord (double x, double y) ;
 
 	private:
 
-		unsigned int type ;
-		Vide*        vide ;
-		Block*       block ;
-		Curseur*	 curseur;
-		Coord*       coord ;
+		uint8_t		type ;
+		Vide*       vide ;
+		Block*      block ;
+		Curseur*	curseur;
+		Coord       coord ;
 
-		unsigned int* entiteeType ;
-		Entitee*      entitee ;
+		uint8_t*	entiteeType ;
+		Entitee*    entitee ;
 } ;
 
 #endif

@@ -20,7 +20,7 @@
  * @param type Le type de l'entité. Ceci est utilisé pour identifier l'entité.
  * @param coord Les coordonnées de l'entité.
  */
-Entitee::Entitee(unsigned int type, Coord* coord)
+Entitee::Entitee(uint8_t type, Coord* coord)
 {
     this->type   = type;
     this->coord  = *coord;
@@ -45,7 +45,7 @@ Entitee::~Entitee(){}
  * 
  * @return Le type de l'entité.
  */
-unsigned int Entitee::getType()
+uint8_t Entitee::getType()
 {
     return type ;
 }
@@ -70,7 +70,7 @@ double Entitee::getConstr()
  * 
  * @param type Le type de l'entité.
  */
-void Entitee::setType(unsigned int type)
+void Entitee::setType(uint8_t type)
 {
     this->type = type ;
 }

@@ -27,7 +27,7 @@ class Block
         /*
         * Constrcuteur de la classe Block.
         */
-        Block (unsigned int type, unsigned int typeRoche) ;
+        Block (uint8_t type, uint8_t typeRoche) ;
 
         /*
         * Constructeur par défaut de la classe Block.
@@ -48,10 +48,10 @@ class Block
         ////////////
 
         // Getter getType, récupère l'indicateur du type block.
-        unsigned int getType () ;
+        uint8_t getType () ;
 
         // Getter getRocheType, récupère l'indicateur du type de roche.
-        unsigned int getRocheType () ;
+        uint8_t getRocheType () ;
 
         // Getter getSoliditee, récupère la soliditée restante avant de se casser.
         double getSoliditee () ;
@@ -61,10 +61,10 @@ class Block
     
     private:
 
-        unsigned int type              = 0 ;
-        unsigned int rocheType         = 0 ;
-        double       soliditee         = 0 ;
-        int          minerai_quantitee = 0 ;
+        uint8_t type              = 0 ;
+        uint8_t rocheType         = 0 ;
+        double  soliditee         = 0 ;
+        int     minerai_quantitee = 0 ;
 } ;
 
 #endif

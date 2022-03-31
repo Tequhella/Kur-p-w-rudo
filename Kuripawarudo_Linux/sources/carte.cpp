@@ -40,18 +40,22 @@ Carte::Carte (int dimX, int dimY, char* nomDeLaCarte)
 		
 		if (elements)
 		{
+			for (int i = 0; i < dimX * dimY; i++)
+			{
+				elements[i].setTypeElement(VIDE) ;
+				elements[i].creerVide() ;
+				elements[i].setCoord(i % dimX, i / dimX) ;
+			}
 			this->dimX = dimX ;
 			this->dimY = dimY ;
 			
 			this->nomDeLaCarte = nomDeLaCarte ;
 			
 			elements[LARGEUR * 2 + LARGEUR / 2].setTypeElement(ENTITEE);
-			elements[LARGEUR * 2 + LARGEUR / 2].setCoord(LARGEUR / 2, 2);
 			elements[LARGEUR * 2 + LARGEUR / 2].setEntitee(VAISSEAU);
 
 			elements[LARGEUR * 3 + LARGEUR / 2].setTypeElement(CURSEUR);
-			elements[LARGEUR * 3 + LARGEUR / 2].creerCurseur();
-			elements[LARGEUR * 3 + LARGEUR / 2].setCoord(LARGEUR / 2, 3);
+			elements[LARGEUR * 3 + LARGEUR / 2].creerCurseur(elements[LARGEUR * 3 + LARGEUR / 2].getCoord());
 		}
 		else
 		{
@@ -107,6 +111,7 @@ void Carte::remplirHasard ()
 		
 		if (minerai < 3)
 		{
+			this->elements[i].detruireElement (this->elements[i].getTypeElement()) ;
 			this->elements[i].setTypeElement (BLOCK) ;
 			this->elements[i].setBlock (MINERAI, 0) ;
 		}
@@ -118,20 +123,17 @@ void Carte::remplirHasard ()
 			else if (rocheType <= 30) /*---->*/ rocheType = ROCHE2 ;
 			else if (rocheType <= 100) /*--->*/ rocheType = ROCHE1 ;
 
+			this->elements[i].detruireElement (this->elements[i].getTypeElement()) ;
 			this->elements[i].setTypeElement (BLOCK) ;
 			this->elements[i].setBlock (ROCHE, rocheType) ;
 		}
 		else if (terre <= 100)
 		{
+			this->elements[i].detruireElement (this->elements[i].getTypeElement()) ;
 			this->elements[i].setTypeElement (BLOCK) ;
 			this->elements[i].setBlock (TERRE, 0) ;
 		}
 		else if (this->elements[i].getTypeElement() == ENTITEE) ;
-		else
-		{
-			this->elements[i].setTypeElement(VIDE) ;
-			this->elements[i].creerVide() ;
-		}
 
 		if (relief > 0 && i % LARGEUR == 0) /*--->*/ relief -= 25;
 
