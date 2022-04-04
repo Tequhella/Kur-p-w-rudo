@@ -35,13 +35,12 @@ void afficherTaille()
 	std::cout << "CreeperEmetteur : " << sizeof(CreeperEmetteur) << std::endl;
 }
 
-
 /**
  * Créez une carte avec un nombre aléatoire de grottes et un nombre aléatoire d'ennemis
- * 
+ *
  * @return Rien.
  */
-int main ()
+int main()
 {
 	/* Création d'un nouvel objet de type Carte. */
 	Carte mapHasard = Carte(LARGEUR, HAUTEUR, "test");
@@ -51,7 +50,7 @@ int main ()
 
 	/* Il crée 4 grottes. */
 	for (int i = 0; i < 4; i++)
-		mapHasard.creerCaverne (rand() % LARGEUR * HAUTEUR + 280, 0);
+		mapHasard.creerCaverne(rand() % LARGEUR * HAUTEUR + 280, 0);
 
 	/* Créer 3 ennemies */
 	mapHasard.creerEnnemie(3);
@@ -65,15 +64,31 @@ int main ()
 
 	afficherTaille();
 
-	/* Boucle en condition la touche est C est pressée, et réaffiche la carte et demande l'action déplacement au joueur*/
-	//while (c != 'c')
-	//{
+	/* Boucle en condition la touche C est pressée, réaffiche la carte et demande l'action déplacement au joueur*/
+	while (c != 'c')
+	{
 		/* Affichage de la carte. */
-	//	mapHasard.afficherCarte();
-		
+		mapHasard.afficherCarte();
+
+		Curseur* curseur = mapHasard.getElement(LARGEUR * coord->y + coord->x)->getCurseur();
+		mapHasard.getElement(LARGEUR * coord->y + coord->x)->setCurseur(nullptr);
+
+		/* Vérifie si l'élément est un bloc ou une entité. S'il s'agit d'un bloc, il définira l'élément de
+		type sur "BLOCK". S'il s'agit d'une entitée, il définira l'élément type sur "ENTITEE". Sinon, il
+		définira l'élément type sur "VIDE". */
+		if (mapHasard.getElement(LARGEUR * coord->y + coord->x)->getBlock())
+			mapHasard.getElement(LARGEUR * coord->y + coord->x)->setTypeElement(BLOCK);
+		else if (mapHasard.getElement(LARGEUR * coord->y + coord->x)->getEntitee())
+			mapHasard.getElement(LARGEUR * coord->y + coord->x)->setTypeElement(ENTITEE);
+		else
+			mapHasard.getElement(LARGEUR * coord->y + coord->x)->setTypeElement(VIDE);
+
 		/* Déplacement du curseur */
-	//	mapHasard.getElement(LARGEUR * coord->y + coord->x)->getCurseur()->deplacement(&c);
-	//}
+		curseur->deplacement(&c);
+		/* Transposition de l'objet curseur dans la prochaine case */
+		mapHasard.getElement(LARGEUR * coord->y + coord->x)->setCurseur(curseur);
+		mapHasard.getElement(LARGEUR * coord->y + coord->x)->setTypeElement(CURSEUR);
+	}
 	/* Détruit l'objet `mapHasard`. */
 	mapHasard.~Carte();
 

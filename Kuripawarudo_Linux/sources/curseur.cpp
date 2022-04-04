@@ -42,24 +42,28 @@ void Curseur::setCoord(Coord coord)
 }
 
 /**
- * Déplace le curseur en fonction de la touche appuyée.
+ * Déplace le curseur en fonction de la touche appuyée et la limite de carte.
  */
 void Curseur::deplacement(char* touche)
 {
 	std::cin >> touche;
-	switch (*touche)
+	switch(*touche)
 	{
 		case 'w':
-			coord->y--;
+			if (coord->y > 0)
+				coord->y--;
 			break;
 		case 's':
-			coord->y++;
+			if (coord->y < HAUTEUR - 1)
+				coord->y++;
 			break;
 		case 'a':
-			coord->x--;
+			if (coord->x > 0)
+				coord->x--;
 			break;
 		case 'd':
-			coord->x++;
+			if (coord->x < LARGEUR - 1)
+				coord->x++;
 			break;
 	}
 }

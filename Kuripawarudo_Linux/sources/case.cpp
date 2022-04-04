@@ -19,10 +19,10 @@
  */
 Case::Case ()
 {
-    block   = nullptr ;
-    entitee = nullptr ;
-    vide    = nullptr ;
-    curseur = nullptr ;
+	block   = nullptr ;
+	entitee = nullptr ;
+	vide    = nullptr ;
+	curseur = nullptr ;
 }
 
 Case::~Case(){}
@@ -42,55 +42,55 @@ Case::~Case(){}
  */
 void Case::detruireElement (uint8_t type)
 {
-    switch (type)
-    {
-        case VIDE:
-            if (vide)
-            {
-                delete vide ;
-                vide  = nullptr ;
-            }
-            else /*--------->*/ cerr << "Erreur : l'élément vide n'existe pas." << endl ;
-            break ;
-        case BLOCK:
-            if (block)
-            {
-                delete block ;
-                block = nullptr ;
-            }
-            else /*--------->*/ cerr << "Erreur : l'élément block n'existe pas." << endl ;
-            break ;
-        case ENTITEE:
-            if (entitee)
-            {
-                delete entitee ;
-                entitee = nullptr ;
-            }
-            else /*--->*/ cerr << "Erreur : l'entité n'existe pas." << endl ;
+	switch (type)
+	{
+		case VIDE:
+			if (vide)
+			{
+				delete vide ;
+				vide  = nullptr ;
+			}
+			else /*--------->*/ cerr << "Erreur : l'élément vide n'existe pas." << endl ;
+			break ;
+		case BLOCK:
+			if (block)
+			{
+				delete block ;
+				block = nullptr ;
+			}
+			else /*--------->*/ cerr << "Erreur : l'élément block n'existe pas." << endl ;
+			break ;
+		case ENTITEE:
+			if (entitee)
+			{
+				delete entitee ;
+				entitee = nullptr ;
+			}
+			else /*--->*/ cerr << "Erreur : l'entité n'existe pas." << endl ;
 
-            if (vide)
-            {
-                delete vide ;
-                vide = nullptr ;
-            }
-            else /*--->*/ cerr << "Erreur : l'entité n'a pas d'élément vide associé." << endl ;
-            break ;
-        case CURSEUR:
-            if (curseur)
-            {
-                delete curseur ;
-                curseur = nullptr ;
-            }
-            else /*--->*/ cerr << "Erreur : le curseur n'existe pas." << endl ;
+			if (vide)
+			{
+				delete vide ;
+				vide = nullptr ;
+			}
+			else /*--->*/ cerr << "Erreur : l'entité n'a pas d'élément vide associé." << endl ;
+			break ;
+		case CURSEUR:
+			if (curseur)
+			{
+				delete curseur ;
+				curseur = nullptr ;
+			}
+			else /*--->*/ cerr << "Erreur : le curseur n'existe pas." << endl ;
 
-            if (vide)
-            {
-                delete vide ;
-                vide = nullptr ;
-            }
-            else /*--->*/ cerr << "Erreur : le curseur n'a pas d'élément vide associé." << endl ;
-            break;
-    }
+			if (vide)
+			{
+				delete vide ;
+				vide = nullptr ;
+			}
+			else /*--->*/ cerr << "Erreur : le curseur n'a pas d'élément vide associé." << endl ;
+			break;
+	}
 }
 
 ////////////
@@ -104,7 +104,7 @@ void Case::detruireElement (uint8_t type)
  */
 uint8_t Case::getTypeElement()
 {
-    return type ;
+	return type ;
 }
 
 /**
@@ -114,7 +114,7 @@ uint8_t Case::getTypeElement()
  */
 Vide* Case::getVide()
 {
-    return vide ;
+	return vide ;
 }
 
 /**
@@ -124,7 +124,7 @@ Vide* Case::getVide()
  */
 Block* Case::getBlock()
 {
-    return block ;
+	return block ;
 }
 
 /**
@@ -134,7 +134,7 @@ Block* Case::getBlock()
  */
 Entitee* Case::getEntitee()
 {
-    return entitee ;
+	return entitee ;
 }
 
 /**
@@ -144,7 +144,7 @@ Entitee* Case::getEntitee()
  */
 Curseur* Case::getCurseur()
 {
-    return curseur ;
+	return curseur ;
 }
 
 /**
@@ -154,7 +154,7 @@ Curseur* Case::getCurseur()
  */
 Coord* Case::getCoord()
 {
-    return &coord ;
+	return &coord ;
 }
 
 ////////////
@@ -168,7 +168,7 @@ Coord* Case::getCoord()
  */
 void Case::setTypeElement (uint8_t type)
 {
-    this->type = type ;
+	this->type = type ;
 }
 
 /**
@@ -176,26 +176,49 @@ void Case::setTypeElement (uint8_t type)
  */
 void Case::creerVide()
 {
-    vide = new Vide() ;
-    if (!vide)
-    {
-        cerr << "Erreur allocation de l'objet vide." << endl ;
-        exit (-1) ;
-    }
-    
+	vide = new Vide() ;
+	if (!vide)
+	{
+		cerr << "Erreur allocation de l'objet vide." << endl ;
+		exit (-1) ;
+	}
+	
 }
 
-/**
- * Crée un nouveau curseur
- */
-void Case::creerCurseur(Coord* coord)
+ /**
+  * Si l'objet est un Coord, alors il crée un nouvel objet Curseur et le stock dans le champ curseur. Si
+  * l'objet est un Curseur, alors il le stock dans le champ curseur. Si l'objet est nullptr, définissez
+  * le champ du curseur sur nullptr. Sinon, imprimez un message d'erreur et quittez le programme
+  *
+  * @param object l'objet à définir comme nouveau curseur.
+  */
+void Case::setCurseur(Base* object)
 {
-    curseur = new Curseur(coord);
-    if (!curseur)
-    {
-        cerr << "Erreur allocation de l'objet curseur." << endl ;
-        exit (-1) ;
-    }
+	if (instanceof<Coord>(object))
+	{
+		Coord* coord = (Coord*) object ;
+		curseur = new Curseur(coord) ;
+		if (!curseur)
+		{
+			cerr << "Erreur allocation de l'objet curseur." << endl ;
+			exit (-1) ;
+		}
+	}
+	else if (instanceof<Curseur>(object))
+	{
+		curseur = (Curseur*) object ;
+		if (!curseur)
+		{
+			cerr << "Erreur allocation de l'objet curseur." << endl;
+			exit(-1);
+		}
+	}
+	else if (object == nullptr) /*--->*/ curseur = nullptr;
+	else
+	{
+		cerr << "Erreur : l'objet n'est pas une coordonnée ou un objet Curseur." << endl ;
+		exit (-1) ;
+	}
 }
 
 /**
@@ -206,12 +229,12 @@ void Case::creerCurseur(Coord* coord)
  */
 void Case::setBlock (uint8_t type, uint8_t typeStone)
 {
-    block = new Block (type, typeStone) ;
-    if (!block)
-    {
-        cerr << "Erreur allocation de l'objet block." << endl ;
-        exit (-1) ;
-    }
+	block = new Block (type, typeStone) ;
+	if (!block)
+	{
+		cerr << "Erreur allocation de l'objet block." << endl ;
+		exit (-1) ;
+	}
 }
 
 /**
@@ -221,23 +244,23 @@ void Case::setBlock (uint8_t type, uint8_t typeStone)
  */
 void Case::setEntitee (uint8_t type)
 {
-    switch (type)
-    {
-        case VAISSEAU        : entitee = new Vaisseau()        ; break ;
-        case REACTEUR        : entitee = new Reacteur()        ; break ;
-        case MINEUR          : entitee = new Mineur()          ; break ;
-        case BOUCLIER        : entitee = new Bouclier()        ; break ;
-        case PHARE           : entitee = new Phare()           ; break ;
-        case BOMBE           : entitee = new Bombe()           ; break ;
-        case CREEPER_EMETTEUR: entitee = new CreeperEmetteur() ; break ;
-    }
+	switch (type)
+	{
+		case VAISSEAU        : entitee = new Vaisseau()        ; break ;
+		case REACTEUR        : entitee = new Reacteur()        ; break ;
+		case MINEUR          : entitee = new Mineur()          ; break ;
+		case BOUCLIER        : entitee = new Bouclier()        ; break ;
+		case PHARE           : entitee = new Phare()           ; break ;
+		case BOMBE           : entitee = new Bombe()           ; break ;
+		case CREEPER_EMETTEUR: entitee = new CreeperEmetteur() ; break ;
+	}
 
-    entitee->setType(type) ;
-    if (!entitee)
-    {
-        cerr << "Erreur allocation de l'objet entitee." << endl ;
-        exit (-1) ;
-    }
+	entitee->setType(type) ;
+	if (!entitee)
+	{
+		cerr << "Erreur allocation de l'objet entitee." << endl ;
+		exit (-1) ;
+	}
 }
 
 /**
@@ -248,5 +271,5 @@ void Case::setEntitee (uint8_t type)
  */
 void Case::setCoord (double x, double y)
 {
-    coord = (Coord) {x, y} ;
+	coord = Coord(x, y);
 }

@@ -55,7 +55,7 @@ Carte::Carte (int dimX, int dimY, char* nomDeLaCarte)
 			elements[LARGEUR * 2 + LARGEUR / 2].setEntitee(VAISSEAU);
 
 			elements[LARGEUR * 3 + LARGEUR / 2].setTypeElement(CURSEUR);
-			elements[LARGEUR * 3 + LARGEUR / 2].creerCurseur(elements[LARGEUR * 3 + LARGEUR / 2].getCoord());
+			elements[LARGEUR * 3 + LARGEUR / 2].setCurseur(elements[LARGEUR * 3 + LARGEUR / 2].getCoord());
 		}
 		else
 		{
@@ -96,6 +96,9 @@ Carte::~Carte ()
  */
 void Carte::remplirHasard ()
 {
+	// Initialisation du random
+	srand(time(NULL));
+	
 	int terre 	= 0 ;
 	int roche 	= 0 ;
 	int minerai = 0 ;

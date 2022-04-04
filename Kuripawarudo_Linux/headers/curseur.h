@@ -14,7 +14,7 @@
 #include "type.h"
 
 /* La classe Curseur est une classe qui représente un curseur */
-class Curseur
+class Curseur : public Base
 {
 	public:
 		

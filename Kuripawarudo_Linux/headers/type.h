@@ -20,6 +20,11 @@
 constexpr auto LARGEUR = 30;
 constexpr auto HAUTEUR = 45;
 
+class Base
+{
+public: virtual ~Base() {}
+};
+
 /**
  * Un Coord est une structure qui a deux membres à virgule flottante double précision, x et y.
  * Il est utilisé pour représenter les coordonnées d'une entité.
@@ -35,12 +40,20 @@ constexpr auto HAUTEUR = 45;
  * int principal (vide)
  * {
  */
-typedef struct
+typedef struct Coord : public Base
 {
+	Coord() : x(0), y(0) {}
+	Coord(double x, double y) : x(x), y(y) {}
     double x;
     double y;
 }
 Coord ;
+
+template<typename Base, typename T>
+inline bool instanceof(const T* ptr)
+{
+    return dynamic_cast<const Base*>(ptr) != nullptr;
+}
 
 /* Un moyen de définir une valeur constante pour chaque type de case. */
 enum

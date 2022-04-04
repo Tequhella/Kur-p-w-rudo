@@ -62,7 +62,7 @@ class Case
 		/*
 		* Méthode creerCurseur, crée un curseur.
 		*/
-		void creerCurseur(Coord* coord) ;
+		void setCurseur(Base* object) ;
 
 		////////////
 		// Getter //
