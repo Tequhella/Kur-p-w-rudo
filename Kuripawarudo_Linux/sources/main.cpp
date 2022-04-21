@@ -2,7 +2,7 @@
 /* Kurīpāwārudo (inspiré du jeu Creeper World 2)             */
 /*-----------------------------------------------------------*/
 /* Module            : main.c                                */
-/* Numéro de version : 0.3.1                                 */
+/* Numéro de version : 0.3.4                                 */
 /* Branche           : Branch-CPP                            */
 /* Date              : 11/01/2022                            */
 /* Auteurs           : Lilian CHARDON                        */
@@ -54,13 +54,14 @@ int main()
 
 	/* Créer 3 ennemies */
 	mapHasard.creerEnnemie(3);
-
-	Case* element = mapHasard.getElement(LARGEUR * 3 + LARGEUR / 2);
-
+	
+	Case* element	 = mapHasard.getElement(LARGEUR * 3 + LARGEUR / 2);
 	/* Enregistre les coordonnées du Curseur du tableau de case */
-	Coord* coord = (element->getCoord());
-
-	char c = 0;
+	Curseur* curseur = element->getCurseur();
+	Coord* coord	 = curseur->getCoord();
+	
+	char c			 = 0;
+	uint8_t	verif	 = 1;
 
 	afficherTaille();
 
@@ -69,25 +70,50 @@ int main()
 	{
 		/* Affichage de la carte. */
 		mapHasard.afficherCarte();
-
-		Curseur* curseur = mapHasard.getElement(LARGEUR * coord->y + coord->x)->getCurseur();
-		mapHasard.getElement(LARGEUR * coord->y + coord->x)->setCurseur(nullptr);
-
+		
+		if (verif == 0)
+		{
+			curseur = mapHasard.getElement(LARGEUR * coord->y + coord->x)->getCurseur();
+		}
+		
+		cout << "Coordonnée curseur : " << coord->x << " " << coord->y << endl;
+		mapHasard.afficherAdresse(LARGEUR * coord->y + coord->x);
+		
 		/* Vérifie si l'élément est un bloc ou une entité. S'il s'agit d'un bloc, il définira l'élément de
 		type sur "BLOCK". S'il s'agit d'une entitée, il définira l'élément type sur "ENTITEE". Sinon, il
 		définira l'élément type sur "VIDE". */
 		if (mapHasard.getElement(LARGEUR * coord->y + coord->x)->getBlock())
+		{
 			mapHasard.getElement(LARGEUR * coord->y + coord->x)->setTypeElement(BLOCK);
+		}
 		else if (mapHasard.getElement(LARGEUR * coord->y + coord->x)->getEntitee())
+		{
 			mapHasard.getElement(LARGEUR * coord->y + coord->x)->setTypeElement(ENTITEE);
+		}
 		else
+		{
 			mapHasard.getElement(LARGEUR * coord->y + coord->x)->setTypeElement(VIDE);
+		}
 
 		/* Déplacement du curseur */
-		curseur->deplacement(&c);
-		/* Transposition de l'objet curseur dans la prochaine case */
-		mapHasard.getElement(LARGEUR * coord->y + coord->x)->setCurseur(curseur);
-		mapHasard.getElement(LARGEUR * coord->y + coord->x)->setTypeElement(CURSEUR);
+		std::cin >> c;
+		verif = curseur->deplacement(&c);
+		if (verif == 1)
+		{
+			/* Transposition de l'objet curseur dans la prochaine case */
+			element->setCurseur(nullptr);
+			mapHasard.getElement(LARGEUR * coord->y + coord->x)->setCurseur(curseur);
+			mapHasard.getElement(LARGEUR * coord->y + coord->x)->setTypeElement(CURSEUR);
+			element = mapHasard.getElement(LARGEUR * coord->y + coord->x);
+		}
+		else
+		{
+			if (curseur->action(&c, &mapHasard) == 0)
+			{
+				cout << "Touche invalide !" << endl;
+			}
+		}
+		
 	}
 	/* Détruit l'objet `mapHasard`. */
 	mapHasard.~Carte();

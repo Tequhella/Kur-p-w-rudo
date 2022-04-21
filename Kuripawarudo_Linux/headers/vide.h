@@ -2,7 +2,7 @@
 /* Kurīpāwārudo (inspiré du jeu Creeper World 2)             */
 /*-----------------------------------------------------------*/
 /* Module            : vide.h                                */
-/* Numéro de version : 0.3.1                                 */
+/* Numéro de version : 0.3.4                                 */
 /* Branche           : Branch-CPP                            */
 /* Date              : 11/01/2022                            */
 /* Auteurs           : Lilian CHARDON                        */

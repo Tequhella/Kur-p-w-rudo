@@ -2,7 +2,7 @@
 /* Kurīpāwārudo (inspiré du jeu Creeper World 2)             */
 /*-----------------------------------------------------------*/
 /* Module            : carte.h                               */
-/* Numéro de version : 0.3.1                                 */
+/* Numéro de version : 0.3.4                                 */
 /* Branche           : Branch-CPP                            */
 /* Date              : 11/01/2022                            */
 /* Auteurs           : Lilian CHARDON                        */
@@ -28,7 +28,7 @@ class Carte
         /*
         * Constructeur de la classe Carte.
         */
-        Carte (int dimX, int dimY, char* nomDeLaCarte) ;
+        Carte (int dimX, int dimY, const char* nomDeLaCarte) ;
         
         /*
         * Destructeur de la classe Carte.
@@ -60,6 +60,13 @@ class Carte
         */
         void afficherCarte () const ;
 
+		/**
+         * @brief Méthode afficherAdresse, affiche l'adresse de l'élément de la carte.
+         * 
+         * @param pos
+         */
+		void afficherAdresse (unsigned int pos) const;
+
         ////////////
         // Getter //
         ////////////
@@ -74,7 +81,7 @@ class Carte
         Case* getElement (unsigned int pos) ;
 
         // Getter getNomDeLaCarte, récupère le nom de la carte.
-        char* getNomDeLaCarte () ;
+        const char* getNomDeLaCarte () ;
 
     private:
 
@@ -84,7 +91,7 @@ class Carte
 
         unsigned int dimX, dimY ;
         Case*        elements ; // Propriété elements : tableau des éléments de la carte.
-        char*        nomDeLaCarte ;
+        const char*        nomDeLaCarte ;
 } ;
 
 #endif

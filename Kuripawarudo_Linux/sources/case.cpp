@@ -2,7 +2,7 @@
 /* Kurīpāwārudo (inspiré du jeu Creeper World 2)             */
 /*-----------------------------------------------------------*/
 /* Module            : case.cpp                              */
-/* Numéro de version : 0.3.1                                 */
+/* Numéro de version : 0.3.4                                 */
 /* Branche           : Branch-CPP                            */
 /* Date              : 11/01/2022                            */
 /* Auteurs           : Lilian CHARDON                        */
@@ -45,6 +45,11 @@ void Case::detruireElement (uint8_t type)
 	switch (type)
 	{
 		case VIDE:
+			if (curseur)
+			{
+				delete curseur;
+				curseur = nullptr;
+			}
 			if (vide)
 			{
 				delete vide ;
@@ -53,6 +58,11 @@ void Case::detruireElement (uint8_t type)
 			else /*--------->*/ cerr << "Erreur : l'élément vide n'existe pas." << endl ;
 			break ;
 		case BLOCK:
+			if (curseur)
+			{
+				delete curseur;
+				curseur = nullptr;
+			}
 			if (block)
 			{
 				delete block ;
@@ -61,6 +71,11 @@ void Case::detruireElement (uint8_t type)
 			else /*--------->*/ cerr << "Erreur : l'élément block n'existe pas." << endl ;
 			break ;
 		case ENTITEE:
+			if (curseur)
+			{
+				delete curseur;
+				curseur = nullptr;
+			}
 			if (entitee)
 			{
 				delete entitee ;
@@ -76,6 +91,11 @@ void Case::detruireElement (uint8_t type)
 			else /*--->*/ cerr << "Erreur : l'entité n'a pas d'élément vide associé." << endl ;
 			break ;
 		case CURSEUR:
+			if (entitee)
+			{
+				delete entitee;
+				entitee = nullptr;
+			}
 			if (curseur)
 			{
 				delete curseur ;
@@ -197,7 +217,7 @@ void Case::setCurseur(Base* object)
 	if (instanceof<Coord>(object))
 	{
 		Coord* coord = (Coord*) object ;
-		curseur = new Curseur(coord) ;
+		curseur = new Curseur(*coord) ;
 		if (!curseur)
 		{
 			cerr << "Erreur allocation de l'objet curseur." << endl ;
