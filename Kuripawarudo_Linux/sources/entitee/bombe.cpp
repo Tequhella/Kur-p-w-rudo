@@ -10,17 +10,10 @@
 
 #include "../../headers/entitee/bombe.h"
 
-Bombe::Bombe()
+Bombe::Bombe() : energieQuantitee(0), energieMax(20), degat(100), portee(2)
 {
-    portee           = 2 ;
-    energieQuantitee = 0 ;
-    energieMax       = 20 ;
-    degat            = 100 ;
-    
-    this->vie        = 1 ;
+    this->constr = 20 ;
+    this->vie = 1 ;
 }
 
-Bombe::~Bombe()
-{
-
-}
+Bombe::~Bombe() {}

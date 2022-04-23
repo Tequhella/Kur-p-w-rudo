@@ -17,13 +17,7 @@
 /**
  * Le constructeur initialise l'objet Case
  */
-Case::Case ()
-{
-	block   = nullptr ;
-	entitee = nullptr ;
-	vide    = nullptr ;
-	curseur = nullptr ;
-}
+Case::Case () : vide(nullptr), block(nullptr), curseur(nullptr), entitee(nullptr) {}
 
 Case::~Case(){}
 

@@ -10,12 +10,10 @@
 
 #include "../../headers/entitee/creeperEmetteur.h"
 
-CreeperEmetteur::CreeperEmetteur()
+CreeperEmetteur::CreeperEmetteur() : frequence(1), puissance(100)
 {
-    this->vie = 1;
-
-    frequence = 1 ;
-    puissance = 100 ;
+	this->constr = 0 ;
+    this->vie = 1 ;
 }
 
 CreeperEmetteur::~CreeperEmetteur()

@@ -10,13 +10,10 @@
 
 #include "../../headers/entitee/phare.h"
 
-Phare::Phare()
+Phare::Phare() : energieQuantitee(0), energieMax(20), portee(6)
 {
-    portee           = 6 ;
-    energieQuantitee = 0 ;
-    energieMax       = 20 ;
-    
-    this->vie        = 5 ;
+	this->constr = 4 ;
+    this->vie    = 5 ;
 }
 
 Phare::~Phare()

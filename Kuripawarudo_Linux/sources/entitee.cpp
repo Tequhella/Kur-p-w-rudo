@@ -20,13 +20,7 @@
  * @param type Le type de l'entité. Ceci est utilisé pour identifier l'entité.
  * @param coord Les coordonnées de l'entité.
  */
-Entitee::Entitee(uint8_t type, Coord* coord)
-{
-    this->type   = type;
-    this->coord  = *coord;
-    this->vie    = 0;
-    this->constr = 0;
-}
+Entitee::Entitee(uint8_t type, Coord* coord) : type(type), coord(*coord), constr(0), vie(0) {}
 
 Entitee::Entitee(){}
 

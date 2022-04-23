@@ -10,10 +10,9 @@
 
 #include "../../headers/entitee/reacteur.h"
 
-Reacteur::Reacteur()
+Reacteur::Reacteur() : emissionEnergie(0.15)
 {
-    emissionEnergie = 0.15 ;
-
+    this->constr = 4;
     this->vie = 1 ;
 }
 

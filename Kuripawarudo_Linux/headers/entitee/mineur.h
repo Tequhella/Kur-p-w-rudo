@@ -29,6 +29,7 @@ class Mineur : public Entitee
 
     private:
 
+        double minageEfficacitee ;
         double energieQuantitee ;
         double energieMax ;
 

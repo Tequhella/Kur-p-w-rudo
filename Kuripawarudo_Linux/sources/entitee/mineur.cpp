@@ -10,12 +10,10 @@
 
 #include "../../headers/entitee/mineur.h"
 
-Mineur::Mineur()
+Mineur::Mineur() : minageEfficacitee(1), energieQuantitee(0), energieMax(20)
 {
-    energieMax       = 20 ;
-    energieQuantitee = 0 ;
-
-    this->vie = 10 ;
+	this->constr = 4 ;
+    this->vie	 = 10 ;
 }
 
 Mineur::~Mineur()

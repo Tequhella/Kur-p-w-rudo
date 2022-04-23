@@ -12,6 +12,7 @@
 
 Bouclier::Bouclier()
 {
+	this->constr = 4 ;
     this->vie = 40 ;
 }
 

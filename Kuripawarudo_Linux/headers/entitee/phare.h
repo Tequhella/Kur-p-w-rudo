@@ -29,9 +29,9 @@ class Phare : public Entitee
 
     private:
 
-        uint8_t portee;
         double  energieQuantitee ;
         double  energieMax ;
+        uint8_t portee;
 
 };
 

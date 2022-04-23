@@ -66,12 +66,12 @@ class Entitee
     private:
 
         uint8_t      type ;
-        double       constr ; // Point de construction.
         Coord        coord ;
 
     protected:
 
         unsigned int id;
+        double       constr; // Point de construction.
         uint8_t      vie;
 
 };

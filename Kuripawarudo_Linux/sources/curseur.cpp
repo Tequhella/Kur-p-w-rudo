@@ -15,10 +15,7 @@ Curseur::Curseur(){}
 /**
  * @brief Le constructeur de la classe Curseur crée un nouvel objet Curseur et initialise sa variable membre coord à la valeur de l'objet Coord {LARGEUR / 2, 3}.
  */
-Curseur::Curseur(Coord coord)
-{
-	this->coord = coord;
-}
+Curseur::Curseur(Coord coord) : coord(coord) {}
 
 Curseur::~Curseur(){}
 
