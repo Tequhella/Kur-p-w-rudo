@@ -2,7 +2,7 @@
 /* Kurīpāwārudo (inspiré du jeu Creeper World 2)             */
 /*-----------------------------------------------------------*/
 /* Module            : curseur.cpp                           */
-/* Numéro de version : 0.3.4                                 */
+/* Numéro de version : 0.3.6                                 */
 /* Branche           : Branch-CPP                            */
 /* Date              : 11/01/2022                            */
 /* Auteurs           : Lilian CHARDON                        */
@@ -73,11 +73,11 @@ uint8_t Curseur::action(char* touche, Carte* carte)
 	uint8_t ret;
 	
 	// Les variables contenant la case d'élément où l'action se fait et celles autours
-	Case* element = carte->getElement(LARGEUR * coord.y + coord.x);
-	Case* element_haut = carte->getElement(LARGEUR * (coord.y - 1) + coord.x);
-	Case* element_bas = carte->getElement(LARGEUR * (coord.y + 1) + coord.x);
-	Case* element_gauche = carte->getElement(LARGEUR * coord.y + coord.x - 1);
-	Case* element_droite = carte->getElement(LARGEUR * coord.y + coord.x + 1);
+	Case* element = carte->getElement(coord.x, coord.y);
+	Case* element_haut = carte->getElement(coord.x, coord.y - 1);
+	Case* element_bas = carte->getElement(coord.x, coord.y + 1);
+	Case* element_gauche = carte->getElement(coord.x - 1, coord.y);
+	Case* element_droite = carte->getElement(coord.x + 1, coord.y);
 	
 	
 	switch(*touche)
@@ -88,7 +88,7 @@ uint8_t Curseur::action(char* touche, Carte* carte)
 			{
 				if (element_bas->getTypeElement() == BLOCK && element->getTypeElement() == VIDE)
 				{
-					element->setEntitee(REACTEUR);
+					element->setEntitee(REACTEUR, carte);
 					element->setTypeElement(ENTITEE);
 				}
 				else /*--->*/ cout << "Impossible de placer un réacteur ici." << endl;
@@ -101,7 +101,7 @@ uint8_t Curseur::action(char* touche, Carte* carte)
 			{
 				if (element_bas->getTypeElement() == BLOCK && element->getTypeElement() == VIDE)
 				{
-					element->setEntitee(MINEUR);
+					element->setEntitee(MINEUR, carte);
 					element->setTypeElement(ENTITEE);
 				}
 				else /*--->*/ cout << "Impossible de placer un mineur ici." << endl;
@@ -113,7 +113,7 @@ uint8_t Curseur::action(char* touche, Carte* carte)
 			{
 				if (element->getTypeElement() == VIDE)
 				{
-					element->setEntitee(BOUCLIER);
+					element->setEntitee(BOUCLIER, carte);
 					element->setTypeElement(ENTITEE);
 				}
 				else /*--->*/ cout << "Impossible de placer un bouclier ici." << endl;
@@ -130,7 +130,7 @@ uint8_t Curseur::action(char* touche, Carte* carte)
 					element_gauche->getTypeElement() == BLOCK) &&
 					element->getTypeElement() == VIDE)
 				{
-					element->setEntitee(PHARE);
+					element->setEntitee(PHARE, carte);
 					element->setTypeElement(ENTITEE);
 				}
 				else /*--->*/ cout << "Impossible de placer un phare ici." << endl;
@@ -143,7 +143,7 @@ uint8_t Curseur::action(char* touche, Carte* carte)
 			{
 				if (element->getTypeElement() == VIDE)
 				{
-					element->setEntitee(BOMBE);
+					element->setEntitee(BOMBE, carte);
 					element->setTypeElement(ENTITEE);
 				}
 				else /*--->*/ cout << "Impossible de placer une bombe ici." << endl;

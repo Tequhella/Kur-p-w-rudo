@@ -2,7 +2,7 @@
 /* Kurīpāwārudo (inspiré du jeu Creeper World 2)             */
 /*-----------------------------------------------------------*/
 /* Module            : main.c                                */
-/* Numéro de version : 0.3.4                                 */
+/* Numéro de version : 0.3.6                                 */
 /* Branche           : Branch-CPP                            */
 /* Date              : 11/01/2022                            */
 /* Auteurs           : Lilian CHARDON                        */
@@ -15,6 +15,8 @@
 #include "../headers/block.h"
 #include "../headers/entitee.h"
 #include "../headers/type.h"
+
+#include <thread>
 
 /**
  * @brief Fonction afficherTaille, permet d'afficher la taille de toutes les classes.
@@ -76,13 +78,14 @@ void afficherTaille()
 
 void bouclePrincipale(Carte* carte)
 {
-	Case* element = carte->getElement(LARGEUR * 3 + LARGEUR / 2);
+	Case* element = carte->getElement(LARGEUR / 2, 3);
 	/* Enregistre les coordonnées du Curseur du tableau de case */
 	Curseur* curseur = element->getCurseur();
 	Coord* coord = curseur->getCoord();
 
 	char c = 0;
 	uint8_t	verif = 1;
+	
 	/* Boucle en condition la touche C est pressée, réaffiche la carte et demande l'action déplacement au joueur*/
 	while (c != 'c')
 	{
@@ -91,26 +94,26 @@ void bouclePrincipale(Carte* carte)
 
 		if (verif == 0)
 		{
-			curseur = carte->getElement(LARGEUR * coord->y + coord->x)->getCurseur();
+			curseur = carte->getElement(coord->x, coord->y)->getCurseur();
 		}
 
 		cout << "Coordonnée curseur : " << coord->x << " " << coord->y << endl;
-		carte->afficherAdresse(LARGEUR * coord->y + coord->x);
+		carte->afficherAdresse(coord->x, coord->y);
 
 		/* Vérifie si l'élément est un bloc ou une entité. S'il s'agit d'un bloc, il définira l'élément de
 		type sur "BLOCK". S'il s'agit d'une entitée, il définira l'élément type sur "ENTITEE". Sinon, il
 		définira l'élément type sur "VIDE". */
-		if (carte->getElement(LARGEUR * coord->y + coord->x)->getBlock())
+		if (carte->getElement(coord->x, coord->y)->getBlock())
 		{
-			carte->getElement(LARGEUR * coord->y + coord->x)->setTypeElement(BLOCK);
+			carte->getElement(coord->x, coord->y)->setTypeElement(BLOCK);
 		}
-		else if (carte->getElement(LARGEUR * coord->y + coord->x)->getEntitee())
+		else if (carte->getElement(coord->x, coord->y)->getEntitee())
 		{
-			carte->getElement(LARGEUR * coord->y + coord->x)->setTypeElement(ENTITEE);
+			carte->getElement(coord->x, coord->y)->setTypeElement(ENTITEE);
 		}
 		else
 		{
-			carte->getElement(LARGEUR * coord->y + coord->x)->setTypeElement(VIDE);
+			carte->getElement(coord->x, coord->y)->setTypeElement(VIDE);
 		}
 
 		/* Déplacement du curseur */
@@ -120,17 +123,15 @@ void bouclePrincipale(Carte* carte)
 		{
 			/* Transposition de l'objet curseur dans la prochaine case */
 			element->setCurseur(nullptr);
-			carte->getElement(LARGEUR * coord->y + coord->x)->setCurseur(curseur);
-			carte->getElement(LARGEUR * coord->y + coord->x)->setTypeElement(CURSEUR);
-			element = carte->getElement(LARGEUR * coord->y + coord->x);
+			carte->getElement(coord->x, coord->y)->setCurseur(curseur);
+			carte->getElement(coord->x, coord->y)->setTypeElement(CURSEUR);
+			element = carte->getElement(coord->x, coord->y);
 		}
 		else
 		{
-			if (curseur->action(&c, carte) == 0)
-			{
-				cout << "Touche invalide !" << endl;
-			}
+			if (curseur->action(&c, carte) == 0) /*--->*/ cout << "Touche invalide !" << endl;
 		}
 
+		carte->gestionConstruction();
 	}
 }

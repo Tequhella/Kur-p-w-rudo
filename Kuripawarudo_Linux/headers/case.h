@@ -2,7 +2,7 @@
 /* Kurīpāwārudo (inspiré du jeu Creeper World 2)             */
 /*-----------------------------------------------------------*/
 /* Module            : case.h                                */
-/* Numéro de version : 0.3.4                                 */
+/* Numéro de version : 0.3.6                                 */
 /* Branche           : Branch-CPP                            */
 /* Date              : 11/01/2022                            */
 /* Auteurs           : Lilian CHARDON                        */
@@ -25,6 +25,7 @@ class Block ;
 class Vide ;
 class Entitee ;
 class Curseur;
+class Carte;
 
 /* La classe Case est utilisée pour créer une case dans la carte */
 class Case
@@ -97,8 +98,13 @@ class Case
 		// Setter setBlock, met à jour un block.
 		void setBlock (uint8_t type, uint8_t typeStone) ;
 
-		// Setter setEntitee, met à jour une entitée.
-		void setEntitee (uint8_t type) ;
+		/**
+		 * Il définit le type d'entité de la case.
+		 *
+		 * @param type Le type de l'entité.
+		 * @param coordEntiteeConstr Le tableau de coordonnées d'entitée à construire.
+		 */
+		void setEntitee (uint8_t type, Carte* carte) ;
 
 		// Setter setCoord, met à jour les coordonnées.
 		void setCoord (double x, double y) ;

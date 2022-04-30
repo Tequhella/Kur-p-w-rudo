@@ -2,7 +2,7 @@
 /* Kurīpāwārudo (inspiré du jeu Creeper World 2)             */
 /*-----------------------------------------------------------*/
 /* Module            : carte.cpp                             */
-/* Numéro de version : 0.3.4                                 */
+/* Numéro de version : 0.3.6                                 */
 /* Branche           : Branch-CPP                            */
 /* Date              : 11/01/2022                            */
 /* Auteurs           : Lilian CHARDON                        */
@@ -25,18 +25,17 @@
  * @param dimY La hauteur de la carte.
  * @param nomDeLaCarte Le nom de la carte.
  */
-Carte::Carte (int dimX, int dimY, const char* nomDeLaCarte)
+Carte::Carte (int dimX, int dimY, const char* nomDeLaCarte) : coordEntiteeConstr(nullptr), nbEntiteeConstr(0), nomDeLaCarte(nomDeLaCarte)
 {
 	if (dimX == 0 || dimY == 0)
 	{
 		elements           = nullptr ;
 		this->dimX         = 0 ;
 		this->dimY         = 0 ;
-		this->nomDeLaCarte = nomDeLaCarte ;
 	}
 	else
 	{
-		elements = new Case [sizeof(Case) * dimX * dimY] ;
+		elements = new Case [dimX * dimY] ;
 		
 		if (elements)
 		{
@@ -49,10 +48,8 @@ Carte::Carte (int dimX, int dimY, const char* nomDeLaCarte)
 			this->dimX = dimX ;
 			this->dimY = dimY ;
 			
-			this->nomDeLaCarte = nomDeLaCarte ;
-			
 			elements[LARGEUR * 2 + LARGEUR / 2].setTypeElement(ENTITEE);
-			elements[LARGEUR * 2 + LARGEUR / 2].setEntitee(VAISSEAU);
+			elements[LARGEUR * 2 + LARGEUR / 2].setEntitee(VAISSEAU, this);
 
 			elements[LARGEUR * 3 + LARGEUR / 2].setTypeElement(CURSEUR);
 			elements[LARGEUR * 3 + LARGEUR / 2].setCurseur(elements[LARGEUR * 3 + LARGEUR / 2].getCoord());
@@ -76,7 +73,9 @@ Carte::~Carte ()
 	{
 		for (unsigned int i = 0; i < dimX * dimY; i++) /*--->*/ this->elements[i].detruireElement(this->elements[i].getTypeElement()) ;
 		delete[] this->elements ;
-		this->elements = nullptr ;
+		delete[] this->coordEntiteeConstr;
+		this->elements   = nullptr ;
+		this->coordEntiteeConstr = nullptr ;
 		cout << "Désallocation de la carte reussi." << endl ;
 	}
 	else
@@ -174,10 +173,14 @@ void Carte::creerCaverne (unsigned int pos, int randMoins)
 
 		randMoins += 5;
 
-		if (droite > 30 && this->elements[pos + 1].getTypeElement() == BLOCK) /*--------->*/ creerCaverne (pos + 1, randMoins);
-		if (bas > 30 && this->elements[pos + LARGEUR].getTypeElement() == BLOCK) /*------>*/ creerCaverne (pos + LARGEUR, randMoins);
-		if (gauche > 30 && this->elements[pos - 1].getTypeElement() == BLOCK) /*--------->*/ creerCaverne (pos - 1, randMoins);
-		if (bas > 30 && this->elements[pos - LARGEUR].getTypeElement() == BLOCK) /*------>*/ creerCaverne (pos - LARGEUR, randMoins);
+		if (droite > 30)
+			if(this->elements[pos + 1].getTypeElement() == BLOCK) /*--------->*/ creerCaverne (pos + 1, randMoins);
+		if (bas > 30)
+			if (this->elements[pos + LARGEUR].getTypeElement() == BLOCK) /*------>*/ creerCaverne (pos + LARGEUR, randMoins);
+		if (gauche > 30)
+			if (this->elements[pos - 1].getTypeElement() == BLOCK) /*--------->*/ creerCaverne (pos - 1, randMoins);
+		if (bas > 30)
+			if (this->elements[pos - LARGEUR].getTypeElement() == BLOCK) /*------>*/ creerCaverne (pos - LARGEUR, randMoins);
 	}
 	
 }
@@ -196,7 +199,7 @@ void Carte::creerEnnemie (int nbEnnemie)
 		while (elements[pos].getTypeElement() != VIDE || pos < 350) /*--->*/ pos = rand() % (LARGEUR * HAUTEUR) + 1;
 
 		elements[pos].setTypeElement(ENTITEE);
-		elements[pos].setEntitee(CREEPER_EMETTEUR);
+		elements[pos].setEntitee(CREEPER_EMETTEUR, this);
 		elements[pos].getEntitee()->setId(i);
 	}
 }
@@ -303,9 +306,53 @@ void Carte::afficherCarte () const
  *
  * @param pos
  */
-void Carte::afficherAdresse (unsigned int pos) const
+void Carte::afficherAdresse (unsigned int x, unsigned int y) const
 {
-	cout << "L'adresse de l'élément est : " << &elements[pos] << endl;
+	cout << "L'adresse de l'élément est : " << &elements[LARGEUR * y + x] << endl;
+}
+
+/**
+ * Fonction gestionConstruction, décrémente les points de construction des entitée.
+ *
+ * @param coordEntiteeConstr un tableau des entitees présents.
+ */
+void Carte::gestionConstruction()
+{
+	if (coordEntiteeConstr)
+	{
+		for (int i = 0; i < nbEntiteeConstr; i++)
+		{
+			cout << "Taille de coordEntiteeConstr : " << sizeof(coordEntiteeConstr) << endl;
+			cout << "Coordonnée dans coordEntiteeConstr[i] : " << coordEntiteeConstr[i].x << " " << coordEntiteeConstr[i].y << endl;
+			Entitee* entitee = this->getElement(coordEntiteeConstr->x, coordEntiteeConstr->y)->getEntitee();
+			switch (entitee->getType())
+			{
+				case VAISSEAU:			break;
+				case CREEPER_EMETTEUR:	break;
+				default:
+					if (entitee->getConstr() > 0) /*--->*/ entitee->decConstr(1);
+					else
+					{
+						/*
+						 * Enlève l'entitée du tableau d'entitée et realloue la mémoire du tableau en fonction de la taille.
+						 */
+						Coord* coordEntiteeConstrTemp = new Coord[nbEntiteeConstr - 1];
+						for (int j = 0; j < nbEntiteeConstr; j++)
+						{
+							if (j < i) /*-------->*/ coordEntiteeConstrTemp[j]	   = coordEntiteeConstr[j];
+							else if (j > i) /*--->*/ coordEntiteeConstrTemp[j - 1] = coordEntiteeConstr[j];
+						}
+						delete[] coordEntiteeConstr;
+						coordEntiteeConstr = coordEntiteeConstrTemp;
+						delete[] coordEntiteeConstrTemp;
+						nbEntiteeConstr--;
+
+						if (nbEntiteeConstr == 0) /*--->*/ coordEntiteeConstr = nullptr;
+					}
+					break;
+			}
+		}
+	}
 }
 
 ////////////
@@ -337,10 +384,19 @@ unsigned int Carte::getDimY ()
  * 
  * @return L'élément de la carte.
  */
-Case* Carte::getElement (unsigned int pos)
+Case* Carte::getElement (unsigned int x, unsigned int y)
 {
-	return &elements[pos];
+	return &elements[LARGEUR * y + x];
 }
+
+/**
+ * @Méthode getCoordEntiteeConstr, récupère le tableau de coordonnée d'entitée en construction.
+ */
+Coord* Carte::getCoordEntiteeConstr()
+{
+	return coordEntiteeConstr;
+}
+
 /**
  * Renvoyer le nom de la carte
  * 
@@ -349,4 +405,47 @@ Case* Carte::getElement (unsigned int pos)
 const char* Carte::getNomDeLaCarte ()
 {
 	return nomDeLaCarte ;
+}
+
+////////////
+// Setter //
+////////////
+
+/**
+ * @brief Méthode setNomDeLaCarte, modifie le nom de la carte.
+ *
+ * @param nomDeLaCarte le nouveau nom de la carte.
+ */
+void Carte::setNomDeLaCarte (const char* nomDeLaCarte)
+{
+	this->nomDeLaCarte = nomDeLaCarte;
+}
+
+/**
+ * @brief Méthode setCoordEntiteeConstr, modifie le tableau de coordonnée d'entitée en construction.
+ *
+ * @param coord la nouvelle coordonnée.
+ */
+void Carte::setCoordEntiteeConstr (Coord coord)
+{
+	if (coordEntiteeConstr)
+	{
+		nbEntiteeConstr++;
+		Coord* coordEntiteeConstrTemp = new Coord[nbEntiteeConstr];
+		for (int i = 0; i < nbEntiteeConstr - 1; i++)
+		{
+			coordEntiteeConstrTemp[i] = coordEntiteeConstr[i];
+		}
+		coordEntiteeConstrTemp[nbEntiteeConstr - 1] = coord;
+		delete[] coordEntiteeConstr;
+		coordEntiteeConstr = coordEntiteeConstrTemp;
+		delete[] coordEntiteeConstrTemp;
+		coordEntiteeConstrTemp = nullptr;
+	}
+	else
+	{
+		coordEntiteeConstr = new Coord[1];
+		coordEntiteeConstr[0] = coord;
+		nbEntiteeConstr++;
+	}
 }

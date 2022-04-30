@@ -2,7 +2,7 @@
 /* Kurīpāwārudo (inspiré du jeu Creeper World 2)             */
 /*-----------------------------------------------------------*/
 /* Module            : entitee.cpp                           */
-/* Numéro de version : 0.3.4                                 */
+/* Numéro de version : 0.3.6                                 */
 /* Branche           : Branch-CPP                            */
 /* Date              : 11/01/2022                            */
 /* Auteurs           : Lilian CHARDON                        */
@@ -22,7 +22,7 @@
  */
 Entitee::Entitee(uint8_t type, Coord* coord) : type(type), coord(*coord), constr(0), vie(0) {}
 
-Entitee::Entitee(){}
+Entitee::Entitee() : type(0), coord(0, 0), constr(0), vie(0) {}
 
 Entitee::~Entitee(){}
 
@@ -77,4 +77,24 @@ void Entitee::setType(uint8_t type)
 void Entitee::setId(unsigned int id)
 {
     this->id = id;
+}
+
+/**
+ * @brief Méthode setConstr, définit le nombre de points de construction de l'entité.
+ * 
+ * @param constr Le nombre de points de construction de l'entité.
+ */
+void Entitee::setConstr(double constr)
+{
+	this->constr = constr;
+}
+
+/**
+ * @brief Méthode decConstr, décrémente les points de construction de l'entitée.
+ *
+ * @param dec Nombre de points de construction à décrémenter.
+ */
+void Entitee::decConstr(double dec)
+{
+	this->constr -= dec;
 }

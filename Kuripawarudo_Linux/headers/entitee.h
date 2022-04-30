@@ -57,11 +57,30 @@ class Entitee
         // Setter //
         ////////////
 
-        /* Mise à jour du type de l'entité. */
+		/**
+		 * @brief Méthode setType, modifie le type de l'entitée.
+		 */
         void setType(uint8_t type) ;
 
-        /* Une méthode setter qui définit l'identifiant de l'entité. */
+        /**
+         * @brief Méthode setId, modifie l'id de l'entitée.
+		 */
         void setId(unsigned int id);
+		
+        /**
+         * @brief Méthode setConstr, modifie le nombre de points de construction de l'entitée.
+         * 
+         * @param constr Le nombre de points de construction de l'entité.
+		 */
+        void setConstr(double constr);
+
+		/**
+		 * @brief Méthode decConstr, décrémente les points de construction de l'entitée.
+		 * 
+		 * @param dec Nombre de points de construction à décrémenter.
+		 */
+		void decConstr(double dec);
+		
 
     private:
 

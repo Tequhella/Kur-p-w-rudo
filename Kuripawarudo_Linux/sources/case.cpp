@@ -2,7 +2,7 @@
 /* Kurīpāwārudo (inspiré du jeu Creeper World 2)             */
 /*-----------------------------------------------------------*/
 /* Module            : case.cpp                              */
-/* Numéro de version : 0.3.4                                 */
+/* Numéro de version : 0.3.6                                 */
 /* Branche           : Branch-CPP                            */
 /* Date              : 11/01/2022                            */
 /* Auteurs           : Lilian CHARDON                        */
@@ -255,17 +255,18 @@ void Case::setBlock (uint8_t type, uint8_t typeStone)
  * Il définit le type d'entité de la case.
  * 
  * @param type Le type de l'entité.
+ * @param coordEntiteeConstr Le tableau de coordonnées d'entitée à construire.
  */
-void Case::setEntitee (uint8_t type)
+void Case::setEntitee (uint8_t type, Carte* carte)
 {
 	switch (type)
 	{
 		case VAISSEAU        : entitee = new Vaisseau()        ; break ;
-		case REACTEUR        : entitee = new Reacteur()        ; break ;
-		case MINEUR          : entitee = new Mineur()          ; break ;
-		case BOUCLIER        : entitee = new Bouclier()        ; break ;
-		case PHARE           : entitee = new Phare()           ; break ;
-		case BOMBE           : entitee = new Bombe()           ; break ;
+		case REACTEUR		 : entitee = new Reacteur()		   ; carte->setCoordEntiteeConstr(coord); break;
+		case MINEUR			 : entitee = new Mineur()		   ; carte->setCoordEntiteeConstr(coord); break;
+		case BOUCLIER		 : entitee = new Bouclier()		   ; carte->setCoordEntiteeConstr(coord); break;
+		case PHARE			 : entitee = new Phare()		   ; carte->setCoordEntiteeConstr(coord); break;
+		case BOMBE			 : entitee = new Bombe()		   ; carte->setCoordEntiteeConstr(coord); break;
 		case CREEPER_EMETTEUR: entitee = new CreeperEmetteur() ; break ;
 	}
 
@@ -286,4 +287,4 @@ void Case::setEntitee (uint8_t type)
 void Case::setCoord (double x, double y)
 {
 	coord = Coord(x, y);
-}
+} 
