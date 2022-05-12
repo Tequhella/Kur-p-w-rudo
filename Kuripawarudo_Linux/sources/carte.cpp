@@ -73,9 +73,13 @@ Carte::~Carte ()
 	{
 		for (unsigned int i = 0; i < dimX * dimY; i++) /*--->*/ this->elements[i].detruireElement(this->elements[i].getTypeElement()) ;
 		delete[] this->elements ;
-		delete[] this->coordEntiteeConstr;
-		this->elements   = nullptr ;
-		this->coordEntiteeConstr = nullptr ;
+		this->elements = nullptr;
+		if (coordEntiteeConstr)
+		{
+			delete this->coordEntiteeConstr;
+			this->coordEntiteeConstr = nullptr;
+		}
+		
 		cout << "Désallocation de la carte reussi." << endl ;
 	}
 	else
@@ -173,13 +177,13 @@ void Carte::creerCaverne (unsigned int pos, int randMoins)
 
 		randMoins += 5;
 
-		if (droite > 30)
+		if (droite > 30 && pos < LARGEUR * HAUTEUR)
 			if(this->elements[pos + 1].getTypeElement() == BLOCK) /*--------->*/ creerCaverne (pos + 1, randMoins);
-		if (bas > 30)
+		if (haut > 30	&& pos >= 0)
 			if (this->elements[pos + LARGEUR].getTypeElement() == BLOCK) /*------>*/ creerCaverne (pos + LARGEUR, randMoins);
-		if (gauche > 30)
+		if (gauche > 30 && pos >= 0)
 			if (this->elements[pos - 1].getTypeElement() == BLOCK) /*--------->*/ creerCaverne (pos - 1, randMoins);
-		if (bas > 30)
+		if (bas > 30	&& pos < LARGEUR * HAUTEUR)
 			if (this->elements[pos - LARGEUR].getTypeElement() == BLOCK) /*------>*/ creerCaverne (pos - LARGEUR, randMoins);
 	}
 	
@@ -320,11 +324,11 @@ void Carte::gestionConstruction()
 {
 	if (coordEntiteeConstr)
 	{
-		for (int i = 0; i < nbEntiteeConstr; i++)
+		for (uint8_t i = 0; i < nbEntiteeConstr; i++)
 		{
 			cout << "Taille de coordEntiteeConstr : " << sizeof(coordEntiteeConstr) << endl;
-			cout << "Coordonnée dans coordEntiteeConstr[i] : " << coordEntiteeConstr[i].x << " " << coordEntiteeConstr[i].y << endl;
-			Entitee* entitee = this->getElement(coordEntiteeConstr->x, coordEntiteeConstr->y)->getEntitee();
+			cout << "Coordonnée dans coordEntiteeConstr[i] : " << coordEntiteeConstr->at(i).x << " " << coordEntiteeConstr->at(i).y << endl;
+			Entitee* entitee = this->getElement(coordEntiteeConstr->at(i).x, coordEntiteeConstr->at(i).y)->getEntitee();
 			switch (entitee->getType())
 			{
 				case VAISSEAU:			break;
@@ -336,18 +340,18 @@ void Carte::gestionConstruction()
 						/*
 						 * Enlève l'entitée du tableau d'entitée et realloue la mémoire du tableau en fonction de la taille.
 						 */
-						Coord* coordEntiteeConstrTemp = new Coord[nbEntiteeConstr - 1];
-						for (int j = 0; j < nbEntiteeConstr; j++)
+						for (uint8_t j = i; j < nbEntiteeConstr - 1; j++)
 						{
-							if (j < i) /*-------->*/ coordEntiteeConstrTemp[j]	   = coordEntiteeConstr[j];
-							else if (j > i) /*--->*/ coordEntiteeConstrTemp[j - 1] = coordEntiteeConstr[j];
+							coordEntiteeConstr->at(j) = coordEntiteeConstr->at(j + 1);
 						}
-						delete[] coordEntiteeConstr;
-						coordEntiteeConstr = coordEntiteeConstrTemp;
-						delete[] coordEntiteeConstrTemp;
+						coordEntiteeConstr->resize(nbEntiteeConstr - 1);
 						nbEntiteeConstr--;
-
-						if (nbEntiteeConstr == 0) /*--->*/ coordEntiteeConstr = nullptr;
+						i--;
+						if (nbEntiteeConstr == 0)
+						{
+							delete coordEntiteeConstr;
+							coordEntiteeConstr = nullptr;
+						}
 					}
 					break;
 			}
@@ -392,7 +396,7 @@ Case* Carte::getElement (unsigned int x, unsigned int y)
 /**
  * @Méthode getCoordEntiteeConstr, récupère le tableau de coordonnée d'entitée en construction.
  */
-Coord* Carte::getCoordEntiteeConstr()
+vector<Coord>* Carte::getCoordEntiteeConstr()
 {
 	return coordEntiteeConstr;
 }
@@ -430,22 +434,14 @@ void Carte::setCoordEntiteeConstr (Coord coord)
 {
 	if (coordEntiteeConstr)
 	{
+		coordEntiteeConstr->resize(nbEntiteeConstr + 1);
+		coordEntiteeConstr->at(nbEntiteeConstr) = coord;
 		nbEntiteeConstr++;
-		Coord* coordEntiteeConstrTemp = new Coord[nbEntiteeConstr];
-		for (int i = 0; i < nbEntiteeConstr - 1; i++)
-		{
-			coordEntiteeConstrTemp[i] = coordEntiteeConstr[i];
-		}
-		coordEntiteeConstrTemp[nbEntiteeConstr - 1] = coord;
-		delete[] coordEntiteeConstr;
-		coordEntiteeConstr = coordEntiteeConstrTemp;
-		delete[] coordEntiteeConstrTemp;
-		coordEntiteeConstrTemp = nullptr;
 	}
 	else
 	{
-		coordEntiteeConstr = new Coord[1];
-		coordEntiteeConstr[0] = coord;
+		coordEntiteeConstr = new vector<Coord>(1);
+		coordEntiteeConstr->at(0) = coord;
 		nbEntiteeConstr++;
 	}
 }

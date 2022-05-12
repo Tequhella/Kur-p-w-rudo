@@ -99,7 +99,7 @@ class Carte
 		/**
 		 * @Méthode getCoordEntiteeConstr, récupère le tableau de coordonnée d'entitée en construction.
 		 */
-		Coord* getCoordEntiteeConstr() ;
+		vector<Coord>* getCoordEntiteeConstr() ;
 
         /**
          * @brief Méthode getNomDeLaCarte, récupère le nom de la carte.
@@ -139,11 +139,11 @@ class Carte
         * Liste des propriétés *
         ***********************/
 
-        unsigned int dimX, dimY ;
-        Case*        elements ;          // Propriété elements : tableau des éléments de la carte.
-        Coord*       coordEntiteeConstr; // Propriété coordEntiteeConstr : tableau des coordonnées des entitées en construction.
-		uint8_t 	 nbEntiteeConstr;    // Propriété nbEntiteeConstr : nombre d'entitées en construction.
-        const char*  nomDeLaCarte ;
+        unsigned int   dimX, dimY ;
+        Case*          elements ;          // Propriété elements : tableau des éléments de la carte.
+        vector<Coord>* coordEntiteeConstr; // Propriété coordEntiteeConstr : tableau des coordonnées des entitées en construction.
+		uint8_t 	   nbEntiteeConstr;    // Propriété nbEntiteeConstr : nombre d'entitées en construction.
+        const char*    nomDeLaCarte ;
 } ;
 
 #endif

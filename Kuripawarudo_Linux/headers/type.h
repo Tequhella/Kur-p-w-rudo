@@ -14,7 +14,9 @@
 #include <iostream>
 #include <cstdlib>
 #include <ctime>
+#include <cstring>
 #include <memory>
+#include <vector>
 
 /* Il définit deux constantes, LARGEUR et HAUTEUR, et leur affecte respectivement les valeurs 30 et 45. */
 constexpr auto LARGEUR = 30;
@@ -44,6 +46,7 @@ typedef struct Coord : public Base
 {
 	Coord() : x(0), y(0) {}
 	Coord(double x, double y) : x(x), y(y) {}
+	~Coord(){}
     double x;
     double y;
 }
