@@ -2,7 +2,7 @@
 /* Kurīpāwārudo (inspiré du jeu Creeper World 2)             */
 /*-----------------------------------------------------------*/
 /* Module            : main.c                                */
-/* Numéro de version : 0.3.6                                 */
+/* Numéro de version : 0.3.7                                 */
 /* Branche           : Branch-CPP                            */
 /* Date              : 11/01/2022                            */
 /* Auteurs           : Lilian CHARDON                        */
@@ -133,5 +133,6 @@ void bouclePrincipale(Carte* carte)
 		}
 
 		carte->gestionConstruction();
+		carte->gestionCasseBlock();
 	}
 }

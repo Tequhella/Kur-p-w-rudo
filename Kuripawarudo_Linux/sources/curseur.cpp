@@ -2,7 +2,7 @@
 /* Kurīpāwārudo (inspiré du jeu Creeper World 2)             */
 /*-----------------------------------------------------------*/
 /* Module            : curseur.cpp                           */
-/* Numéro de version : 0.3.6                                 */
+/* Numéro de version : 0.3.7                                 */
 /* Branche           : Branch-CPP                            */
 /* Date              : 11/01/2022                            */
 /* Auteurs           : Lilian CHARDON                        */
@@ -83,6 +83,14 @@ uint8_t Curseur::action(char* touche, Carte* carte)
 	switch(*touche)
 	{
 		case 'c': ret = 1; break;
+		case 'f': 
+			if (element->getTypeElement() == BLOCK)
+			{
+				carte->setCoordBlockCasse(this->coord);
+			}
+			else /*--->*/ cout << "Vous ne pouvez pas casser de bloc !" << endl;
+			ret = 1;
+			break;
 		case '1':
 			if (!(element->getEntitee()))
 			{

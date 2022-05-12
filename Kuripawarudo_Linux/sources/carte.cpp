@@ -2,7 +2,7 @@
 /* Kurīpāwārudo (inspiré du jeu Creeper World 2)             */
 /*-----------------------------------------------------------*/
 /* Module            : carte.cpp                             */
-/* Numéro de version : 0.3.6                                 */
+/* Numéro de version : 0.3.7                                 */
 /* Branche           : Branch-CPP                            */
 /* Date              : 11/01/2022                            */
 /* Auteurs           : Lilian CHARDON                        */
@@ -25,7 +25,12 @@
  * @param dimY La hauteur de la carte.
  * @param nomDeLaCarte Le nom de la carte.
  */
-Carte::Carte (int dimX, int dimY, const char* nomDeLaCarte) : coordEntiteeConstr(nullptr), nbEntiteeConstr(0), nomDeLaCarte(nomDeLaCarte)
+Carte::Carte (int dimX, int dimY, const char* nomDeLaCarte) :
+	coordEntiteeConstr(nullptr),
+	coordBlockCasse(nullptr),
+	nbEntiteeConstr(0),
+	nbBlockCasse(0),
+	nomDeLaCarte(nomDeLaCarte)
 {
 	if (dimX == 0 || dimY == 0)
 	{
@@ -78,6 +83,11 @@ Carte::~Carte ()
 		{
 			delete this->coordEntiteeConstr;
 			this->coordEntiteeConstr = nullptr;
+		}
+		if (coordBlockCasse)
+		{
+			delete this->coordBlockCasse;
+			this->coordBlockCasse = nullptr;
 		}
 		
 		cout << "Désallocation de la carte reussi." << endl ;
@@ -316,9 +326,7 @@ void Carte::afficherAdresse (unsigned int x, unsigned int y) const
 }
 
 /**
- * Fonction gestionConstruction, décrémente les points de construction des entitée.
- *
- * @param coordEntiteeConstr un tableau des entitees présents.
+ * Méthode gestionConstruction, décrémente les points de construction des entitée.
  */
 void Carte::gestionConstruction()
 {
@@ -326,7 +334,6 @@ void Carte::gestionConstruction()
 	{
 		for (uint8_t i = 0; i < nbEntiteeConstr; i++)
 		{
-			cout << "Taille de coordEntiteeConstr : " << sizeof(coordEntiteeConstr) << endl;
 			cout << "Coordonnée dans coordEntiteeConstr[i] : " << coordEntiteeConstr->at(i).x << " " << coordEntiteeConstr->at(i).y << endl;
 			Entitee* entitee = this->getElement(coordEntiteeConstr->at(i).x, coordEntiteeConstr->at(i).y)->getEntitee();
 			switch (entitee->getType())
@@ -354,6 +361,44 @@ void Carte::gestionConstruction()
 						}
 					}
 					break;
+			}
+		}
+	}
+}
+
+/**
+ * @brief Méthode gestionCasseBlock, décrémente les points de durabilité des blocks.
+ */
+void Carte::gestionCasseBlock()
+{
+	if (coordBlockCasse)
+	{
+		for (uint8_t i = 0; i < nbBlockCasse; i++)
+		{
+			cout << "Coordonnée dans coordBlockCasse[i] : " << coordBlockCasse->at(i).x << " " << coordBlockCasse->at(i).y << endl;
+			Block* block = this->getElement(coordBlockCasse->at(i).x, coordBlockCasse->at(i).y)->getBlock();
+			if (block->getSoliditee() > 0) /*--->*/ block->decSoliditee(1);
+			else
+			{
+				this->getElement(coordBlockCasse->at(i).x, coordBlockCasse->at(i).y)->detruireElement(BLOCK);
+				this->getElement(coordBlockCasse->at(i).x, coordBlockCasse->at(i).y)->creerVide();
+				this->getElement(coordBlockCasse->at(i).x, coordBlockCasse->at(i).y)->setTypeElement(VIDE);
+				/*
+				* Enlève le block du tableau de coordonnées des blocks à casser et realloue la mémoire
+				* du tableau en fonction de la taille.
+				*	*/
+				for (uint8_t j = i; j < nbBlockCasse - 1; j++)
+				{
+					coordBlockCasse->at(j) = coordBlockCasse->at(j + 1);
+				}
+				coordBlockCasse->resize(nbBlockCasse - 1);
+				nbBlockCasse--;
+				i--;
+				if (nbBlockCasse == 0)
+				{
+					delete coordBlockCasse;
+					coordBlockCasse = nullptr;
+				}
 			}
 		}
 	}
@@ -402,6 +447,16 @@ vector<Coord>* Carte::getCoordEntiteeConstr()
 }
 
 /**
+ * @brief getCoordBlockCasse, récupère le tableau de coordonnée de blocks à casser.
+ *
+ * @return un tableau de coordonnée.
+ */
+vector<Coord>* Carte::getCoordBlockCasse()
+{
+	return coordBlockCasse;
+}
+
+/**
  * Renvoyer le nom de la carte
  * 
  * @return Le nom de la carte.
@@ -441,7 +496,42 @@ void Carte::setCoordEntiteeConstr (Coord coord)
 	else
 	{
 		coordEntiteeConstr = new vector<Coord>(1);
-		coordEntiteeConstr->at(0) = coord;
-		nbEntiteeConstr++;
+		if (coordEntiteeConstr)
+		{
+			coordEntiteeConstr->at(0) = coord;
+			nbEntiteeConstr++;
+		}
+		else
+		{
+			cout << "Erreur : impossible de créer le tableau de coordonnée d'entitée en construction." << endl;
+		}
+	}
+}
+
+/**
+ * @brief Méthode setCoordBlockCasse, modifie le tableau de coordonnée de block à casser.
+ *
+ * @param coord la nouvelle coordonnée.
+ */
+void Carte::setCoordBlockCasse(Coord coord)
+{
+	if (coordBlockCasse)
+	{
+		coordBlockCasse->resize(nbBlockCasse + 1);
+		coordBlockCasse->at(nbBlockCasse) = coord;
+		nbBlockCasse++;
+	}
+	else
+	{
+		coordBlockCasse = new vector<Coord>(1);
+		if (coordBlockCasse)
+		{
+			coordBlockCasse->at(0) = coord;
+			nbBlockCasse++;
+		}
+		else
+		{
+			cout << "Erreur : impossible de créer le tableau de coordonnée de block à casser." << endl;
+		}
 	}
 }

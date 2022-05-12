@@ -2,7 +2,7 @@
 /* Kurīpāwārudo (inspiré du jeu Creeper World 2)             */
 /*-----------------------------------------------------------*/
 /* Module            : block.cpp                             */
-/* Numéro de version : 0.3.6                                 */
+/* Numéro de version : 0.3.7                                 */
 /* Branche           : Branch-CPP                            */
 /* Date              : 11/01/2022                            */
 /* Auteurs           : Lilian CHARDON                        */
@@ -101,4 +101,58 @@ double Block::getSoliditee ()
 int Block::getMinerai_quantitee ()
 {
     return minerai_quantitee ;
+}
+
+////////////
+// Getter //
+////////////
+
+/**
+ * @brief Méthode setType, définit l'indicateur du type de block.
+ * 
+ * @param type Le type de block.
+ */
+void Block::setType (uint8_t type)
+{
+	this->type = type ;
+}
+
+/**
+ * @brief Méthode setRocheType, définit l'indicateur du type de roche.
+ * 
+ * @param rocheType Le type de roche.
+ */
+void Block::setRocheType (uint8_t rocheType)
+{
+	this->rocheType = rocheType ;
+}
+
+/**
+ * @brief Méthode setSoliditee, définit la soliditée restante avant de se casser.
+ * 
+ * @param soliditee La nouvelle valeur de solidité.
+ */
+void Block::setSoliditee (double soliditee)
+{
+	this->soliditee = soliditee ;
+}
+
+/**
+ * @brief Méthode decSoliditee, décrémente la soliditée restante avant de se casser.
+ * 
+ * @param soliditee La valeur de décrémentation.
+ */
+void Block::decSoliditee (double soliditee)
+{
+	this->soliditee -= soliditee ;
+}
+
+/**
+ * @brief Méthode setMinerai_quantitee, définit la quantité de minerai.
+ * 
+ * @param minerai_quantitee La nouvelle quantité de minerai.
+ */
+void Block::setMinerai_quantitee (int minerai_quantitee)
+{
+	this->minerai_quantitee = minerai_quantitee ;
 }

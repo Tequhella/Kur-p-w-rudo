@@ -2,7 +2,7 @@
 /* Kurīpāwārudo (inspiré du jeu Creeper World 2)             */
 /*-----------------------------------------------------------*/
 /* Module            : carte.h                               */
-/* Numéro de version : 0.3.6                                 */
+/* Numéro de version : 0.3.7                                 */
 /* Branche           : Branch-CPP                            */
 /* Date              : 11/01/2022                            */
 /* Auteurs           : Lilian CHARDON                        */
@@ -71,11 +71,14 @@ class Carte
 		void afficherAdresse (unsigned int x, unsigned int y) const;
 		
         /**
-         * @brief Fonction gestionConstruction, décrémente les points de construction des entitée.
-         *
-         * @param tabEntitee un tableau des entitees présents.
+         * @brief Méthode gestionConstruction, décrémente les points de construction des entitée.
          */
         void gestionConstruction();
+
+		/**
+		 * @brief Méthode gestionCasseBlock, décrémente les points de durabilité des blocks.
+		 */
+		void gestionCasseBlock();
 
         ////////////
         // Getter //
@@ -98,8 +101,17 @@ class Carte
 		
 		/**
 		 * @Méthode getCoordEntiteeConstr, récupère le tableau de coordonnée d'entitée en construction.
+		 * 
+		 * @return un tableau de coordonnée.
 		 */
 		vector<Coord>* getCoordEntiteeConstr() ;
+
+		/**
+		 * @brief getCoordBlockCasse, récupère le tableau de coordonnée de blocks à casser.
+		 * 
+		 * @return un tableau de coordonnée.
+		 */
+		vector<Coord>* getCoordBlockCasse() ;
 
         /**
          * @brief Méthode getNomDeLaCarte, récupère le nom de la carte.
@@ -123,6 +135,13 @@ class Carte
 		 * @param coord la nouvelle coordonnée.
 		 */
 		void setCoordEntiteeConstr(Coord coord) ;
+
+		/**
+		 * @brief Méthode setCoordBlockCasse, modifie le tableau de coordonnée de block à casser.
+		 * 
+		 * @param coord la nouvelle coordonnée.
+		 */
+		void setCoordBlockCasse(Coord coord) ;
 		
 		////////////
 		// Thread //
@@ -142,7 +161,9 @@ class Carte
         unsigned int   dimX, dimY ;
         Case*          elements ;          // Propriété elements : tableau des éléments de la carte.
         vector<Coord>* coordEntiteeConstr; // Propriété coordEntiteeConstr : tableau des coordonnées des entitées en construction.
+        vector<Coord>* coordBlockCasse;    // Propriété coordBlockCasse : tableau des coordonnées des blocks à casser.
 		uint8_t 	   nbEntiteeConstr;    // Propriété nbEntiteeConstr : nombre d'entitées en construction.
+		uint8_t 	   nbBlockCasse;       // Propriété nbBlockCasse : nombre de blocks à casser.
         const char*    nomDeLaCarte ;
 } ;
 

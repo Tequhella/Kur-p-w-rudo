@@ -2,7 +2,7 @@
 /* Kurīpāwārudo (inspiré du jeu Creeper World 2)             */
 /*-----------------------------------------------------------*/
 /* Module            : block.h                               */
-/* Numéro de version : 0.3.6                                 */
+/* Numéro de version : 0.3.7                                 */
 /* Branche           : Branch-CPP                            */
 /* Date              : 11/01/2022                            */
 /* Auteurs           : Lilian CHARDON                        */
@@ -58,6 +58,25 @@ class Block
 
         // Getter getMinerai_quantitee, récupère la quantitee de minerai.
         int getMinerai_quantitee () ;
+
+        ////////////
+        // Setter //
+        ////////////
+        
+		// Setter setType, définit l'indicateur du type block.
+		void setType (uint8_t type) ;
+		
+		// Setter setRocheType, définit l'indicateur du type de roche.
+		void setRocheType (uint8_t typeRoche) ;
+		
+		// Setter setSoliditee, définit la solidité restante avant de se casser.
+		void setSoliditee (double soliditee) ;
+
+		// Setter decSoliditee, décrémente la solidité restante avant de se casser.
+		void decSoliditee (double soliditee) ;
+		
+		// Setter setMinerai_quantitee, définit la quantité de minerai.
+		void setMinerai_quantitee (int quantitee) ;
     
     private:
 
