@@ -149,7 +149,7 @@ void Carte::remplirHasard ()
 			this->elements[i].setTypeElement (BLOCK) ;
 			this->elements[i].setBlock (TERRE, 0) ;
 		}
-		else if (this->elements[i].getTypeElement() == ENTITEE) ;
+		else if (this->elements[i].getTypeElement() == ENTITEE)
 
 		if (relief > 0 && i % LARGEUR == 0) /*--->*/ relief -= 25;
 
@@ -162,9 +162,9 @@ void Carte::remplirHasard ()
  * @param pos La position du bloc où commence la grotte.
  * @param randMoins Plus le nombre est élevé, plus la grotte sera petite.
  */
-void Carte::creerCaverne (unsigned int pos, int randMoins)
+void Carte::creerCaverne (int pos, int randMoins)
 {
-	
+	srand(time(NULL));
 	while (pos > LARGEUR * HAUTEUR || this->elements[pos].getTypeElement() != BLOCK) /*--->*/ pos = rand() % LARGEUR * HAUTEUR + 280;
 	
 	if (this->elements[pos].getTypeElement() == BLOCK)
@@ -189,7 +189,7 @@ void Carte::creerCaverne (unsigned int pos, int randMoins)
 
 		if (droite > 30 && pos < LARGEUR * HAUTEUR)
 			if(this->elements[pos + 1].getTypeElement() == BLOCK) /*--------->*/ creerCaverne (pos + 1, randMoins);
-		if (haut > 30	&& pos >= 0)
+		if (haut > 30 && pos >= 0)
 			if (this->elements[pos + LARGEUR].getTypeElement() == BLOCK) /*------>*/ creerCaverne (pos + LARGEUR, randMoins);
 		if (gauche > 30 && pos >= 0)
 			if (this->elements[pos - 1].getTypeElement() == BLOCK) /*--------->*/ creerCaverne (pos - 1, randMoins);

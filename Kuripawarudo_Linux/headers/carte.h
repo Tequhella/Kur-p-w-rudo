@@ -51,7 +51,7 @@ class Carte
         /*
         * Méthode creerCaverne, détruit des blocks dans une carte déjà remplie de façon récursive.
         */
-        void creerCaverne (unsigned int pos, int randMoins) ;
+        void creerCaverne (int pos, int randMoins) ;
 
         /*
         * Méthode creerEnnemie, ajoute des émetteurs de creeper dans les cavernes.

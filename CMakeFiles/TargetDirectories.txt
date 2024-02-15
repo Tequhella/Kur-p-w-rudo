@@ -1,0 +1,3 @@
+/home/tequhella/Documents/VScode/Kuripawarudo/Kur-p-w-rudo/CMakeFiles/kuripawarudo-v0-3-7-CPP.dir
+/home/tequhella/Documents/VScode/Kuripawarudo/Kur-p-w-rudo/CMakeFiles/edit_cache.dir
+/home/tequhella/Documents/VScode/Kuripawarudo/Kur-p-w-rudo/CMakeFiles/rebuild_cache.dir

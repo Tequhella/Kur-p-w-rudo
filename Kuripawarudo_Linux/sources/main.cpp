@@ -18,6 +18,10 @@
 
 #include <thread>
 
+// If parameter is not true, test fails
+// This check function would be provided by the test framework
+#define IS_TRUE(x) { if (!(x)) std::cout << __FUNCTION__ << " a échoué sur la ligne " << __LINE__ << std::endl; }
+
 /**
  * @brief Fonction afficherTaille, permet d'afficher la taille de toutes les classes.
  */
@@ -30,20 +34,30 @@ void afficherTaille();
  */
 void bouclePrincipale(Carte* carte);
 
+/**
+ * @brief Test de toutes les fonctions du programme.
+ * 
+ * @return true si toutes les fonctions sont valides.
+ * @return false si une fonction est invalide.
+ */
+bool testFonction();
+
 
 int main()
 {
 	/* Création d'un nouvel objet de type Carte. */
 	Carte mapHasard = Carte(LARGEUR, HAUTEUR, "test");
-
+    
 	/* Remplit la carte avec des éléments aléatoires. */
 	mapHasard.remplirHasard();
-
+    
 	/* Il crée 4 grottes. */
 	for (int i = 0; i < 4; i++)
 		mapHasard.creerCaverne(rand() % LARGEUR * HAUTEUR + 280, 0);
 
-	/* Créer 3 ennemies. */
+	/* Affiche la taille de toutes les classes. */
+    afficherTaille();
+    /* Créer 3 ennemies. */
 	mapHasard.creerEnnemie(3);
 
 	/* Boucle principale du jeu. */
@@ -51,7 +65,7 @@ int main()
 
 	
 	/* Détruit l'objet `mapHasard`. */
-	mapHasard.~Carte();
+	delete &mapHasard;
 
 	return 0;
 }
@@ -60,21 +74,19 @@ int main()
 
 void afficherTaille()
 {
-	std::cout << "Carte : " << sizeof(Carte) << std::endl;
-	std::cout << "Case : " << sizeof(Case) << std::endl;
-	std::cout << "Curseur : " << sizeof(Curseur) << std::endl;
-	std::cout << "Vide : " << sizeof(Vide) << std::endl;
-	std::cout << "Block : " << sizeof(Block) << std::endl;
-	std::cout << "Entitee : " << sizeof(Entitee) << std::endl;
-	std::cout << "Reacteur : " << sizeof(Reacteur) << std::endl;
-	std::cout << "Mineur : " << sizeof(Mineur) << std::endl;
-	std::cout << "Bouclier : " << sizeof(Bouclier) << std::endl;
-	std::cout << "Phare : " << sizeof(Phare) << std::endl;
-	std::cout << "Bombe : " << sizeof(Bombe) << std::endl;
-	std::cout << "CreeperEmetteur : " << sizeof(CreeperEmetteur) << std::endl;
+	std::cout << "Carte : " << sizeof(Carte) << " octets" << std::endl;
+	std::cout << "Case : " << sizeof(Case) << " octets" << std::endl;
+	std::cout << "Curseur : " << sizeof(Curseur) << " octets" << std::endl;
+	std::cout << "Vide : " << sizeof(Vide) << " octets" << std::endl;
+	std::cout << "Block : " << sizeof(Block) << " octets" << std::endl;
+	std::cout << "Entitee : " << sizeof(Entitee) << " octets" << std::endl;
+	std::cout << "Reacteur : " << sizeof(Reacteur) << " octets" << std::endl;
+	std::cout << "Mineur : " << sizeof(Mineur) << " octets" << std::endl;
+	std::cout << "Bouclier : " << sizeof(Bouclier) << " octets" << std::endl;
+	std::cout << "Phare : " << sizeof(Phare) << " octets" << std::endl;
+	std::cout << "Bombe : " << sizeof(Bombe) << " octets" << std::endl;
+	std::cout << "CreeperEmetteur : " << sizeof(CreeperEmetteur) << " octets" << std::endl;
 }
-
-
 
 void bouclePrincipale(Carte* carte)
 {
@@ -135,4 +147,11 @@ void bouclePrincipale(Carte* carte)
 		carte->gestionConstruction();
 		carte->gestionCasseBlock();
 	}
+}
+
+bool testFonction()
+{
+    /* Test de la fonction deplacement de la classe Curseur. */
+    
+    return true;
 }

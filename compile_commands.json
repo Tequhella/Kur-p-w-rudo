@@ -1,0 +1,72 @@
+[
+{
+  "directory": "/home/tequhella/Documents/VScode/Kuripawarudo/Kur-p-w-rudo",
+  "command": "/usr/bin/c++  -I/home/tequhella/Documents/VScode/Kuripawarudo/Kur-p-w-rudo -I/home/tequhella/Documents/VScode/Kuripawarudo/Kur-p-w-rudo/Kuripawarudo_Linux/headers -g -Wall -Wextra -Werror -std=gnu++23 -o CMakeFiles/kuripawarudo-v0-3-7-CPP.dir/Kuripawarudo_Linux/sources/main.cpp.o -c /home/tequhella/Documents/VScode/Kuripawarudo/Kur-p-w-rudo/Kuripawarudo_Linux/sources/main.cpp",
+  "file": "/home/tequhella/Documents/VScode/Kuripawarudo/Kur-p-w-rudo/Kuripawarudo_Linux/sources/main.cpp"
+},
+{
+  "directory": "/home/tequhella/Documents/VScode/Kuripawarudo/Kur-p-w-rudo",
+  "command": "/usr/bin/c++  -I/home/tequhella/Documents/VScode/Kuripawarudo/Kur-p-w-rudo -I/home/tequhella/Documents/VScode/Kuripawarudo/Kur-p-w-rudo/Kuripawarudo_Linux/headers -g -Wall -Wextra -Werror -std=gnu++23 -o CMakeFiles/kuripawarudo-v0-3-7-CPP.dir/Kuripawarudo_Linux/sources/carte.cpp.o -c /home/tequhella/Documents/VScode/Kuripawarudo/Kur-p-w-rudo/Kuripawarudo_Linux/sources/carte.cpp",
+  "file": "/home/tequhella/Documents/VScode/Kuripawarudo/Kur-p-w-rudo/Kuripawarudo_Linux/sources/carte.cpp"
+},
+{
+  "directory": "/home/tequhella/Documents/VScode/Kuripawarudo/Kur-p-w-rudo",
+  "command": "/usr/bin/c++  -I/home/tequhella/Documents/VScode/Kuripawarudo/Kur-p-w-rudo -I/home/tequhella/Documents/VScode/Kuripawarudo/Kur-p-w-rudo/Kuripawarudo_Linux/headers -g -Wall -Wextra -Werror -std=gnu++23 -o CMakeFiles/kuripawarudo-v0-3-7-CPP.dir/Kuripawarudo_Linux/sources/case.cpp.o -c /home/tequhella/Documents/VScode/Kuripawarudo/Kur-p-w-rudo/Kuripawarudo_Linux/sources/case.cpp",
+  "file": "/home/tequhella/Documents/VScode/Kuripawarudo/Kur-p-w-rudo/Kuripawarudo_Linux/sources/case.cpp"
+},
+{
+  "directory": "/home/tequhella/Documents/VScode/Kuripawarudo/Kur-p-w-rudo",
+  "command": "/usr/bin/c++  -I/home/tequhella/Documents/VScode/Kuripawarudo/Kur-p-w-rudo -I/home/tequhella/Documents/VScode/Kuripawarudo/Kur-p-w-rudo/Kuripawarudo_Linux/headers -g -Wall -Wextra -Werror -std=gnu++23 -o CMakeFiles/kuripawarudo-v0-3-7-CPP.dir/Kuripawarudo_Linux/sources/block.cpp.o -c /home/tequhella/Documents/VScode/Kuripawarudo/Kur-p-w-rudo/Kuripawarudo_Linux/sources/block.cpp",
+  "file": "/home/tequhella/Documents/VScode/Kuripawarudo/Kur-p-w-rudo/Kuripawarudo_Linux/sources/block.cpp"
+},
+{
+  "directory": "/home/tequhella/Documents/VScode/Kuripawarudo/Kur-p-w-rudo",
+  "command": "/usr/bin/c++  -I/home/tequhella/Documents/VScode/Kuripawarudo/Kur-p-w-rudo -I/home/tequhella/Documents/VScode/Kuripawarudo/Kur-p-w-rudo/Kuripawarudo_Linux/headers -g -Wall -Wextra -Werror -std=gnu++23 -o CMakeFiles/kuripawarudo-v0-3-7-CPP.dir/Kuripawarudo_Linux/sources/entitee.cpp.o -c /home/tequhella/Documents/VScode/Kuripawarudo/Kur-p-w-rudo/Kuripawarudo_Linux/sources/entitee.cpp",
+  "file": "/home/tequhella/Documents/VScode/Kuripawarudo/Kur-p-w-rudo/Kuripawarudo_Linux/sources/entitee.cpp"
+},
+{
+  "directory": "/home/tequhella/Documents/VScode/Kuripawarudo/Kur-p-w-rudo",
+  "command": "/usr/bin/c++  -I/home/tequhella/Documents/VScode/Kuripawarudo/Kur-p-w-rudo -I/home/tequhella/Documents/VScode/Kuripawarudo/Kur-p-w-rudo/Kuripawarudo_Linux/headers -g -Wall -Wextra -Werror -std=gnu++23 -o CMakeFiles/kuripawarudo-v0-3-7-CPP.dir/Kuripawarudo_Linux/sources/vide.cpp.o -c /home/tequhella/Documents/VScode/Kuripawarudo/Kur-p-w-rudo/Kuripawarudo_Linux/sources/vide.cpp",
+  "file": "/home/tequhella/Documents/VScode/Kuripawarudo/Kur-p-w-rudo/Kuripawarudo_Linux/sources/vide.cpp"
+},
+{
+  "directory": "/home/tequhella/Documents/VScode/Kuripawarudo/Kur-p-w-rudo",
+  "command": "/usr/bin/c++  -I/home/tequhella/Documents/VScode/Kuripawarudo/Kur-p-w-rudo -I/home/tequhella/Documents/VScode/Kuripawarudo/Kur-p-w-rudo/Kuripawarudo_Linux/headers -g -Wall -Wextra -Werror -std=gnu++23 -o CMakeFiles/kuripawarudo-v0-3-7-CPP.dir/Kuripawarudo_Linux/sources/curseur.cpp.o -c /home/tequhella/Documents/VScode/Kuripawarudo/Kur-p-w-rudo/Kuripawarudo_Linux/sources/curseur.cpp",
+  "file": "/home/tequhella/Documents/VScode/Kuripawarudo/Kur-p-w-rudo/Kuripawarudo_Linux/sources/curseur.cpp"
+},
+{
+  "directory": "/home/tequhella/Documents/VScode/Kuripawarudo/Kur-p-w-rudo",
+  "command": "/usr/bin/c++  -I/home/tequhella/Documents/VScode/Kuripawarudo/Kur-p-w-rudo -I/home/tequhella/Documents/VScode/Kuripawarudo/Kur-p-w-rudo/Kuripawarudo_Linux/headers -g -Wall -Wextra -Werror -std=gnu++23 -o CMakeFiles/kuripawarudo-v0-3-7-CPP.dir/Kuripawarudo_Linux/sources/entitee/vaisseau.cpp.o -c /home/tequhella/Documents/VScode/Kuripawarudo/Kur-p-w-rudo/Kuripawarudo_Linux/sources/entitee/vaisseau.cpp",
+  "file": "/home/tequhella/Documents/VScode/Kuripawarudo/Kur-p-w-rudo/Kuripawarudo_Linux/sources/entitee/vaisseau.cpp"
+},
+{
+  "directory": "/home/tequhella/Documents/VScode/Kuripawarudo/Kur-p-w-rudo",
+  "command": "/usr/bin/c++  -I/home/tequhella/Documents/VScode/Kuripawarudo/Kur-p-w-rudo -I/home/tequhella/Documents/VScode/Kuripawarudo/Kur-p-w-rudo/Kuripawarudo_Linux/headers -g -Wall -Wextra -Werror -std=gnu++23 -o CMakeFiles/kuripawarudo-v0-3-7-CPP.dir/Kuripawarudo_Linux/sources/entitee/reacteur.cpp.o -c /home/tequhella/Documents/VScode/Kuripawarudo/Kur-p-w-rudo/Kuripawarudo_Linux/sources/entitee/reacteur.cpp",
+  "file": "/home/tequhella/Documents/VScode/Kuripawarudo/Kur-p-w-rudo/Kuripawarudo_Linux/sources/entitee/reacteur.cpp"
+},
+{
+  "directory": "/home/tequhella/Documents/VScode/Kuripawarudo/Kur-p-w-rudo",
+  "command": "/usr/bin/c++  -I/home/tequhella/Documents/VScode/Kuripawarudo/Kur-p-w-rudo -I/home/tequhella/Documents/VScode/Kuripawarudo/Kur-p-w-rudo/Kuripawarudo_Linux/headers -g -Wall -Wextra -Werror -std=gnu++23 -o CMakeFiles/kuripawarudo-v0-3-7-CPP.dir/Kuripawarudo_Linux/sources/entitee/mineur.cpp.o -c /home/tequhella/Documents/VScode/Kuripawarudo/Kur-p-w-rudo/Kuripawarudo_Linux/sources/entitee/mineur.cpp",
+  "file": "/home/tequhella/Documents/VScode/Kuripawarudo/Kur-p-w-rudo/Kuripawarudo_Linux/sources/entitee/mineur.cpp"
+},
+{
+  "directory": "/home/tequhella/Documents/VScode/Kuripawarudo/Kur-p-w-rudo",
+  "command": "/usr/bin/c++  -I/home/tequhella/Documents/VScode/Kuripawarudo/Kur-p-w-rudo -I/home/tequhella/Documents/VScode/Kuripawarudo/Kur-p-w-rudo/Kuripawarudo_Linux/headers -g -Wall -Wextra -Werror -std=gnu++23 -o CMakeFiles/kuripawarudo-v0-3-7-CPP.dir/Kuripawarudo_Linux/sources/entitee/bouclier.cpp.o -c /home/tequhella/Documents/VScode/Kuripawarudo/Kur-p-w-rudo/Kuripawarudo_Linux/sources/entitee/bouclier.cpp",
+  "file": "/home/tequhella/Documents/VScode/Kuripawarudo/Kur-p-w-rudo/Kuripawarudo_Linux/sources/entitee/bouclier.cpp"
+},
+{
+  "directory": "/home/tequhella/Documents/VScode/Kuripawarudo/Kur-p-w-rudo",
+  "command": "/usr/bin/c++  -I/home/tequhella/Documents/VScode/Kuripawarudo/Kur-p-w-rudo -I/home/tequhella/Documents/VScode/Kuripawarudo/Kur-p-w-rudo/Kuripawarudo_Linux/headers -g -Wall -Wextra -Werror -std=gnu++23 -o CMakeFiles/kuripawarudo-v0-3-7-CPP.dir/Kuripawarudo_Linux/sources/entitee/phare.cpp.o -c /home/tequhella/Documents/VScode/Kuripawarudo/Kur-p-w-rudo/Kuripawarudo_Linux/sources/entitee/phare.cpp",
+  "file": "/home/tequhella/Documents/VScode/Kuripawarudo/Kur-p-w-rudo/Kuripawarudo_Linux/sources/entitee/phare.cpp"
+},
+{
+  "directory": "/home/tequhella/Documents/VScode/Kuripawarudo/Kur-p-w-rudo",
+  "command": "/usr/bin/c++  -I/home/tequhella/Documents/VScode/Kuripawarudo/Kur-p-w-rudo -I/home/tequhella/Documents/VScode/Kuripawarudo/Kur-p-w-rudo/Kuripawarudo_Linux/headers -g -Wall -Wextra -Werror -std=gnu++23 -o CMakeFiles/kuripawarudo-v0-3-7-CPP.dir/Kuripawarudo_Linux/sources/entitee/bombe.cpp.o -c /home/tequhella/Documents/VScode/Kuripawarudo/Kur-p-w-rudo/Kuripawarudo_Linux/sources/entitee/bombe.cpp",
+  "file": "/home/tequhella/Documents/VScode/Kuripawarudo/Kur-p-w-rudo/Kuripawarudo_Linux/sources/entitee/bombe.cpp"
+},
+{
+  "directory": "/home/tequhella/Documents/VScode/Kuripawarudo/Kur-p-w-rudo",
+  "command": "/usr/bin/c++  -I/home/tequhella/Documents/VScode/Kuripawarudo/Kur-p-w-rudo -I/home/tequhella/Documents/VScode/Kuripawarudo/Kur-p-w-rudo/Kuripawarudo_Linux/headers -g -Wall -Wextra -Werror -std=gnu++23 -o CMakeFiles/kuripawarudo-v0-3-7-CPP.dir/Kuripawarudo_Linux/sources/entitee/creeperEmetteur.cpp.o -c /home/tequhella/Documents/VScode/Kuripawarudo/Kur-p-w-rudo/Kuripawarudo_Linux/sources/entitee/creeperEmetteur.cpp",
+  "file": "/home/tequhella/Documents/VScode/Kuripawarudo/Kur-p-w-rudo/Kuripawarudo_Linux/sources/entitee/creeperEmetteur.cpp"
+}
+]
