@@ -18,10 +18,6 @@
 
 #include <thread>
 
-// If parameter is not true, test fails
-// This check function would be provided by the test framework
-#define IS_TRUE(x) { if (!(x)) std::cout << __FUNCTION__ << " a échoué sur la ligne " << __LINE__ << std::endl; }
-
 /**
  * @brief Fonction afficherTaille, permet d'afficher la taille de toutes les classes.
  */
@@ -33,14 +29,6 @@ void afficherTaille();
  * @param carte, la carte du jeu.
  */
 void bouclePrincipale(Carte* carte);
-
-/**
- * @brief Test de toutes les fonctions du programme.
- * 
- * @return true si toutes les fonctions sont valides.
- * @return false si une fonction est invalide.
- */
-bool testFonction();
 
 
 int main()
@@ -63,9 +51,6 @@ int main()
 	/* Boucle principale du jeu. */
 	bouclePrincipale(&mapHasard);
 
-	
-	/* Détruit l'objet `mapHasard`. */
-	delete &mapHasard;
 
 	return 0;
 }
@@ -147,11 +132,4 @@ void bouclePrincipale(Carte* carte)
 		carte->gestionConstruction();
 		carte->gestionCasseBlock();
 	}
-}
-
-bool testFonction()
-{
-    /* Test de la fonction deplacement de la classe Curseur. */
-    
-    return true;
 }

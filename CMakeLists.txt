@@ -1,36 +1,26 @@
-cmake_minimum_required(VERSION 3.12)
-project(kuripawarudo)
+cmake_minimum_required(VERSION 3.10)
 
-set(CMAKE_C_STANDARD 11)
+project(Kuripawarudo)
+
 set(CMAKE_CXX_STANDARD 23)
-set(CMAKE_CXX_STANDARD_REQUIRED ON)
-set(CMAKE_C_STANDARD_REQUIRED ON)
+set(CMAKE_CXX_STANDARD_REQUIRED True)
 
-# required!
-set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
-set(CMAKE_EXPORT_LINK_COMMANDS ON)
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wextra -Werror -Wpedantic")
 
-set(SOURCES
-    Kuripawarudo_Linux/sources/main.cpp
-    Kuripawarudo_Linux/sources/carte.cpp
-    Kuripawarudo_Linux/sources/case.cpp
-    Kuripawarudo_Linux/sources/block.cpp
-    Kuripawarudo_Linux/sources/entitee.cpp
-    Kuripawarudo_Linux/sources/vide.cpp
-    Kuripawarudo_Linux/sources/curseur.cpp
-    Kuripawarudo_Linux/sources/entitee/vaisseau.cpp
-    Kuripawarudo_Linux/sources/entitee/reacteur.cpp
-    Kuripawarudo_Linux/sources/entitee/mineur.cpp
-    Kuripawarudo_Linux/sources/entitee/bouclier.cpp
-    Kuripawarudo_Linux/sources/entitee/phare.cpp
-    Kuripawarudo_Linux/sources/entitee/bombe.cpp
-    Kuripawarudo_Linux/sources/entitee/creeperEmetteur.cpp
-)
+set(SOURCE_DIR Kuripawarudo_Linux/sources)
+set(SOURCE_ENTITEES_DIR Kuripawarudo_Linux/sources/entitee)
+set(INCLUDE_DIR Kuripawarudo_Linux/headers)
+set(INCLUDE_ENTITEES_DIR Kuripawarudo_Linux/headers/entitee)
 
-set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/Kuripawarudo_Linux/build/obj)
+include_directories(${INCLUDE_DIR})
+include_directories(${INCLUDE_ENTITEES_DIR})
 
-add_executable(kuripawarudo-v0-3-7-CPP ${SOURCES})
+file(GLOB SOURCES ${SOURCE_DIR}/*.cpp)
+file(GLOB SOURCES_ENTITEES ${SOURCE_ENTITEES_DIR}/*.cpp)
 
-target_include_directories(kuripawarudo-v0-3-7-CPP PRIVATE ${CMAKE_CURRENT_SOURCE_DIR} ${CMAKE_CURRENT_SOURCE_DIR}/Kuripawarudo_Linux/headers)
+set(SOURCES ${SOURCES} ${SOURCES_ENTITEES})
 
-target_compile_options(kuripawarudo-v0-3-7-CPP PRIVATE -g -Wall -Wextra -Werror)
+add_executable(Kuripawarudo-v0-3-7 ${SOURCES})
+
+# change executable path to root directory
+set(EXECUTABLE_OUTPUT_PATH ${CMAKE_SOURCE_DIR})
