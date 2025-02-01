@@ -18,6 +18,9 @@
 #include <memory>
 #include <vector>
 
+#include <boost/log/trivial.hpp>
+#include <boost/log/utility/setup.hpp>
+
 /* Il définit deux constantes, LARGEUR et HAUTEUR, et leur affecte respectivement les valeurs 30 et 45. */
 constexpr auto LARGEUR = 30;
 constexpr auto HAUTEUR = 45;
@@ -28,7 +31,7 @@ class Base
 };
 
 /**
- * Un Coord est une structure qui a deux membres à virgule flottante double précision, x et y.
+ * Coord est une structure qui a deux membres à virgule flottante double précision, x et y.
  * Il est utilisé pour représenter les coordonnées d'une entité.
  * 
  * Coord GetCoord(vide)
@@ -59,7 +62,7 @@ inline bool instanceof(const T* ptr)
 }
 
 /* Un moyen de définir une valeur constante pour chaque type de case. */
-enum
+enum TypeElement
 {
     VIDE,
     BLOCK,
@@ -70,7 +73,7 @@ enum
 /* Définir une valeur constante pour chaque type de terrain. */
 constexpr auto TERRE = 1;
 constexpr auto ROCHE = 2;
-enum
+enum RocheType
 {
     ROCHE1,
     ROCHE2,
@@ -79,7 +82,7 @@ enum
 constexpr auto MINERAI = 3;
 
 /* Une liste de tous les différents types d'entités. */
-enum
+enum TypeEntitee
 {
     VAISSEAU,
     REACTEUR,

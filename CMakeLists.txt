@@ -20,7 +20,16 @@ file(GLOB SOURCES_ENTITEES ${SOURCE_ENTITEES_DIR}/*.cpp)
 
 set(SOURCES ${SOURCES} ${SOURCES_ENTITEES})
 
-add_executable(Kuripawarudo-v0-3-7 ${SOURCES})
+# Rechercher Boost
+find_package(Boost REQUIRED COMPONENTS log log_setup)
+
+if(Boost_FOUND)
+    include_directories(${Boost_INCLUDE_DIRS})
+    add_executable(Kuripawarudo-v0-3-7 ${SOURCES})
+    target_link_libraries(Kuripawarudo-v0-3-7 ${Boost_LIBRARIES} Boost::log Boost::log_setup)
+else()
+    message(FATAL_ERROR "Boost not found")
+endif()
 
 # change executable path to root directory
 set(EXECUTABLE_OUTPUT_PATH ${CMAKE_SOURCE_DIR})

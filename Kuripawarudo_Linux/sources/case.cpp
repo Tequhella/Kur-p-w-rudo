@@ -46,11 +46,11 @@ void Case::detruireElement (uint8_t type)
 			}
 			if (vide)
 			{
-				delete vide ;
-				vide  = nullptr ;
+				delete vide;
+				vide  = nullptr;
 			}
-			else /*--------->*/ cerr << "Erreur : l'élément vide n'existe pas." << endl ;
-			break ;
+			else /*--------->*/ BOOST_LOG_TRIVIAL(error) << "Erreur : l'élément vide n'existe pas.";
+			break;
 		case BLOCK:
 			if (curseur)
 			{
@@ -59,11 +59,11 @@ void Case::detruireElement (uint8_t type)
 			}
 			if (block)
 			{
-				delete block ;
-				block = nullptr ;
+				delete block;
+				block = nullptr;
 			}
-			else /*--------->*/ cerr << "Erreur : l'élément block n'existe pas." << endl ;
-			break ;
+			else /*--------->*/ BOOST_LOG_TRIVIAL(error) << "Erreur : l'élément block n'existe pas.";
+			break;
 		case ENTITEE:
 			if (curseur)
 			{
@@ -72,18 +72,18 @@ void Case::detruireElement (uint8_t type)
 			}
 			if (entitee)
 			{
-				delete entitee ;
-				entitee = nullptr ;
+				delete entitee;
+				entitee = nullptr;
 			}
-			else /*--->*/ cerr << "Erreur : l'entité n'existe pas." << endl ;
+			else /*--->*/ BOOST_LOG_TRIVIAL(error) << "Erreur : l'entité n'existe pas.";
 
 			if (vide)
 			{
-				delete vide ;
-				vide = nullptr ;
+				delete vide;
+				vide = nullptr;
 			}
-			else /*--->*/ cerr << "Erreur : l'entité n'a pas d'élément vide associé." << endl ;
-			break ;
+			else /*--->*/ BOOST_LOG_TRIVIAL(error) << "Erreur : l'entité n'a pas d'élément vide associé.";
+			break;
 		case CURSEUR:
 			if (entitee)
 			{
@@ -92,17 +92,17 @@ void Case::detruireElement (uint8_t type)
 			}
 			if (curseur)
 			{
-				delete curseur ;
-				curseur = nullptr ;
+				delete curseur;
+				curseur = nullptr;
 			}
-			else /*--->*/ cerr << "Erreur : le curseur n'existe pas." << endl ;
+			else /*--->*/ BOOST_LOG_TRIVIAL(error) << "Erreur : le curseur n'existe pas.";
 
 			if (vide)
 			{
-				delete vide ;
-				vide = nullptr ;
+				delete vide;
+				vide = nullptr;
 			}
-			else /*--->*/ cerr << "Erreur : le curseur n'a pas d'élément vide associé." << endl ;
+			else /*--->*/ BOOST_LOG_TRIVIAL(error) << "Erreur : le curseur n'a pas d'élément vide associé.";
 			break;
 	}
 }
@@ -118,7 +118,7 @@ void Case::detruireElement (uint8_t type)
  */
 uint8_t Case::getTypeElement()
 {
-	return type ;
+	return type;
 }
 
 /**
@@ -128,7 +128,7 @@ uint8_t Case::getTypeElement()
  */
 Vide* Case::getVide()
 {
-	return vide ;
+	return vide;
 }
 
 /**
@@ -138,7 +138,7 @@ Vide* Case::getVide()
  */
 Block* Case::getBlock()
 {
-	return block ;
+	return block;
 }
 
 /**
@@ -148,7 +148,7 @@ Block* Case::getBlock()
  */
 Entitee* Case::getEntitee()
 {
-	return entitee ;
+	return entitee;
 }
 
 /**
@@ -158,7 +158,7 @@ Entitee* Case::getEntitee()
  */
 Curseur* Case::getCurseur()
 {
-	return curseur ;
+	return curseur;
 }
 
 /**
@@ -168,7 +168,7 @@ Curseur* Case::getCurseur()
  */
 Coord* Case::getCoord()
 {
-	return &coord ;
+	return &coord;
 }
 
 ////////////
@@ -182,7 +182,8 @@ Coord* Case::getCoord()
  */
 void Case::setTypeElement (uint8_t type)
 {
-	this->type = type ;
+	this->type = type;
+    BOOST_LOG_TRIVIAL(debug) << "Type de l'élément défini sur " << type;
 }
 
 /**
@@ -190,11 +191,11 @@ void Case::setTypeElement (uint8_t type)
  */
 void Case::creerVide()
 {
-	vide = new Vide() ;
+	vide = new Vide();
 	if (!vide)
 	{
-		cerr << "Erreur allocation de l'objet vide." << endl ;
-		exit (-1) ;
+		BOOST_LOG_TRIVIAL(error) << "Erreur allocation de l'objet vide.";
+		exit (-1);
 	}
 	
 }
@@ -210,28 +211,28 @@ void Case::setCurseur(Base* object)
 {
 	if (instanceof<Coord>(object))
 	{
-		Coord* coord = (Coord*) object ;
-		curseur = new Curseur(*coord) ;
+		Coord* coord = (Coord*) object;
+		curseur = new Curseur(*coord);
 		if (!curseur)
 		{
-			cerr << "Erreur allocation de l'objet curseur." << endl ;
-			exit (-1) ;
+			BOOST_LOG_TRIVIAL(error) << "Erreur allocation de l'objet curseur.";
+			exit (-1);
 		}
 	}
 	else if (instanceof<Curseur>(object))
 	{
-		curseur = (Curseur*) object ;
+		curseur = (Curseur*) object;
 		if (!curseur)
 		{
-			cerr << "Erreur allocation de l'objet curseur." << endl;
+			BOOST_LOG_TRIVIAL(error) << "Erreur allocation de l'objet curseur.";
 			exit(-1);
 		}
 	}
 	else if (object == nullptr) /*--->*/ curseur = nullptr;
 	else
 	{
-		cerr << "Erreur : l'objet n'est pas une coordonnée ou un objet Curseur." << endl ;
-		exit (-1) ;
+		BOOST_LOG_TRIVIAL(error) << "Erreur : l'objet n'est pas une coordonnée ou un objet Curseur.";
+		exit (-1);
 	}
 }
 
@@ -243,11 +244,11 @@ void Case::setCurseur(Base* object)
  */
 void Case::setBlock (uint8_t type, uint8_t typeStone)
 {
-	block = new Block (type, typeStone) ;
+	block = new Block (type, typeStone);
 	if (!block)
 	{
-		cerr << "Erreur allocation de l'objet block." << endl ;
-		exit (-1) ;
+		BOOST_LOG_TRIVIAL(error) << "Erreur allocation de l'objet block.";
+		exit (-1);
 	}
 }
 
@@ -261,20 +262,20 @@ void Case::setEntitee (uint8_t type, Carte* carte)
 {
 	switch (type)
 	{
-		case VAISSEAU        : entitee = new Vaisseau()        ; break ;
-		case REACTEUR		 : entitee = new Reacteur()		   ; carte->setCoordEntiteeConstr(coord); break;
-		case MINEUR			 : entitee = new Mineur()		   ; carte->setCoordEntiteeConstr(coord); break;
-		case BOUCLIER		 : entitee = new Bouclier()		   ; carte->setCoordEntiteeConstr(coord); break;
-		case PHARE			 : entitee = new Phare()		   ; carte->setCoordEntiteeConstr(coord); break;
-		case BOMBE			 : entitee = new Bombe()		   ; carte->setCoordEntiteeConstr(coord); break;
-		case CREEPER_EMETTEUR: entitee = new CreeperEmetteur() ; break ;
+		case VAISSEAU        : entitee = new Vaisseau()       ; break;
+		case REACTEUR		 : entitee = new Reacteur()		  ; carte->setCoordEntiteeConstr(coord); break;
+		case MINEUR			 : entitee = new Mineur()		  ; carte->setCoordEntiteeConstr(coord); break;
+		case BOUCLIER		 : entitee = new Bouclier()		  ; carte->setCoordEntiteeConstr(coord); break;
+		case PHARE			 : entitee = new Phare()		  ; carte->setCoordEntiteeConstr(coord); break;
+		case BOMBE			 : entitee = new Bombe()		  ; carte->setCoordEntiteeConstr(coord); break;
+		case CREEPER_EMETTEUR: entitee = new CreeperEmetteur(); break;
 	}
 
-	entitee->setType(type) ;
+	entitee->setType(type);
 	if (!entitee)
 	{
-		cerr << "Erreur allocation de l'objet entitee." << endl ;
-		exit (-1) ;
+		BOOST_LOG_TRIVIAL(error) << "Erreur allocation de l'objet entitee.";
+		exit (-1);
 	}
 }
 

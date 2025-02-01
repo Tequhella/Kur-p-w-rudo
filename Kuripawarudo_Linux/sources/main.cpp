@@ -30,18 +30,35 @@ void afficherTaille();
  */
 void bouclePrincipale(Carte* carte);
 
+/**
+ * @brief Fonction init_logging, permet d'initialiser le logging.
+ */
+void init_logging();
+
+/**
+ * @brief Fonction log_messages, permet de logger des messages.
+ */
+void log_messages();
+
 
 int main()
 {
+    init_logging();
+    log_messages();
+
 	/* Création d'un nouvel objet de type Carte. */
 	Carte mapHasard = Carte(LARGEUR, HAUTEUR, "test");
     
 	/* Remplit la carte avec des éléments aléatoires. */
 	mapHasard.remplirHasard();
     
+
 	/* Il crée 4 grottes. */
 	for (int i = 0; i < 4; i++)
-		mapHasard.creerCaverne(rand() % LARGEUR * HAUTEUR + 280, 0);
+    {
+        mapHasard.creerCaverne(rand() % LARGEUR * HAUTEUR + 280, 0);
+        BOOST_LOG_TRIVIAL(debug) << "Grotte " << i << " créée.";
+    }
 
 	/* Affiche la taille de toutes les classes. */
     afficherTaille();
@@ -55,7 +72,35 @@ int main()
 	return 0;
 }
 
+void init_logging()
+{
+    // Log vers un fichier
+    boost::log::add_file_log(
+        boost::log::keywords::file_name = "sample_%N.log",
+        boost::log::keywords::rotation_size = 10 * 1024 * 1024,
+        boost::log::keywords::time_based_rotation = boost::log::sinks::file::rotation_at_time_point(0, 0, 0),
+        boost::log::keywords::format = "[%TimeStamp%]: %Message%"
+    );
 
+    // Log vers la console
+    boost::log::add_console_log(
+        std::cout,
+        boost::log::keywords::format = "[%TimeStamp%]: %Message%"
+    );
+
+    // Ajouter des attributs communs comme le timestamp
+    boost::log::add_common_attributes();
+}
+
+void log_messages()
+{
+    BOOST_LOG_TRIVIAL(trace) << "This is a trace severity message";
+    BOOST_LOG_TRIVIAL(debug) << "This is a debug severity message";
+    BOOST_LOG_TRIVIAL(info) << "This is an informational severity message";
+    BOOST_LOG_TRIVIAL(warning) << "This is a warning severity message";
+    BOOST_LOG_TRIVIAL(error) << "This is an error severity message";
+    BOOST_LOG_TRIVIAL(fatal) << "This is a fatal severity message";
+}
 
 void afficherTaille()
 {

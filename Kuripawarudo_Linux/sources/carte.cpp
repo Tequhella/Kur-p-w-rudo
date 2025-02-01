@@ -13,6 +13,7 @@
 #include "../headers/case.h"
 #include "../headers/block.h"
 #include "../headers/entitee.h"
+#include <random>
 
 /*************************************************************************
 *                       Constructeur & Destructeur                       *
@@ -34,24 +35,25 @@ Carte::Carte (int dimX, int dimY, const char* nomDeLaCarte) :
 {
 	if (dimX == 0 || dimY == 0)
 	{
-		elements           = nullptr ;
-		this->dimX         = 0 ;
-		this->dimY         = 0 ;
+		elements           = nullptr;
+		this->dimX         = 0;
+		this->dimY         = 0;
+        BOOST_LOG_TRIVIAL(error) << "Erreur : la largeur ou la hauteur de la carte est nulle.";
 	}
 	else
 	{
-		elements = new Case [dimX * dimY] ;
+		elements = new Case [dimX * dimY];
 		
 		if (elements)
 		{
 			for (int i = 0; i < dimX * dimY; i++)
 			{
-				elements[i].setTypeElement(VIDE) ;
-				elements[i].creerVide() ;
-				elements[i].setCoord(i % dimX, i / dimX) ;
+				elements[i].setTypeElement(VIDE);
+				elements[i].creerVide();
+				elements[i].setCoord(i % dimX, i / dimX);
 			}
-			this->dimX = dimX ;
-			this->dimY = dimY ;
+			this->dimX = dimX;
+			this->dimY = dimY;
 			
 			elements[LARGEUR * 2 + LARGEUR / 2].setTypeElement(ENTITEE);
 			elements[LARGEUR * 2 + LARGEUR / 2].setEntitee(VAISSEAU, this);
@@ -61,8 +63,8 @@ Carte::Carte (int dimX, int dimY, const char* nomDeLaCarte) :
 		}
 		else
 		{
-			cerr << "Erreur allocation des éléments de la carte." << endl ;
-			exit (-1) ;
+			BOOST_LOG_TRIVIAL(error) << "Erreur allocation des éléments de la carte.";
+			exit (-1);
 		}
 		
 	}
@@ -76,8 +78,8 @@ Carte::~Carte ()
 {
 	if (elements)
 	{
-		for (unsigned int i = 0; i < dimX * dimY; i++) /*--->*/ this->elements[i].detruireElement(this->elements[i].getTypeElement()) ;
-		delete[] this->elements ;
+		for (unsigned int i = 0; i < dimX * dimY; i++) /*--->*/ this->elements[i].detruireElement(this->elements[i].getTypeElement());
+		delete[] this->elements;
 		this->elements = nullptr;
 		if (coordEntiteeConstr)
 		{
@@ -90,11 +92,11 @@ Carte::~Carte ()
 			this->coordBlockCasse = nullptr;
 		}
 		
-		cout << "Désallocation de la carte reussi." << endl ;
+		BOOST_LOG_TRIVIAL(info) << "Désallocation de la carte reussi.";
 	}
 	else
 	{
-		cerr << "Erreur allocation des éléments de la carte." << endl ;
+		BOOST_LOG_TRIVIAL(error) << "Erreur allocation des éléments de la carte.";
 		exit (-1);
 	}
 
@@ -105,55 +107,58 @@ Carte::~Carte ()
 *************************************************************************/
 
 /**
- * Il remplit la carte avec des éléments aléatoires.
+ * Remplit la carte avec des éléments aléatoires.
  */
 void Carte::remplirHasard ()
 {
 	// Initialisation du random
-	srand(time(NULL));
+	std::random_device rd; 
+    std::mt19937 gen(rd());
+    std::uniform_int_distribution<> dis(0, 99); 
 	
-	int terre 	= 0 ;
-	int roche 	= 0 ;
-	int minerai = 0 ;
-	int relief  = 200; // variable se démécrantant à chaque ligne pour creer un relief
+	int terre 	= 0;
+	int roche 	= 0;
+	int minerai = 0;
+	int relief  = 200; // variable se démécrentant à chaque ligne pour creer un relief
 
 	for (unsigned int i = 0; i < LARGEUR * HAUTEUR; i++)
 	{
-		terre   = (rand() % 100 + 1) + relief ;
-		roche   = (rand() % 100 + 1) + relief ;
-		minerai = (rand() % 100 + 1) + relief ;
+		terre   = (dis(gen) % 100 + 1) + relief;
+		roche   = (dis(gen) % 100 + 1) + relief;
+		minerai = (dis(gen) % 100 + 1) + relief;
 
-		this->elements[i].setCoord (i % LARGEUR, i / LARGEUR) ;
+		this->elements[i].setCoord(i % LARGEUR, i / LARGEUR);
 		
 		if (minerai < 3)
 		{
-			this->elements[i].detruireElement (this->elements[i].getTypeElement()) ;
-			this->elements[i].setTypeElement (BLOCK) ;
-			this->elements[i].setBlock (MINERAI, 0) ;
+			this->elements[i].detruireElement (this->elements[i].getTypeElement());
+			this->elements[i].setTypeElement (BLOCK);
+			this->elements[i].setBlock (MINERAI, 0);
 		}
 		else if (roche < 21)
 		{
-			int rocheType = (rand() % 100 + 1) ;
+			int rocheType = (dis(gen) % 100 + 1);
 
-			if (rocheType <= 5) /*---------->*/ rocheType = ROCHE3 ;
-			else if (rocheType <= 30) /*---->*/ rocheType = ROCHE2 ;
-			else if (rocheType <= 100) /*--->*/ rocheType = ROCHE1 ;
+			if (rocheType <= 5) /*---------->*/ rocheType = ROCHE3;
+			else if (rocheType <= 30) /*---->*/ rocheType = ROCHE2;
+			else if (rocheType <= 100) /*--->*/ rocheType = ROCHE1;
 
-			this->elements[i].detruireElement (this->elements[i].getTypeElement()) ;
-			this->elements[i].setTypeElement (BLOCK) ;
-			this->elements[i].setBlock (ROCHE, rocheType) ;
+			this->elements[i].detruireElement (this->elements[i].getTypeElement());
+			this->elements[i].setTypeElement (BLOCK);
+			this->elements[i].setBlock (ROCHE, rocheType);
 		}
 		else if (terre <= 100)
 		{
-			this->elements[i].detruireElement (this->elements[i].getTypeElement()) ;
-			this->elements[i].setTypeElement (BLOCK) ;
-			this->elements[i].setBlock (TERRE, 0) ;
+			this->elements[i].detruireElement (this->elements[i].getTypeElement());
+			this->elements[i].setTypeElement (BLOCK);
+			this->elements[i].setBlock (TERRE, 0);
 		}
 		else if (this->elements[i].getTypeElement() == ENTITEE)
 
 		if (relief > 0 && i % LARGEUR == 0) /*--->*/ relief -= 25;
-
 	}
+
+    BOOST_LOG_TRIVIAL(debug) << "Carte remplie.";
 }
 
 /**
@@ -164,26 +169,32 @@ void Carte::remplirHasard ()
  */
 void Carte::creerCaverne (int pos, int randMoins)
 {
-	srand(time(NULL));
-	while (pos > LARGEUR * HAUTEUR || this->elements[pos].getTypeElement() != BLOCK) /*--->*/ pos = rand() % LARGEUR * HAUTEUR + 280;
-	
+	std::random_device rd; 
+    std::mt19937 gen(rd());
+    std::uniform_int_distribution<> dis(0, 99); 
+
+    while (pos > LARGEUR * HAUTEUR || this->elements[pos].getTypeElement() != BLOCK)
+    {
+        pos = dis(gen) % LARGEUR * HAUTEUR + 280;
+    }
+    
 	if (this->elements[pos].getTypeElement() == BLOCK)
 	{
-		int droite = rand() % 100 - randMoins;
-		while (droite < 0) /*--->*/ droite = rand() % 100 - randMoins;
+		int droite = dis(gen) % 100 - randMoins;
+		while (droite < 0) /*--->*/ droite = dis(gen) % 100 - randMoins;
 		
-		int bas    = rand() % 100 - randMoins;
-		while (bas < 0) /*------>*/ bas = rand() % 100 - randMoins;
+		int bas    = dis(gen) % 100 - randMoins;
+		while (bas < 0) /*------>*/ bas = dis(gen) % 100 - randMoins;
 
-		int gauche = rand() % 100 - randMoins;
-		while (gauche < 0) /*--->*/ gauche = rand() % 100 - randMoins;
+		int gauche = dis(gen) % 100 - randMoins;
+		while (gauche < 0) /*--->*/ gauche = dis(gen) % 100 - randMoins;
 
-		int haut   = rand() % 100 - randMoins;
-		while (haut < 0) /*----->*/ haut = rand() % 100 - randMoins;
+		int haut   = dis(gen) % 100 - randMoins;
+		while (haut < 0) /*----->*/ haut = dis(gen) % 100 - randMoins;
 
-		this->elements[pos].detruireElement (BLOCK) ;
-		this->elements[pos].setTypeElement (VIDE) ;
-		this->elements[pos].creerVide() ;
+		this->elements[pos].detruireElement (BLOCK);
+		this->elements[pos].setTypeElement (VIDE);
+		this->elements[pos].creerVide();
 
 		randMoins += 5;
 
@@ -197,6 +208,7 @@ void Carte::creerCaverne (int pos, int randMoins)
 			if (this->elements[pos - LARGEUR].getTypeElement() == BLOCK) /*------>*/ creerCaverne (pos - LARGEUR, randMoins);
 	}
 	
+    BOOST_LOG_TRIVIAL(debug) << "Grotte créée.";
 }
 
 /**
@@ -206,11 +218,15 @@ void Carte::creerCaverne (int pos, int randMoins)
  */
 void Carte::creerEnnemie (int nbEnnemie)
 {
+    std::random_device rd; 
+    std::mt19937 gen(rd());
+    std::uniform_int_distribution<> dis(0, 99); 
+
 	int pos = 0;
 
 	for (int i = 0; i < nbEnnemie; i++)
 	{
-		while (elements[pos].getTypeElement() != VIDE || pos < 350) /*--->*/ pos = rand() % (LARGEUR * HAUTEUR) + 1;
+		while (elements[pos].getTypeElement() != VIDE || pos < 350) /*--->*/ pos = dis(gen) % (LARGEUR * HAUTEUR) + 1;
 
 		elements[pos].setTypeElement(ENTITEE);
 		elements[pos].setEntitee(CREEPER_EMETTEUR, this);
@@ -334,7 +350,7 @@ void Carte::gestionConstruction()
 	{
 		for (uint8_t i = 0; i < nbEntiteeConstr; i++)
 		{
-			cout << "Coordonnée dans coordEntiteeConstr[i] : " << coordEntiteeConstr->at(i).x << " " << coordEntiteeConstr->at(i).y << endl;
+			BOOST_LOG_TRIVIAL(debug) << "Coordonnée dans coordEntiteeConstr[i] : " << coordEntiteeConstr->at(i).x << " " << coordEntiteeConstr->at(i).y;
 			Entitee* entitee = this->getElement(coordEntiteeConstr->at(i).x, coordEntiteeConstr->at(i).y)->getEntitee();
 			switch (entitee->getType())
 			{
@@ -375,7 +391,7 @@ void Carte::gestionCasseBlock()
 	{
 		for (uint8_t i = 0; i < nbBlockCasse; i++)
 		{
-			cout << "Coordonnée dans coordBlockCasse[i] : " << coordBlockCasse->at(i).x << " " << coordBlockCasse->at(i).y << endl;
+			BOOST_LOG_TRIVIAL(debug) << "Coordonnée dans coordBlockCasse[i] : " << coordBlockCasse->at(i).x << " " << coordBlockCasse->at(i).y;
 			Block* block = this->getElement(coordBlockCasse->at(i).x, coordBlockCasse->at(i).y)->getBlock();
 			if (block->getSoliditee() > 0) /*--->*/ block->decSoliditee(1);
 			else
@@ -415,17 +431,17 @@ void Carte::gestionCasseBlock()
  */
 unsigned int Carte::getDimX ()
 {
-	return dimX ;
+	return dimX;
 }
 
 /**
- * Renvoie la valeur de la variable membre dimY
+ * Renvoie la valeur de la variable membre privée dimY
  * 
  * @return La valeur de la variable membre dimY.
  */
 unsigned int Carte::getDimY ()
 {
-	return dimY ;
+	return dimY;
 }
 
 /**
@@ -463,7 +479,7 @@ vector<Coord>* Carte::getCoordBlockCasse()
  */
 const char* Carte::getNomDeLaCarte ()
 {
-	return nomDeLaCarte ;
+	return nomDeLaCarte;
 }
 
 ////////////
