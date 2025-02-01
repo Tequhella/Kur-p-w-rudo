@@ -22,20 +22,23 @@ class Entitee
     *                       Constructeur & Destructeur                       *
     *************************************************************************/
         
-        /*
-        * Constructeur de la classe Entitee.
-        */
-        Entitee(uint8_t type, Coord* coord) ;
+        /**
+         * @brief Constructeur de la classe Entitee.
+         * 
+         * @param type Le type de l'entitée. Ceci est utilisé pour identifier l'entitée.
+         * @param coord Les coordonnées de l'entitée.
+         */
+        Entitee(TypeEntitee type, Coord* coord) ;
 
 
-        /*
-        * Constructeur par défaut de la classe Entitée.
-        */
+        /**
+         * @brief Constructeur par défaut de la classe Entitee.
+         */
         Entitee() ;
 
-        /*
-        * Destructeur de la classe Entitee.
-        */
+        /**
+         * @brief Destructeur de la classe Entitee.
+         */
         ~Entitee() ;
 
     /*************************************************************************
@@ -46,10 +49,18 @@ class Entitee
         // Getter //
         ////////////
 
-        /* Renvoie le type de l'entité. */
-        uint8_t getType() ;
+        /**
+         * @brief Méthode getType, récupère le type de l'entitée.
+         * 
+         * @return TypeEntitee Le type de l'entitée.
+         */
+        TypeEntitee getType() ;
 
-        /* Renvoie le nombre de points de construction de l'entité. */
+        /**
+         * @brief Méthode getId, récupère l'id de l'entitée.
+         * 
+         * @return double L'id de l'entitée.
+         */
         double getConstr() ;
 
 
@@ -60,7 +71,7 @@ class Entitee
 		/**
 		 * @brief Méthode setType, modifie le type de l'entitée.
 		 */
-        void setType(uint8_t type) ;
+        void setType(TypeEntitee type) ;
 
         /**
          * @brief Méthode setId, modifie l'id de l'entitée.
@@ -84,8 +95,8 @@ class Entitee
 
     private:
 
-        uint8_t      type ;
-        Coord        coord ;
+        TypeEntitee      type ;
+        Coord            coord ;
 
     protected:
 

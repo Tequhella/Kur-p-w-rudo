@@ -36,55 +36,95 @@ class Case
 	*                       Constructeur & Destructeur                       *
 	*************************************************************************/
 
-		/*
-		* Constructeur de la classe Case.
-		*/
+		/**
+		 * @brief Constructeur de la classe Case.
+		 * 
+		 */
 		Case () ;
 
-		/*
-		* Destructeur de la classe Case.
-		*/
+		/**
+		 * @brief Destructeur de la classe Case.
+		 * 
+		 */
 		~Case () ;
 
 	/*************************************************************************
 	*                                 Méthode                                *
 	*************************************************************************/
 
-		/*
-		* Méthode detruireElement, permet de détruire l'élément selon le type que c'est.
-		*/
-		void detruireElement (uint8_t type) ;
+		/**
+		 * @brief detruireElement, détruit un élément de la case.
+		 * 
+         * Si l'élément est un bloc, le supprime.
+         * Si l'élément est une entitée, le supprime ainsi que son élément vide associé.
+         * Si l'élément est un curseur, le supprime ainsi que son élément vide associé.
+         * Si l'élément est un élément vide, le supprime
+         * 
+		 * @param type Le type de l'élément à détruire.
+		 */
+		void detruireElement (TypeElement type) ;
 
-		/*
-		* Méthode creerVide, crée une case de vide.
-		*/
+		/**
+		 * @brief creerVide, crée un objet vide.
+		 * 
+		 */
 		void creerVide() ;
 
-		/*
-		* Méthode creerCurseur, crée un curseur.
-		*/
+		/**
+		 * @brief Définit le curseur de la case.
+		 * 
+         * Si l'objet est un Coord, alors il crée un nouvel objet Curseur et le stock dans le champ curseur. Si
+         * l'objet est un Curseur, alors il le stock dans le champ curseur. Si l'objet est nullptr, définissez
+         * le champ du curseur sur nullptr. Sinon, imprimez un message d'erreur et quittez le programme
+         * 
+		 * @param object L'objet curseur.
+		 */
 		void setCurseur(Base* object) ;
 
 		////////////
 		// Getter //
 		////////////
 
-		// Getter getTypeElement, permet de récupérer l'indicateur du type de l'élément.
-		uint8_t getTypeElement() ;
+		/**
+		 * @brief getTypeElement, récupère le type de l'élément.
+		 * 
+		 * @return TypeElement Le type de l'élément.
+		 */
+		TypeElement getTypeElement() ;
 
-		// Getter getVide, récupère la case de vide (ainsi sa quantité de creeper).
+		/**
+		 * @brief getVide, récupère l'objet vide.
+		 * 
+		 * @return Vide* L'objet vide.
+		 */
 		Vide* getVide() ;
 
-		// Getter getBlock, récupère le block de la case.
+		/**
+		 * @brief getBlock, récupère l'objet block.
+		 * 
+		 * @return Block* L'objet block.
+		 */
 		Block* getBlock() ;
 
-		// Getter getEntitee, récupère l'entitée de la case.
+		/**
+		 * @brief getEntitee, récupère l'entitée.
+		 * 
+		 * @return Entitee* L'entitée.
+		 */
 		Entitee* getEntitee() ;
 
-		// Getter getEntitee, récupère le curseur.
+		/**
+		 * @brief getCurseur, récupère le curseur.
+		 * 
+		 * @return Curseur* Le curseur.
+		 */
 		Curseur* getCurseur() ;
 
-		// Getter getCoord, récupère les coordonnées de la case (x, y) ;
+		/**
+		 * @brief getCoord, récupère la coordonnée de la case.
+		 * 
+		 * @return Coord* La coordonnée de la case.
+		 */
 		Coord* getCoord() ;
 
 
@@ -93,10 +133,10 @@ class Case
 		////////////
 
 		// Setter setTypeElement, met à jour l'indicateur de type.
-		void setTypeElement (uint8_t type) ;
+		void setTypeElement (TypeElement type) ;
 
 		// Setter setBlock, met à jour un block.
-		void setBlock (uint8_t type, uint8_t typeStone) ;
+		void setBlock (uint8_t type, RocheType typeStone) ;
 
 		/**
 		 * Il définit le type d'entité de la case.
@@ -104,21 +144,21 @@ class Case
 		 * @param type Le type de l'entité.
 		 * @param coordEntiteeConstr Le tableau de coordonnées d'entitée à construire.
 		 */
-		void setEntitee (uint8_t type, Carte* carte) ;
+		void setEntitee (TypeEntitee type, Carte* carte) ;
 
 		// Setter setCoord, met à jour les coordonnées.
 		void setCoord (double x, double y) ;
 
 	private:
 
-		uint8_t		type ;
+		TypeElement type ;
 		Vide*       vide ;
 		Block*      block ;
 		Curseur*	curseur;
 		Coord       coord ;
 
-		uint8_t*	entiteeType ;
-		Entitee*    entitee ;
+		TypeEntitee* entiteeType ;
+		Entitee*     entitee ;
 } ;
 
 #endif

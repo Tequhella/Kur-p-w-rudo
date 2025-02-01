@@ -14,9 +14,6 @@
 #include "../headers/block.h"
 #include "../headers/curseur.h"
 
-/**
- * Le constructeur initialise l'objet Case
- */
 Case::Case () : vide(nullptr), block(nullptr), curseur(nullptr), entitee(nullptr) {}
 
 Case::~Case(){}
@@ -26,15 +23,7 @@ Case::~Case(){}
 *************************************************************************/
 
 
-/**
- * * Si l'élément est un bloc, le supprime.
- * * Si l'élément est une entitée, le supprime ainsi que son élément vide associé.
- * * Si l'élément est un curseur, le supprime ainsi que son élément vide associé.
- * * Si l'élément est un élément vide, le supprime
- * 
- * @param type le type d'élément à supprimer.
- */
-void Case::detruireElement (uint8_t type)
+void Case::detruireElement (TypeElement type)
 {
 	switch (type)
 	{
@@ -111,61 +100,31 @@ void Case::detruireElement (uint8_t type)
 // Getter //
 ////////////
 
-/**
- * Renvoyer le type de case
- * 
- * @return Le type de l'élément.
- */
-uint8_t Case::getTypeElement()
+TypeElement Case::getTypeElement()
 {
 	return type;
 }
 
-/**
- * Renvoie la valeur du membre privée vide
- * 
- * @return La valeur de la variable vide.
- */
 Vide* Case::getVide()
 {
 	return vide;
 }
 
-/**
- * Retourne le bloc de la case
- * 
- * @return Le bloc de la case actuelle.
- */
 Block* Case::getBlock()
 {
 	return block;
 }
 
-/**
- * Renvoye l'entitée.
- * 
- * @return L'entitée de la case.
- */
 Entitee* Case::getEntitee()
 {
 	return entitee;
 }
 
-/**
- * Retourne le curseur.
- * 
- * @return Le curseur de la case.
- */
 Curseur* Case::getCurseur()
 {
 	return curseur;
 }
 
-/**
- * Renvoie la coordonnée du cas
- * 
- * @return coord
- */
 Coord* Case::getCoord()
 {
 	return &coord;
@@ -175,20 +134,11 @@ Coord* Case::getCoord()
 // Setter //
 ////////////
 
-/**
- * Définit le type de la case
- * 
- * @param type Le type de case.
- */
-void Case::setTypeElement (uint8_t type)
+void Case::setTypeElement (TypeElement type)
 {
 	this->type = type;
-    BOOST_LOG_TRIVIAL(debug) << "Type de l'élément défini sur " << type;
 }
 
-/**
- * Crée une nouvelle case vide
- */
 void Case::creerVide()
 {
 	vide = new Vide();
@@ -200,13 +150,6 @@ void Case::creerVide()
 	
 }
 
- /**
-  * Si l'objet est un Coord, alors il crée un nouvel objet Curseur et le stock dans le champ curseur. Si
-  * l'objet est un Curseur, alors il le stock dans le champ curseur. Si l'objet est nullptr, définissez
-  * le champ du curseur sur nullptr. Sinon, imprimez un message d'erreur et quittez le programme
-  *
-  * @param object l'objet à définir comme nouveau curseur.
-  */
 void Case::setCurseur(Base* object)
 {
 	if (instanceof<Coord>(object))
@@ -236,13 +179,7 @@ void Case::setCurseur(Base* object)
 	}
 }
 
-/**
- * Crée un nouvel objet Block et l'affecte à la variable de bloc
- * 
- * @param type le type de bloc (1 = terre, 2 = roche, 3 = minerai)
- * @param typeStone le type de pierre qui est utilisé pour construire le bloc.
- */
-void Case::setBlock (uint8_t type, uint8_t typeStone)
+void Case::setBlock (uint8_t type, RocheType typeStone)
 {
 	block = new Block (type, typeStone);
 	if (!block)
@@ -252,16 +189,14 @@ void Case::setBlock (uint8_t type, uint8_t typeStone)
 	}
 }
 
-/**
- * Il définit le type d'entité de la case.
- * 
- * @param type Le type de l'entité.
- * @param coordEntiteeConstr Le tableau de coordonnées d'entitée à construire.
- */
-void Case::setEntitee (uint8_t type, Carte* carte)
+void Case::setEntitee (TypeEntitee type, Carte* carte)
 {
 	switch (type)
 	{
+        case NON_ENTITEE:
+            entitee = nullptr;
+            BOOST_LOG_TRIVIAL(error) << "Erreur : le type d'entitée n'est pas défini." ;
+            break;
 		case VAISSEAU        : entitee = new Vaisseau()       ; break;
 		case REACTEUR		 : entitee = new Reacteur()		  ; carte->setCoordEntiteeConstr(coord); break;
 		case MINEUR			 : entitee = new Mineur()		  ; carte->setCoordEntiteeConstr(coord); break;
@@ -279,12 +214,6 @@ void Case::setEntitee (uint8_t type, Carte* carte)
 	}
 }
 
-/**
- * Définit les coordonnées de la case
- * 
- * @param x La coordonnée x de la case.
- * @param y La coordonnée y de la case.
- */
 void Case::setCoord (double x, double y)
 {
 	coord = Coord(x, y);

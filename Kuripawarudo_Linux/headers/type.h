@@ -75,6 +75,7 @@ constexpr auto TERRE = 1;
 constexpr auto ROCHE = 2;
 enum RocheType
 {
+    NON_ROCHE,
     ROCHE1,
     ROCHE2,
     ROCHE3
@@ -84,6 +85,7 @@ constexpr auto MINERAI = 3;
 /* Une liste de tous les différents types d'entités. */
 enum TypeEntitee
 {
+    NON_ENTITEE,
     VAISSEAU,
     REACTEUR,
     MINEUR,

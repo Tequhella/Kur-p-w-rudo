@@ -69,6 +69,8 @@ Carte::Carte (int dimX, int dimY, const char* nomDeLaCarte) :
 		
 	}
 
+    BOOST_LOG_TRIVIAL(info) << "Carte créée.";
+
 }
 
 /**
@@ -133,11 +135,11 @@ void Carte::remplirHasard ()
 		{
 			this->elements[i].detruireElement (this->elements[i].getTypeElement());
 			this->elements[i].setTypeElement (BLOCK);
-			this->elements[i].setBlock (MINERAI, 0);
+			this->elements[i].setBlock (MINERAI, NON_ROCHE);
 		}
 		else if (roche < 21)
 		{
-			int rocheType = (dis(gen) % 100 + 1);
+			RocheType rocheType = (RocheType) (dis(gen) % 100 + 1);
 
 			if (rocheType <= 5) /*---------->*/ rocheType = ROCHE3;
 			else if (rocheType <= 30) /*---->*/ rocheType = ROCHE2;
@@ -151,11 +153,14 @@ void Carte::remplirHasard ()
 		{
 			this->elements[i].detruireElement (this->elements[i].getTypeElement());
 			this->elements[i].setTypeElement (BLOCK);
-			this->elements[i].setBlock (TERRE, 0);
+			this->elements[i].setBlock (TERRE, NON_ROCHE);
 		}
-		else if (this->elements[i].getTypeElement() == ENTITEE)
-
-		if (relief > 0 && i % LARGEUR == 0) /*--->*/ relief -= 25;
+		else if (this->elements[i].getTypeElement() == ENTITEE) // ne rien faire
+        BOOST_LOG_TRIVIAL(debug) << "Entitée, ne rien faire.";
+		if (relief > 0 && i % LARGEUR == 0)
+        {
+            relief -= 25;
+        }
 	}
 
     BOOST_LOG_TRIVIAL(debug) << "Carte remplie.";
@@ -207,8 +212,6 @@ void Carte::creerCaverne (int pos, int randMoins)
 		if (bas > 30	&& pos < LARGEUR * HAUTEUR)
 			if (this->elements[pos - LARGEUR].getTypeElement() == BLOCK) /*------>*/ creerCaverne (pos - LARGEUR, randMoins);
 	}
-	
-    BOOST_LOG_TRIVIAL(debug) << "Grotte créée.";
 }
 
 /**
@@ -279,6 +282,7 @@ void Carte::afficherCarte () const
 									case ROCHE:
 										switch (elements[k].getBlock()->getRocheType())
 										{
+                                            case NON_ROCHE: cout << " "; break;
 											case ROCHE1: cout << "▒"; break;
 											case ROCHE2: cout << "▓"; break;
 											case ROCHE3: cout << "█"; break;
@@ -290,6 +294,7 @@ void Carte::afficherCarte () const
 							case ENTITEE:
 								switch (elements[k].getEntitee()->getType())
 								{
+                                    case NON_ENTITEE: cout << " "; break;
 									case VAISSEAU: cout << "◈"; break;
 									case REACTEUR:
 										if (elements[k].getEntitee()->getConstr() <= 0) /*--->*/ cout << "◬";

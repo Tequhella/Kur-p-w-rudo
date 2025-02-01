@@ -22,7 +22,7 @@ Block::Block (){}
  * @param type Le type de bloc.
  * @param rocheType 1, 2 ou 3
  */
-Block::Block (uint8_t type, uint8_t rocheType)
+Block::Block (uint8_t type, RocheType rocheType)
 {
     switch (type)
     {
@@ -38,19 +38,21 @@ Block::Block (uint8_t type, uint8_t rocheType)
             this->rocheType = rocheType ;
             switch (rocheType)
             {
-                case 1: soliditee = 6  ; break ;
-                case 2: soliditee = 12 ; break ;
-                case 3: soliditee = 24 ; break ;
+                case NON_ROCHE:
+                    BOOST_LOG_TRIVIAL(error) << "Erreur : le type de roche n'est pas défini.";
+                    break ;
+                case ROCHE1: soliditee = 6  ; break ;
+                case ROCHE2: soliditee = 12 ; break ;
+                case ROCHE3: soliditee = 24 ; break ;
             }
             
             break ;
-        case 3:
+        case MINERAI:
             // Création bloc de minerai.
             this->type        = type ;
             minerai_quantitee = rand() % 500 + 1 ;
             break ;
     }
-
 }
 
 Block::~Block (){}
@@ -63,41 +65,21 @@ Block::~Block (){}
 // Getter //
 ////////////
 
-/**
- * Renvoie le type du bloc
- * 
- * @return Le type de bloc.
- */
 uint8_t Block::getType ()
 {
     return type ;
 }
 
-/**
- * Renvoie le type Roche du bloc
- * 
- * @return La valeur de la variable rocheType.
- */
-uint8_t Block::getRocheType ()
+RocheType Block::getRocheType ()
 {
     return rocheType ;
 }
 
-/**
- * La fonction retourne la valeur de la variable soliditee
- * 
- * @return La valeur de solidité.
- */
 double Block::getSoliditee ()
 {
     return soliditee ;
 }
 
-/**
- * La fonction retourne la valeur de la variable minerai_quantitee
- * 
- * @return La quantité minerale du bloc.
- */
 int Block::getMinerai_quantitee ()
 {
     return minerai_quantitee ;
@@ -107,52 +89,27 @@ int Block::getMinerai_quantitee ()
 // Getter //
 ////////////
 
-/**
- * @brief Méthode setType, définit l'indicateur du type de block.
- * 
- * @param type Le type de block.
- */
 void Block::setType (uint8_t type)
 {
 	this->type = type ;
 }
 
-/**
- * @brief Méthode setRocheType, définit l'indicateur du type de roche.
- * 
- * @param rocheType Le type de roche.
- */
-void Block::setRocheType (uint8_t rocheType)
+void Block::setRocheType (RocheType rocheType)
 {
 	this->rocheType = rocheType ;
 }
 
-/**
- * @brief Méthode setSoliditee, définit la soliditée restante avant de se casser.
- * 
- * @param soliditee La nouvelle valeur de solidité.
- */
 void Block::setSoliditee (double soliditee)
 {
 	this->soliditee = soliditee ;
 }
 
-/**
- * @brief Méthode decSoliditee, décrémente la soliditée restante avant de se casser.
- * 
- * @param soliditee La valeur de décrémentation.
- */
 void Block::decSoliditee (double soliditee)
 {
 	this->soliditee -= soliditee ;
 }
 
-/**
- * @brief Méthode setMinerai_quantitee, définit la quantité de minerai.
- * 
- * @param minerai_quantitee La nouvelle quantité de minerai.
- */
-void Block::setMinerai_quantitee (int minerai_quantitee)
+void Block::setMinerai_quantitee (int quantitee)
 {
-	this->minerai_quantitee = minerai_quantitee ;
+	this->minerai_quantitee = quantitee ;
 }
