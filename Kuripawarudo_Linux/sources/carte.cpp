@@ -221,6 +221,8 @@ void Carte::creerCaverne (int pos, int randMoins)
  */
 void Carte::creerEnnemie (int nbEnnemie)
 {
+    BOOST_LOG_TRIVIAL(debug) << "Création des ennemies.";
+
     std::random_device rd; 
     std::mt19937 gen(rd());
     std::uniform_int_distribution<> dis(0, 99); 
@@ -229,8 +231,10 @@ void Carte::creerEnnemie (int nbEnnemie)
 
 	for (int i = 0; i < nbEnnemie; i++)
 	{
-		while (elements[pos].getTypeElement() != VIDE || pos < 350) /*--->*/ pos = dis(gen) % (LARGEUR * HAUTEUR) + 1;
-
+		while (elements[pos].getTypeElement() != VIDE || pos < 350)
+        {
+            pos = dis(gen) % (LARGEUR * HAUTEUR) + 350;
+        }
 		elements[pos].setTypeElement(ENTITEE);
 		elements[pos].setEntitee(CREEPER_EMETTEUR, this);
 		elements[pos].getEntitee()->setId(i);

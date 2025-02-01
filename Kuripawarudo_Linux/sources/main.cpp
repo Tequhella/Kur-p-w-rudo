@@ -61,7 +61,7 @@ int main()
     }
 
 	/* Affiche la taille de toutes les classes. */
-    afficherTaille();
+    //afficherTaille();
     /* Créer 3 ennemies. */
 	mapHasard.creerEnnemie(3);
 
@@ -120,6 +120,8 @@ void afficherTaille()
 
 void bouclePrincipale(Carte* carte)
 {
+    BOOST_LOG_TRIVIAL(info) << "Boucle principale du jeu.";
+
 	Case* element = carte->getElement(LARGEUR / 2, 3);
 	/* Enregistre les coordonnées du Curseur du tableau de case */
 	Curseur* curseur = element->getCurseur();
