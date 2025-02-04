@@ -156,7 +156,7 @@ void Carte::remplirHasard ()
 			this->elements[i].setBlock (TERRE, NON_ROCHE);
 		}
 		else if (this->elements[i].getTypeElement() == ENTITEE) // ne rien faire
-        BOOST_LOG_TRIVIAL(debug) << "Entitée, ne rien faire.";
+            BOOST_LOG_TRIVIAL(debug) << "Entitée, ne rien faire.";
 		if (relief > 0 && i % LARGEUR == 0)
         {
             relief -= 25;
@@ -174,6 +174,12 @@ void Carte::remplirHasard ()
  */
 void Carte::creerCaverne (int pos, int randMoins)
 {
+    if (pos < 0 || pos > LARGEUR * HAUTEUR)
+    {
+        BOOST_LOG_TRIVIAL(error) << "Erreur : la position est en dehors de la carte.";
+        return;
+    }
+    
 	std::random_device rd; 
     std::mt19937 gen(rd());
     std::uniform_int_distribution<> dis(0, 99); 
@@ -199,18 +205,34 @@ void Carte::creerCaverne (int pos, int randMoins)
 
 		this->elements[pos].detruireElement (BLOCK);
 		this->elements[pos].setTypeElement (VIDE);
-		this->elements[pos].creerVide();
+		if (this->elements[pos].getVide())
+        {
+            BOOST_LOG_TRIVIAL(info) << "Vide déjà alloué.";
+        }
+        else
+        {
+            this->elements[pos].creerVide();
+        }
+        
 
 		randMoins += 5;
 
-		if (droite > 30 && pos < LARGEUR * HAUTEUR)
-			if(this->elements[pos + 1].getTypeElement() == BLOCK) /*--------->*/ creerCaverne (pos + 1, randMoins);
-		if (haut > 30 && pos >= 0)
-			if (this->elements[pos + LARGEUR].getTypeElement() == BLOCK) /*------>*/ creerCaverne (pos + LARGEUR, randMoins);
-		if (gauche > 30 && pos >= 0)
-			if (this->elements[pos - 1].getTypeElement() == BLOCK) /*--------->*/ creerCaverne (pos - 1, randMoins);
-		if (bas > 30	&& pos < LARGEUR * HAUTEUR)
-			if (this->elements[pos - LARGEUR].getTypeElement() == BLOCK) /*------>*/ creerCaverne (pos - LARGEUR, randMoins);
+		if (droite > 30 && (pos + 1) < LARGEUR * HAUTEUR && (pos % LARGEUR) != (LARGEUR - 1))
+        {
+            if (this->elements[pos + 1].getTypeElement() == BLOCK) creerCaverne(pos + 1, randMoins);
+        }
+        if (haut > 30 && (pos + LARGEUR) < LARGEUR * HAUTEUR)
+        {
+            if (this->elements[pos + LARGEUR].getTypeElement() == BLOCK) creerCaverne(pos + LARGEUR, randMoins);
+        }
+        if (gauche > 30 && (pos - 1) >= 0 && (pos % LARGEUR) != 0)
+        {
+            if (this->elements[pos - 1].getTypeElement() == BLOCK) creerCaverne(pos - 1, randMoins);
+        }
+        if (bas > 30 && (pos - LARGEUR) >= 0)
+        {
+            if (this->elements[pos - LARGEUR].getTypeElement() == BLOCK) creerCaverne(pos - LARGEUR, randMoins);
+        }
 	}
 }
 
@@ -225,7 +247,7 @@ void Carte::creerEnnemie (int nbEnnemie)
 
     std::random_device rd; 
     std::mt19937 gen(rd());
-    std::uniform_int_distribution<> dis(0, 99); 
+    std::uniform_int_distribution<> dis(0, LARGEUR * HAUTEUR); 
 
 	int pos = 0;
 
@@ -233,7 +255,7 @@ void Carte::creerEnnemie (int nbEnnemie)
 	{
 		while (elements[pos].getTypeElement() != VIDE || pos < 350)
         {
-            pos = dis(gen) % (LARGEUR * HAUTEUR) + 350;
+            pos = dis(gen);
         }
 		elements[pos].setTypeElement(ENTITEE);
 		elements[pos].setEntitee(CREEPER_EMETTEUR, this);

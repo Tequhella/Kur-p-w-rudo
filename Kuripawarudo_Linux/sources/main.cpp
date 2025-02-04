@@ -17,6 +17,8 @@
 #include "../headers/type.h"
 
 #include <thread>
+#include <filesystem>
+namespace fs = std::filesystem;
 
 /**
  * @brief Fonction afficherTaille, permet d'afficher la taille de toutes les classes.
@@ -68,15 +70,17 @@ int main()
 	/* Boucle principale du jeu. */
 	bouclePrincipale(&mapHasard);
 
-
 	return 0;
 }
 
 void init_logging()
 {
+    if (!fs::exists("logs"))
+        fs::create_directory("logs");
+
     // Log vers un fichier
     boost::log::add_file_log(
-        boost::log::keywords::file_name = "sample_%N.log",
+        boost::log::keywords::file_name = "logs/sample_%N.log",
         boost::log::keywords::rotation_size = 10 * 1024 * 1024,
         boost::log::keywords::time_based_rotation = boost::log::sinks::file::rotation_at_time_point(0, 0, 0),
         boost::log::keywords::format = "[%TimeStamp%]: %Message%"
@@ -142,7 +146,7 @@ void bouclePrincipale(Carte* carte)
 		}
 
 		cout << "Coordonnée curseur : " << coord->x << " " << coord->y << endl;
-		carte->afficherAdresse(coord->x, coord->y);
+		//carte->afficherAdresse(coord->x, coord->y);
 
 		/* Vérifie si l'élément est un bloc ou une entité. S'il s'agit d'un bloc, il définira l'élément de
 		type sur "BLOCK". S'il s'agit d'une entitée, il définira l'élément type sur "ENTITEE". Sinon, il

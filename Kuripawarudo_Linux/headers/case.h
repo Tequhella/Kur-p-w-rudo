@@ -21,9 +21,9 @@
 #include "entitee/creeperEmetteur.h"
 
 
-class Block ;
-class Vide ;
-class Entitee ;
+class Block;
+class Vide;
+class Entitee;
 class Curseur;
 class Carte;
 
@@ -40,13 +40,13 @@ class Case
 		 * @brief Constructeur de la classe Case.
 		 * 
 		 */
-		Case () ;
+		Case ();
 
 		/**
 		 * @brief Destructeur de la classe Case.
 		 * 
 		 */
-		~Case () ;
+		~Case ();
 
 	/*************************************************************************
 	*                                 Méthode                                *
@@ -62,13 +62,13 @@ class Case
          * 
 		 * @param type Le type de l'élément à détruire.
 		 */
-		void detruireElement (TypeElement type) ;
+		void detruireElement (TypeElement type);
 
 		/**
 		 * @brief creerVide, crée un objet vide.
 		 * 
 		 */
-		void creerVide() ;
+		void creerVide();
 
 		/**
 		 * @brief Définit le curseur de la case.
@@ -79,7 +79,16 @@ class Case
          * 
 		 * @param object L'objet curseur.
 		 */
-		void setCurseur(Base* object) ;
+		void setCurseur(Base* object);
+
+        /**
+         * @brief Surcharge de l'opérateur de flux de sortie.
+         *
+         * @param os Le flux de sortie. 
+         * @param c La case à afficher.
+         * @return std::ostream& Le flux de sortie.
+         */
+        friend std::ostream& operator<< (std::ostream& os, const Case& c);
 
 		////////////
 		// Getter //
@@ -90,42 +99,42 @@ class Case
 		 * 
 		 * @return TypeElement Le type de l'élément.
 		 */
-		TypeElement getTypeElement() ;
+		TypeElement getTypeElement();
 
 		/**
 		 * @brief getVide, récupère l'objet vide.
 		 * 
 		 * @return Vide* L'objet vide.
 		 */
-		Vide* getVide() ;
+		Vide* getVide();
 
 		/**
 		 * @brief getBlock, récupère l'objet block.
 		 * 
 		 * @return Block* L'objet block.
 		 */
-		Block* getBlock() ;
+		Block* getBlock();
 
 		/**
 		 * @brief getEntitee, récupère l'entitée.
 		 * 
 		 * @return Entitee* L'entitée.
 		 */
-		Entitee* getEntitee() ;
+		Entitee* getEntitee();
 
 		/**
 		 * @brief getCurseur, récupère le curseur.
 		 * 
 		 * @return Curseur* Le curseur.
 		 */
-		Curseur* getCurseur() ;
+		Curseur* getCurseur();
 
 		/**
 		 * @brief getCoord, récupère la coordonnée de la case.
 		 * 
 		 * @return Coord* La coordonnée de la case.
 		 */
-		Coord* getCoord() ;
+		Coord* getCoord();
 
 
 		////////////
@@ -133,10 +142,10 @@ class Case
 		////////////
 
 		// Setter setTypeElement, met à jour l'indicateur de type.
-		void setTypeElement (TypeElement type) ;
+		void setTypeElement (TypeElement type);
 
 		// Setter setBlock, met à jour un block.
-		void setBlock (uint8_t type, RocheType typeStone) ;
+		void setBlock (uint8_t type, RocheType typeStone);
 
 		/**
 		 * Il définit le type d'entité de la case.
@@ -144,21 +153,21 @@ class Case
 		 * @param type Le type de l'entité.
 		 * @param coordEntiteeConstr Le tableau de coordonnées d'entitée à construire.
 		 */
-		void setEntitee (TypeEntitee type, Carte* carte) ;
+		void setEntitee (TypeEntitee type, Carte* carte);
 
 		// Setter setCoord, met à jour les coordonnées.
-		void setCoord (double x, double y) ;
+		void setCoord (double x, double y);
 
 	private:
 
-		TypeElement type ;
-		Vide*       vide ;
-		Block*      block ;
+		TypeElement type;
+		Vide*       vide;
+		Block*      block;
 		Curseur*	curseur;
-		Coord       coord ;
+		Coord       coord;
 
-		TypeEntitee* entiteeType ;
-		Entitee*     entitee ;
-} ;
+		TypeEntitee* entiteeType;
+		Entitee*     entitee;
+};
 
 #endif

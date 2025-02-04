@@ -13,6 +13,7 @@
 #include "../headers/vide.h"
 #include "../headers/block.h"
 #include "../headers/curseur.h"
+#include "case.h"
 
 Case::Case () : vide(nullptr), block(nullptr), curseur(nullptr), entitee(nullptr) {}
 
@@ -61,7 +62,8 @@ void Case::detruireElement (TypeElement type)
 			}
 			if (entitee)
 			{
-				delete entitee;
+                BOOST_LOG_TRIVIAL(info) << "Entitée " << entitee->getType() << " détruite.";
+                delete entitee;
 				entitee = nullptr;
 			}
 			else /*--->*/ BOOST_LOG_TRIVIAL(error) << "Erreur : l'entité n'existe pas.";
@@ -94,6 +96,16 @@ void Case::detruireElement (TypeElement type)
 			else /*--->*/ BOOST_LOG_TRIVIAL(error) << "Erreur : le curseur n'a pas d'élément vide associé.";
 			break;
 	}
+}
+
+std::ostream &operator<<(std::ostream &os, const Case &c)
+{
+    if (c.vide) /*--->*/ os << "VIDE";
+    else if (c.block) /*--->*/ os << "BLOCK";
+    else if (c.entitee) /*--->*/ os << "ENTITEE";
+    else if (c.curseur) /*--->*/ os << "CURSEUR";
+    else /*--->*/ os << "UNKNOWN";
+    return os;
 }
 
 ////////////
@@ -141,13 +153,15 @@ void Case::setTypeElement (TypeElement type)
 
 void Case::creerVide()
 {
-	vide = new Vide();
 	if (!vide)
-	{
-		BOOST_LOG_TRIVIAL(error) << "Erreur allocation de l'objet vide.";
-		exit (-1);
-	}
-	
+    {
+        vide = new Vide();
+        if (!vide)
+        {
+            BOOST_LOG_TRIVIAL(error) << "Erreur allocation de l'objet vide.";
+            exit (-1);
+        }
+    }
 }
 
 void Case::setCurseur(Base* object)
@@ -212,9 +226,11 @@ void Case::setEntitee (TypeEntitee type, Carte* carte)
 		BOOST_LOG_TRIVIAL(error) << "Erreur allocation de l'objet entitee.";
 		exit (-1);
 	}
+
+    BOOST_LOG_TRIVIAL(info) << "Entitée " << type << " créée.";
 }
 
 void Case::setCoord (double x, double y)
 {
 	coord = Coord(x, y);
-} 
+}

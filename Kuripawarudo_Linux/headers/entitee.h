@@ -39,7 +39,7 @@ class Entitee
         /**
          * @brief Destructeur de la classe Entitee.
          */
-        ~Entitee() ;
+        virtual ~Entitee() ;
 
     /*************************************************************************
     *                                 Méthode                                *

@@ -70,6 +70,8 @@ enum TypeElement
     CURSEUR
 };
 
+std::ostream& operator<<(std::ostream& os, TypeElement type);
+
 /* Définir une valeur constante pour chaque type de terrain. */
 constexpr auto TERRE = 1;
 constexpr auto ROCHE = 2;
@@ -94,6 +96,8 @@ enum TypeEntitee
     BOMBE,
     CREEPER_EMETTEUR
 };
+
+std::ostream& operator<<(std::ostream& os, TypeEntitee type);
 
 
 #endif
