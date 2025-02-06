@@ -15,10 +15,9 @@
 #include "../headers/block.h"
 #include "../headers/entitee.h"
 #include "../headers/type.h"
+#include "../headers/log.h"
 
 #include <thread>
-#include <filesystem>
-namespace fs = std::filesystem;
 
 /**
  * @brief Fonction afficherTaille, permet d'afficher la taille de toutes les classes.
@@ -31,16 +30,6 @@ void afficherTaille();
  * @param carte, la carte du jeu.
  */
 void bouclePrincipale(Carte* carte);
-
-/**
- * @brief Fonction init_logging, permet d'initialiser le logging.
- */
-void init_logging();
-
-/**
- * @brief Fonction log_messages, permet de logger des messages.
- */
-void log_messages();
 
 
 int main()
@@ -71,39 +60,6 @@ int main()
 	bouclePrincipale(&mapHasard);
 
 	return 0;
-}
-
-void init_logging()
-{
-    if (!fs::exists("logs"))
-        fs::create_directory("logs");
-
-    // Log vers un fichier
-    boost::log::add_file_log(
-        boost::log::keywords::file_name = "logs/sample_%N.log",
-        boost::log::keywords::rotation_size = 10 * 1024 * 1024,
-        boost::log::keywords::time_based_rotation = boost::log::sinks::file::rotation_at_time_point(0, 0, 0),
-        boost::log::keywords::format = "[%TimeStamp%]: %Message%"
-    );
-
-    // Log vers la console
-    boost::log::add_console_log(
-        std::cout,
-        boost::log::keywords::format = "[%TimeStamp%]: %Message%"
-    );
-
-    // Ajouter des attributs communs comme le timestamp
-    boost::log::add_common_attributes();
-}
-
-void log_messages()
-{
-    BOOST_LOG_TRIVIAL(trace) << "This is a trace severity message";
-    BOOST_LOG_TRIVIAL(debug) << "This is a debug severity message";
-    BOOST_LOG_TRIVIAL(info) << "This is an informational severity message";
-    BOOST_LOG_TRIVIAL(warning) << "This is a warning severity message";
-    BOOST_LOG_TRIVIAL(error) << "This is an error severity message";
-    BOOST_LOG_TRIVIAL(fatal) << "This is a fatal severity message";
 }
 
 void afficherTaille()

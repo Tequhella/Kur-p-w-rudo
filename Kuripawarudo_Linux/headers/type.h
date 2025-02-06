@@ -18,8 +18,7 @@
 #include <memory>
 #include <vector>
 
-#include <boost/log/trivial.hpp>
-#include <boost/log/utility/setup.hpp>
+#include "log.h"
 
 /* Il définit deux constantes, LARGEUR et HAUTEUR, et leur affecte respectivement les valeurs 30 et 45. */
 constexpr auto LARGEUR = 30;
