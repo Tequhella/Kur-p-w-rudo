@@ -129,7 +129,7 @@ void bouclePrincipale(Carte* carte)
 	Case* element = carte->getElement(LARGEUR / 2, 3);
 	/* Enregistre les coordonnées du Curseur du tableau de case */
 	Curseur* curseur = element->getCurseur();
-	Coord* coord = curseur->getCoord();
+	Coord& coord = curseur->getCoord();
 
 	char c = 0;
 	uint8_t	verif = 1;
@@ -140,28 +140,23 @@ void bouclePrincipale(Carte* carte)
 		/* Affichage de la carte. */
 		carte->afficherCarte();
 
-		if (verif == 0)
-		{
-			curseur = carte->getElement(coord->x, coord->y)->getCurseur();
-		}
-
-		cout << "Coordonnée curseur : " << coord->x << " " << coord->y << endl;
-		//carte->afficherAdresse(coord->x, coord->y);
+		cout << "Coordonnée curseur : " << coord.x << " " << coord.y << endl;
+		//carte->afficherAdresse(coord.x, coord.y);
 
 		/* Vérifie si l'élément est un bloc ou une entité. S'il s'agit d'un bloc, il définira l'élément de
 		type sur "BLOCK". S'il s'agit d'une entitée, il définira l'élément type sur "ENTITEE". Sinon, il
 		définira l'élément type sur "VIDE". */
-		if (carte->getElement(coord->x, coord->y)->getBlock())
+		if (carte->getElement(coord.x, coord.y)->getBlock())
 		{
-			carte->getElement(coord->x, coord->y)->setTypeElement(BLOCK);
+			carte->getElement(coord.x, coord.y)->setTypeElement(BLOCK);
 		}
-		else if (carte->getElement(coord->x, coord->y)->getEntitee())
+		else if (carte->getElement(coord.x, coord.y)->getEntitee())
 		{
-			carte->getElement(coord->x, coord->y)->setTypeElement(ENTITEE);
+			carte->getElement(coord.x, coord.y)->setTypeElement(ENTITEE);
 		}
 		else
 		{
-			carte->getElement(coord->x, coord->y)->setTypeElement(VIDE);
+			carte->getElement(coord.x, coord.y)->setTypeElement(VIDE);
 		}
 
 		/* Déplacement du curseur */
@@ -170,10 +165,8 @@ void bouclePrincipale(Carte* carte)
 		if (verif == 1)
 		{
 			/* Transposition de l'objet curseur dans la prochaine case */
-			element->setCurseur(nullptr);
-			carte->getElement(coord->x, coord->y)->setCurseur(curseur);
-			carte->getElement(coord->x, coord->y)->setTypeElement(CURSEUR);
-			element = carte->getElement(coord->x, coord->y);
+			carte->getElement(coord.x, coord.y)->setTypeElement(CURSEUR);
+			element = carte->getElement(coord.x, coord.y);
 		}
 		else
 		{

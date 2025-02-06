@@ -13,6 +13,7 @@
 #include "../headers/case.h"
 #include "../headers/block.h"
 #include "../headers/entitee.h"
+#include "../headers/curseur.h"
 #include <random>
 
 /*************************************************************************
@@ -46,11 +47,13 @@ Carte::Carte (int dimX, int dimY, const char* nomDeLaCarte) :
 		
 		if (elements)
 		{
+            std::shared_ptr<Curseur> curseur = make_shared<Curseur>(Coord {LARGEUR / 2, 3});
 			for (int i = 0; i < dimX * dimY; i++)
 			{
 				elements[i].setTypeElement(VIDE);
 				elements[i].creerVide();
 				elements[i].setCoord(i % dimX, i / dimX);
+                elements[i].setCurseur(curseur);
 			}
 			this->dimX = dimX;
 			this->dimY = dimY;
@@ -59,7 +62,6 @@ Carte::Carte (int dimX, int dimY, const char* nomDeLaCarte) :
 			elements[LARGEUR * 2 + LARGEUR / 2].setEntitee(VAISSEAU, this);
 
 			elements[LARGEUR * 3 + LARGEUR / 2].setTypeElement(CURSEUR);
-			elements[LARGEUR * 3 + LARGEUR / 2].setCurseur(elements[LARGEUR * 3 + LARGEUR / 2].getCoord());
 		}
 		else
 		{
@@ -564,6 +566,16 @@ void Carte::setCoordBlockCasse(Coord coord)
 {
 	if (coordBlockCasse)
 	{
+        // check if coord is already in the vector
+        for (uint8_t i = 0; i < nbBlockCasse; i++)
+        {
+            if (coordBlockCasse->at(i).x == coord.x && coordBlockCasse->at(i).y == coord.y)
+            {
+                BOOST_LOG_TRIVIAL(info) << "Coordonnée déjà présente dans le tableau de coordonnée de block à casser.";
+                return;
+            }
+        }
+        
 		coordBlockCasse->resize(nbBlockCasse + 1);
 		coordBlockCasse->at(nbBlockCasse) = coord;
 		nbBlockCasse++;

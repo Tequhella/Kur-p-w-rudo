@@ -29,11 +29,6 @@ void Case::detruireElement (TypeElement type)
 	switch (type)
 	{
 		case VIDE:
-			if (curseur)
-			{
-				delete curseur;
-				curseur = nullptr;
-			}
 			if (vide)
 			{
 				delete vide;
@@ -42,11 +37,6 @@ void Case::detruireElement (TypeElement type)
 			else /*--------->*/ BOOST_LOG_TRIVIAL(error) << "Erreur : l'élément vide n'existe pas.";
 			break;
 		case BLOCK:
-			if (curseur)
-			{
-				delete curseur;
-				curseur = nullptr;
-			}
 			if (block)
 			{
 				delete block;
@@ -55,11 +45,6 @@ void Case::detruireElement (TypeElement type)
 			else /*--------->*/ BOOST_LOG_TRIVIAL(error) << "Erreur : l'élément block n'existe pas.";
 			break;
 		case ENTITEE:
-			if (curseur)
-			{
-				delete curseur;
-				curseur = nullptr;
-			}
 			if (entitee)
 			{
                 BOOST_LOG_TRIVIAL(info) << "Entitée " << entitee->getType() << " détruite.";
@@ -81,19 +66,26 @@ void Case::detruireElement (TypeElement type)
 				delete entitee;
 				entitee = nullptr;
 			}
+
 			if (curseur)
 			{
-				delete curseur;
+				delete curseur.get();
 				curseur = nullptr;
 			}
 			else /*--->*/ BOOST_LOG_TRIVIAL(error) << "Erreur : le curseur n'existe pas.";
 
-			if (vide)
-			{
-				delete vide;
-				vide = nullptr;
-			}
-			else /*--->*/ BOOST_LOG_TRIVIAL(error) << "Erreur : le curseur n'a pas d'élément vide associé.";
+            if (vide)
+            {
+                delete vide;
+                vide = nullptr;
+            }
+
+			if (block)
+            {
+                delete block;
+                block = nullptr;
+            }
+
 			break;
 	}
 }
@@ -134,7 +126,7 @@ Entitee* Case::getEntitee()
 
 Curseur* Case::getCurseur()
 {
-	return curseur;
+	return curseur.get();
 }
 
 Coord* Case::getCoord()
@@ -164,33 +156,14 @@ void Case::creerVide()
     }
 }
 
-void Case::setCurseur(Base* object)
+void Case::setCurseur(std::shared_ptr<Curseur> curseur)
 {
-	if (instanceof<Coord>(object))
-	{
-		Coord* coord = (Coord*) object;
-		curseur = new Curseur(*coord);
-		if (!curseur)
-		{
-			BOOST_LOG_TRIVIAL(error) << "Erreur allocation de l'objet curseur.";
-			exit (-1);
-		}
-	}
-	else if (instanceof<Curseur>(object))
-	{
-		curseur = (Curseur*) object;
-		if (!curseur)
-		{
-			BOOST_LOG_TRIVIAL(error) << "Erreur allocation de l'objet curseur.";
-			exit(-1);
-		}
-	}
-	else if (object == nullptr) /*--->*/ curseur = nullptr;
-	else
-	{
-		BOOST_LOG_TRIVIAL(error) << "Erreur : l'objet n'est pas une coordonnée ou un objet Curseur.";
-		exit (-1);
-	}
+    if (!curseur)
+    {
+        BOOST_LOG_TRIVIAL(error) << "Erreur : le curseur n'existe pas.";
+        exit (-1);
+    }
+    this->curseur = curseur;
 }
 
 void Case::setBlock (uint8_t type, RocheType typeStone)

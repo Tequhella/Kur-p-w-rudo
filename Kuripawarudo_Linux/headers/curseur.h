@@ -26,45 +26,66 @@ class Curseur : public Base
 	*                       Constructeur & Destructeur                       *
 	*************************************************************************/
 
-		/* Constructeur */
+		/**
+		 * @brief Constructeur de la classe Curseur.
+		 * 
+		 */
 		Curseur();
 		
-		/*
-		* Constructeur de la classe Curseur.
-		*/
+		/**
+		 * @brief Constructeur de la classe Curseur.
+		 * 
+		 * @param coord Les coordonnées du curseur.
+		 */
 		Curseur(Coord coord);
 
-		/*
-		* Destructeur de la classe Curseur.
-		*/
+		/**
+		 * @brief Destructeur de la classe Curseur.
+		 * 
+		 */
 		~Curseur();
 
 	/*************************************************************************
 	*                                 Méthode                                *
 	*************************************************************************/
 
-		/*
-		* Méthode deplacement, déplace le curseur.
-		*/
-		uint8_t deplacement(char* touche);
+		/**
+		 * @brief deplacement, déplace le curseur.
+		 * 
+		 * @param touche La touche appuyée.
+		 * @return bool true si le curseur a été déplacé, false sinon.
+		 */
+		bool deplacement(char* touche);
 
-		/*
-		* Méthode action, fait une action de construction.
-		*/
-		uint8_t action(char* touche, Carte* carte);
+		/**
+		 * @brief action, effectue une action.
+		 * 
+		 * @param touche La touche appuyée.
+		 * @param carte La carte où se trouve le curseur.
+		 * @return true si l'action a été effectuée, false sinon.
+         */
+        bool action(char* touche, Carte* carte);
 
 		////////////
 		// Getter //
 		////////////
 
-		// Getter getCoord, récupère les coordonnées du curseur.
-		Coord* getCoord();
+		/**
+		 * @brief getCoord, récupère les coordonnées du curseur.
+		 * 
+		 * @return Coord* Les coordonnées du curseur.
+		 */
+		Coord& getCoord();
 
 		////////////
 		// Setter //
 		////////////
 
-		// Setter setCoord, met à jour les coordonnées du curseur.
+		/**
+		 * @brief setCoord, modifie les coordonnées du curseur.
+		 * 
+		 * @param coord Les nouvelles coordonnées du curseur.
+		 */
 		void setCoord(Coord coord);
 
 	private:

@@ -12,65 +12,35 @@
 
 Curseur::Curseur(){}
 
-/**
- * @brief Le constructeur de la classe Curseur crée un nouvel objet Curseur et initialise sa variable membre coord à la valeur de l'objet Coord {LARGEUR / 2, 3}.
- */
 Curseur::Curseur(Coord coord) : coord(coord) {}
 
 Curseur::~Curseur(){}
 
-/**
- * @brief Renvoie les coordonnées du curseur
- * 
- * @return Les coordonnées du curseur.
- */
-Coord* Curseur::getCoord()
+Coord& Curseur::getCoord()
 {
-	return &coord;
+	return coord;
 }
 
-/**
- * @brief Définit la coordonnée du curseur sur la coordonnée donnée.
- * 
- * @param coord La coordonnée du curseur.
- */
 void Curseur::setCoord(Coord coord)
 {
 	this->coord = coord;
 }
 
-/**
- * @brief Déplace le curseur en fonction de la touche appuyée et la limite de carte.
- * 
- * @param touche La touche appuyée.
- * 
- * @return Renvoie 1 si le curseur a été déplacé, 0 sinon.
- */
-uint8_t Curseur::deplacement(char* touche)
+bool Curseur::deplacement(char* touche)
 {
-	uint8_t ret;
 	switch(*touche)
 	{
-		case 'w': if (coord.y > 0) /*------------->*/ coord.y--; ret = 1; break;
-		case 's': if (coord.y < HAUTEUR - 1) /*--->*/ coord.y++; ret = 1; break;
-		case 'a': if (coord.x > 0) /*------------->*/ coord.x--; ret = 1; break;
-		case 'd': if (coord.x < LARGEUR - 1) /*--->*/ coord.x++; ret = 1; break;
-		default: ret = 0; break;
+		case 'w': if (coord.y > 0) /*------------->*/ coord.y--; break;
+		case 's': if (coord.y < HAUTEUR - 1) /*--->*/ coord.y++; break;
+		case 'a': if (coord.x > 0) /*------------->*/ coord.x--; break;
+		case 'd': if (coord.x < LARGEUR - 1) /*--->*/ coord.x++; break;
+		default: return false; break;
 	}
-	return ret;
+	return true;
 }
 
-/**
- * @brief Place une structure en fonction de la touche appuyée.
- * 
- * @param touche La touche appuyée.
- * @param element La case d'élément où l'action se fait.
- * 
- * @return Renvoie 1 si l'action a été effectuée, 0 sinon.
- */
-uint8_t Curseur::action(char* touche, Carte* carte)
+bool Curseur::action(char* touche, Carte* carte)
 {
-	uint8_t ret;
 	
 	// Les variables contenant la case d'élément où l'action se fait et celles autours
 	Case* element = carte->getElement(coord.x, coord.y);
@@ -82,14 +52,14 @@ uint8_t Curseur::action(char* touche, Carte* carte)
 	
 	switch(*touche)
 	{
-		case 'c': ret = 1; break;
+		case 'c': return true; break;
 		case 'f': 
 			if (element->getTypeElement() == BLOCK)
 			{
 				carte->setCoordBlockCasse(this->coord);
 			}
 			else /*--->*/ cout << "Vous ne pouvez pas casser de bloc !" << endl;
-			ret = 1;
+			return true;
 			break;
 		case '1':
 			if (!(element->getEntitee()))
@@ -102,7 +72,7 @@ uint8_t Curseur::action(char* touche, Carte* carte)
 				else /*--->*/ cout << "Impossible de placer un réacteur ici." << endl;
 			}
 			else /*------->*/ cout << "Il y a déjà une entitée ici !" << endl;
-			ret = 1;
+			return true;
 			break;
 		case '2':
 			if (!(element->getEntitee()))
@@ -127,7 +97,7 @@ uint8_t Curseur::action(char* touche, Carte* carte)
 				else /*--->*/ cout << "Impossible de placer un bouclier ici." << endl;
 			}
 			else /*------->*/ cout << "Il y a déjà une entitée ici !" << endl;
-			ret = 1;
+			return true;
 			break;
 		case '4':
 			if (!(element->getEntitee()))
@@ -144,7 +114,7 @@ uint8_t Curseur::action(char* touche, Carte* carte)
 				else /*--->*/ cout << "Impossible de placer un phare ici." << endl;
 			}
 			else /*------->*/ cout << "Il y a déjà une entitée ici !" << endl;
-			ret = 1;
+			return true;
 			break;
 		case '5':
 			if (!(element->getEntitee()))
@@ -157,10 +127,10 @@ uint8_t Curseur::action(char* touche, Carte* carte)
 				else /*--->*/ cout << "Impossible de placer une bombe ici." << endl;
 			}
 			else /*------->*/ cout << "Il y a déjà une entitée ici !" << endl;
-			ret = 1;
+			return true;
 			break;
-		default: ret = 0; break;
+		default: return false; break;
 	}
 	
-	return ret;
+	return true;
 }

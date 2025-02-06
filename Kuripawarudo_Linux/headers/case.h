@@ -20,6 +20,8 @@
 #include "entitee/bombe.h"
 #include "entitee/creeperEmetteur.h"
 
+#include <memory>
+
 
 class Block;
 class Vide;
@@ -73,13 +75,9 @@ class Case
 		/**
 		 * @brief Définit le curseur de la case.
 		 * 
-         * Si l'objet est un Coord, alors il crée un nouvel objet Curseur et le stock dans le champ curseur. Si
-         * l'objet est un Curseur, alors il le stock dans le champ curseur. Si l'objet est nullptr, définissez
-         * le champ du curseur sur nullptr. Sinon, imprimez un message d'erreur et quittez le programme
-         * 
-		 * @param object L'objet curseur.
+         * @param curseur Le curseur à définir.
 		 */
-		void setCurseur(Base* object);
+		void setCurseur(std::shared_ptr<Curseur> curseur);
 
         /**
          * @brief Surcharge de l'opérateur de flux de sortie.
@@ -160,14 +158,14 @@ class Case
 
 	private:
 
-		TypeElement type;
-		Vide*       vide;
-		Block*      block;
-		Curseur*	curseur;
-		Coord       coord;
+		TypeElement                 type;
+		Vide*                       vide;
+		Block*                      block;
+		std::shared_ptr<Curseur>	curseur;
+		Coord                       coord;
 
-		TypeEntitee* entiteeType;
-		Entitee*     entitee;
+		TypeEntitee*                entiteeType;
+		Entitee*                    entitee;
 };
 
 #endif
