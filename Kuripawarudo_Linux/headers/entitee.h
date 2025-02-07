@@ -28,18 +28,17 @@ class Entitee
          * @param type Le type de l'entitée. Ceci est utilisé pour identifier l'entitée.
          * @param coord Les coordonnées de l'entitée.
          */
-        Entitee(TypeEntitee type, Coord* coord) ;
-
+        Entitee(TypeEntitee type, const Coord& coord);
 
         /**
          * @brief Constructeur par défaut de la classe Entitee.
          */
-        Entitee() ;
+        Entitee();
 
         /**
          * @brief Destructeur de la classe Entitee.
          */
-        virtual ~Entitee() ;
+        virtual ~Entitee();
 
     /*************************************************************************
     *                                 Méthode                                *
@@ -54,56 +53,53 @@ class Entitee
          * 
          * @return TypeEntitee Le type de l'entitée.
          */
-        TypeEntitee getType() ;
+        TypeEntitee getType() const;
 
         /**
-         * @brief Méthode getId, récupère l'id de l'entitée.
+         * @brief Méthode getConstr, récupère le nombre de points de construction de l'entitée.
          * 
-         * @return double L'id de l'entitée.
+         * @return double Le nombre de points de construction de l'entitée.
          */
-        double getConstr() ;
-
+        double getConstr() const;
 
         ////////////
         // Setter //
         ////////////
 
-		/**
-		 * @brief Méthode setType, modifie le type de l'entitée.
-		 */
-        void setType(TypeEntitee type) ;
+        /**
+         * @brief Méthode setType, modifie le type de l'entitée.
+         */
+        void setType(TypeEntitee type);
 
         /**
          * @brief Méthode setId, modifie l'id de l'entitée.
-		 */
+         */
         void setId(unsigned int id);
-		
+        
         /**
          * @brief Méthode setConstr, modifie le nombre de points de construction de l'entitée.
          * 
          * @param constr Le nombre de points de construction de l'entité.
-		 */
+         */
         void setConstr(double constr);
 
-		/**
-		 * @brief Méthode decConstr, décrémente les points de construction de l'entitée.
-		 * 
-		 * @param dec Nombre de points de construction à décrémenter.
-		 */
-		void decConstr(double dec);
-		
+        /**
+         * @brief Méthode decConstr, décrémente les points de construction de l'entitée.
+         * 
+         * @param dec Nombre de points de construction à décrémenter.
+         */
+        void decConstr(double dec);
 
     private:
 
-        TypeEntitee      type ;
-        Coord            coord ;
+        TypeEntitee type;
+        Coord coord;
 
     protected:
 
         unsigned int id;
-        double       constr; // Point de construction.
-        uint8_t      vie;
-
+        double constr; // Point de construction.
+        uint8_t vie;
 };
 
 #endif

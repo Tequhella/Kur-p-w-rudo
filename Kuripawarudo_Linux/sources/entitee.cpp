@@ -14,12 +14,13 @@
 *                       Constructeur & Destructeur                       *
 *************************************************************************/
 
+Entitee::Entitee(TypeEntitee type, const Coord& coord) 
+    : type(type), coord(coord), id(0), constr(0.0), vie(0) {}
 
-Entitee::Entitee(TypeEntitee type, Coord* coord) : type(type), coord(*coord), constr(0), vie(0) {}
+Entitee::Entitee() 
+    : type(TypeEntitee::NON_ENTITEE), coord(), id(0), constr(0.0), vie(0) {}
 
-Entitee::Entitee() : type(NON_ENTITEE), coord(0, 0), constr(0), vie(0) {}
-
-Entitee::~Entitee(){}
+Entitee::~Entitee() {}
 
 /*************************************************************************
 *                                 Méthode                                *
@@ -29,16 +30,15 @@ Entitee::~Entitee(){}
 // Getter //
 ////////////
 
-TypeEntitee Entitee::getType()
+TypeEntitee Entitee::getType() const
 {
     return type;
 }
 
-double Entitee::getConstr()
+double Entitee::getConstr() const
 {
     return constr;
 }
-
 
 ////////////
 // Setter //
@@ -56,10 +56,10 @@ void Entitee::setId(unsigned int id)
 
 void Entitee::setConstr(double constr)
 {
-	this->constr = constr;
+    this->constr = constr;
 }
 
 void Entitee::decConstr(double dec)
 {
-	this->constr -= dec;
+    this->constr -= dec;
 }
