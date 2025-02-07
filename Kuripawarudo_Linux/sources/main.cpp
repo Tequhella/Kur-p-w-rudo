@@ -86,6 +86,8 @@ void bouclePrincipale(Carte* carte)
 	/* Enregistre les coordonnées du Curseur du tableau de case */
 	Curseur* curseur = element->getCurseur();
 	Coord& coord = curseur->getCoord();
+    // récupération vaisseau
+    Vaisseau& vaisseau = *(Vaisseau*) carte->getElement(LARGEUR / 2, 2)->getEntitee();
 
 	char c = 0;
 	uint8_t	verif = 1;
@@ -93,6 +95,9 @@ void bouclePrincipale(Carte* carte)
 	/* Boucle en condition la touche C est pressée, réaffiche la carte et demande l'action déplacement au joueur*/
 	while (c != 'c')
 	{
+        double energieEff = vaisseau.getEnergieEfficacitee();
+        double mineraiEff = vaisseau.getMineraiEfficacitee();
+
 		/* Affichage de la carte. */
 		carte->afficherCarte();
 
@@ -128,6 +133,9 @@ void bouclePrincipale(Carte* carte)
 		{
 			if (curseur->action(&c, carte) == 0) /*--->*/ cout << "Touche invalide !" << endl;
 		}
+        
+        vaisseau.incNRJ(energieEff);
+        vaisseau.incMinerai(mineraiEff);
 
 		carte->gestionConstruction();
 		carte->gestionCasseBlock();

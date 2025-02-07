@@ -272,6 +272,8 @@ void Carte::afficherCarte () const
 {
 	cout << "Nom de la carte : " << nomDeLaCarte << endl;
 
+    cout << *(Vaisseau*) elements[LARGEUR * 2 + LARGEUR / 2].getEntitee() << endl;
+
 	unsigned int k = 0;
 
 	for (unsigned int i = 0; i < HAUTEUR + 2; i++)
