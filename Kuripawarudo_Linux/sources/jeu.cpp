@@ -95,6 +95,7 @@ void Jeu::bouclePrincipale()
         std::cin >> c;
         deplacerCurseur(c);
 
+        gestionRessources();
         gestionConstruction();
         gestionCasseBlock();
     }
@@ -143,8 +144,10 @@ void Jeu::gestionConstruction()
             case CREEPER_EMETTEUR:
                 break;
             default:
-                if (entitee->getConstr() > 0) /*--->*/
+                if (entitee->getConstr() > 0)
+                {
                     entitee->decConstr(1);
+                }
                 else
                 {
                     /*
@@ -161,6 +164,15 @@ void Jeu::gestionConstruction()
                     {
                         delete coordEntiteeConstr;
                         coordEntiteeConstr = nullptr;
+                    }
+
+                    if (entitee->getType() == REACTEUR)
+                    {
+                        vaisseau.setEnergieEfficacitee(vaisseau.getEnergieEfficacitee() + 0.4);
+                    }
+                    else if (entitee->getType() == MINEUR)
+                    {
+                        vaisseau.setMineraiEfficacitee(vaisseau.getMineraiEfficacitee() + 0.5);
                     }
                 }
                 break;

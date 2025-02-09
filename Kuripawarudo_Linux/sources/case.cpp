@@ -47,9 +47,17 @@ void Case::detruireElement (TypeElement type)
 		case ENTITEE:
 			if (entitee)
 			{
-                BOOST_LOG_TRIVIAL(info) << "Entitée " << entitee->getType() << " détruite.";
-                delete entitee;
-				entitee = nullptr;
+                try
+                {
+                    TypeEntitee type = entitee->getType();
+                    delete entitee;
+                    entitee = nullptr;
+                    BOOST_LOG_TRIVIAL(info) << "Entitée " << type << " détruite.";
+                }
+                catch (const std::exception& e)
+                {
+                    BOOST_LOG_TRIVIAL(error) << "Erreur : " << e.what();
+                }
 			}
 			else /*--->*/ BOOST_LOG_TRIVIAL(error) << "Erreur : l'entité n'existe pas.";
 

@@ -221,9 +221,17 @@ void Carte::creerEnnemie (int nbEnnemie)
         {
             pos = dis(gen);
         }
-		elements[pos].setTypeElement(ENTITEE);
-		elements[pos].setEntitee(CREEPER_EMETTEUR, setCoordEntiteeCallback);
-		elements[pos].getEntitee()->setId(i);
+        
+		if (pos >= 0 && pos < LARGEUR * HAUTEUR)
+        {
+            elements[pos].setTypeElement(ENTITEE);
+            elements[pos].setEntitee(CREEPER_EMETTEUR, setCoordEntiteeCallback);
+            elements[pos].getEntitee()->setId(i);
+        }
+        else
+        {
+            BOOST_LOG_TRIVIAL(error) << "Erreur : la position " << pos << " est en dehors de la carte.";
+        }
 	}
 }
 
