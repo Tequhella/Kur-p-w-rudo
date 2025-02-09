@@ -20,18 +20,7 @@
 *                       Constructeur & Destructeur                       *
 *************************************************************************/
 
-/**
- * Créer un nouvel objet Carte
- * 
- * @param dimX La largeur de la carte.
- * @param dimY La hauteur de la carte.
- * @param nomDeLaCarte Le nom de la carte.
- */
 Carte::Carte (int dimX, int dimY, const char* nomDeLaCarte) :
-	coordEntiteeConstr(nullptr),
-	coordBlockCasse(nullptr),
-	nbEntiteeConstr(0),
-	nbBlockCasse(0),
 	nomDeLaCarte(nomDeLaCarte)
 {
 	if (dimX == 0 || dimY == 0)
@@ -59,7 +48,7 @@ Carte::Carte (int dimX, int dimY, const char* nomDeLaCarte) :
 			this->dimY = dimY;
 			
 			elements[LARGEUR * 2 + LARGEUR / 2].setTypeElement(ENTITEE);
-			elements[LARGEUR * 2 + LARGEUR / 2].setEntitee(VAISSEAU, this);
+			elements[LARGEUR * 2 + LARGEUR / 2].setEntitee(VAISSEAU, setCoordEntiteeCallback);
 
 			elements[LARGEUR * 3 + LARGEUR / 2].setTypeElement(CURSEUR);
 		}
@@ -75,9 +64,6 @@ Carte::Carte (int dimX, int dimY, const char* nomDeLaCarte) :
 
 }
 
-/**
- * Le destructeur de la classe Carte est responsable de la suppression du tableau d'éléments
- */
 Carte::~Carte ()
 {
 	if (elements)
@@ -85,16 +71,6 @@ Carte::~Carte ()
 		for (unsigned int i = 0; i < dimX * dimY; i++) /*--->*/ this->elements[i].detruireElement(this->elements[i].getTypeElement());
 		delete[] this->elements;
 		this->elements = nullptr;
-		if (coordEntiteeConstr)
-		{
-			delete this->coordEntiteeConstr;
-			this->coordEntiteeConstr = nullptr;
-		}
-		if (coordBlockCasse)
-		{
-			delete this->coordBlockCasse;
-			this->coordBlockCasse = nullptr;
-		}
 		
 		BOOST_LOG_TRIVIAL(info) << "Désallocation de la carte reussi.";
 	}
@@ -110,9 +86,6 @@ Carte::~Carte ()
 *                                 Méthode                                *
 *************************************************************************/
 
-/**
- * Remplit la carte avec des éléments aléatoires.
- */
 void Carte::remplirHasard ()
 {
 	// Initialisation du random
@@ -168,12 +141,6 @@ void Carte::remplirHasard ()
     BOOST_LOG_TRIVIAL(debug) << "Carte remplie.";
 }
 
-/**
- * Crée une grotte dans la carte
- * 
- * @param pos La position du bloc où commence la grotte.
- * @param randMoins Plus le nombre est élevé, plus la grotte sera petite.
- */
 void Carte::creerCaverne (int pos, int randMoins)
 {
     if (pos < 0 || pos > LARGEUR * HAUTEUR)
@@ -238,11 +205,6 @@ void Carte::creerCaverne (int pos, int randMoins)
 	}
 }
 
-/**
- * Crée un certain nombre d'ennemis
- * 
- * @param nbEnnemie le nombre d'ennemis à créer
- */
 void Carte::creerEnnemie (int nbEnnemie)
 {
     BOOST_LOG_TRIVIAL(debug) << "Création des ennemies.";
@@ -260,14 +222,11 @@ void Carte::creerEnnemie (int nbEnnemie)
             pos = dis(gen);
         }
 		elements[pos].setTypeElement(ENTITEE);
-		elements[pos].setEntitee(CREEPER_EMETTEUR, this);
+		elements[pos].setEntitee(CREEPER_EMETTEUR, setCoordEntiteeCallback);
 		elements[pos].getEntitee()->setId(i);
 	}
 }
 
-/**
- * Il imprime la carte
- */
 void Carte::afficherCarte () const
 {
 	cout << "Nom de la carte : " << nomDeLaCarte << endl;
@@ -366,152 +325,30 @@ void Carte::afficherCarte () const
 	
 }
 
-/**
- * @brief Méthode afficherAdresse, affiche l'adresse de l'élément de la carte.
- *
- * @param pos
- */
 void Carte::afficherAdresse (unsigned int x, unsigned int y) const
 {
 	cout << "L'adresse de l'élément est : " << &elements[LARGEUR * y + x] << endl;
-}
-
-/**
- * Méthode gestionConstruction, décrémente les points de construction des entitée.
- */
-void Carte::gestionConstruction()
-{
-	if (coordEntiteeConstr)
-	{
-		for (uint8_t i = 0; i < nbEntiteeConstr; i++)
-		{
-			BOOST_LOG_TRIVIAL(debug) << "Coordonnée dans coordEntiteeConstr[i] : " << coordEntiteeConstr->at(i).x << " " << coordEntiteeConstr->at(i).y;
-			Entitee* entitee = this->getElement(coordEntiteeConstr->at(i).x, coordEntiteeConstr->at(i).y)->getEntitee();
-			switch (entitee->getType())
-			{
-				case VAISSEAU:			break;
-				case CREEPER_EMETTEUR:	break;
-				default:
-					if (entitee->getConstr() > 0) /*--->*/ entitee->decConstr(1);
-					else
-					{
-						/*
-						 * Enlève l'entitée du tableau d'entitée et realloue la mémoire du tableau en fonction de la taille.
-						 */
-						for (uint8_t j = i; j < nbEntiteeConstr - 1; j++)
-						{
-							coordEntiteeConstr->at(j) = coordEntiteeConstr->at(j + 1);
-						}
-						coordEntiteeConstr->resize(nbEntiteeConstr - 1);
-						nbEntiteeConstr--;
-						i--;
-						if (nbEntiteeConstr == 0)
-						{
-							delete coordEntiteeConstr;
-							coordEntiteeConstr = nullptr;
-						}
-					}
-					break;
-			}
-		}
-	}
-}
-
-/**
- * @brief Méthode gestionCasseBlock, décrémente les points de durabilité des blocks.
- */
-void Carte::gestionCasseBlock()
-{
-	if (coordBlockCasse)
-	{
-		for (uint8_t i = 0; i < nbBlockCasse; i++)
-		{
-			BOOST_LOG_TRIVIAL(debug) << "Coordonnée dans coordBlockCasse[i] : " << coordBlockCasse->at(i).x << " " << coordBlockCasse->at(i).y;
-			Block* block = this->getElement(coordBlockCasse->at(i).x, coordBlockCasse->at(i).y)->getBlock();
-			if (block->getSoliditee() > 0) /*--->*/ block->decSoliditee(1);
-			else
-			{
-				this->getElement(coordBlockCasse->at(i).x, coordBlockCasse->at(i).y)->detruireElement(BLOCK);
-				this->getElement(coordBlockCasse->at(i).x, coordBlockCasse->at(i).y)->creerVide();
-				this->getElement(coordBlockCasse->at(i).x, coordBlockCasse->at(i).y)->setTypeElement(VIDE);
-				/*
-				* Enlève le block du tableau de coordonnées des blocks à casser et realloue la mémoire
-				* du tableau en fonction de la taille.
-				*	*/
-				for (uint8_t j = i; j < nbBlockCasse - 1; j++)
-				{
-					coordBlockCasse->at(j) = coordBlockCasse->at(j + 1);
-				}
-				coordBlockCasse->resize(nbBlockCasse - 1);
-				nbBlockCasse--;
-				i--;
-				if (nbBlockCasse == 0)
-				{
-					delete coordBlockCasse;
-					coordBlockCasse = nullptr;
-				}
-			}
-		}
-	}
 }
 
 ////////////
 // Getter //
 ////////////
 
-/**
- * Renvoie la valeur de la variable membre privée dimX
- * 
- * @return La valeur de la variable membre dimX.
- */
 unsigned int Carte::getDimX ()
 {
 	return dimX;
 }
 
-/**
- * Renvoie la valeur de la variable membre privée dimY
- * 
- * @return La valeur de la variable membre dimY.
- */
 unsigned int Carte::getDimY ()
 {
 	return dimY;
 }
 
-/**
- * Renvoie l'élément de la carte
- * 
- * @return L'élément de la carte.
- */
 Case* Carte::getElement (unsigned int x, unsigned int y)
 {
 	return &elements[LARGEUR * y + x];
 }
 
-/**
- * @Méthode getCoordEntiteeConstr, récupère le tableau de coordonnée d'entitée en construction.
- */
-vector<Coord>* Carte::getCoordEntiteeConstr()
-{
-	return coordEntiteeConstr;
-}
-
-/**
- * @brief getCoordBlockCasse, récupère le tableau de coordonnée de blocks à casser.
- *
- * @return un tableau de coordonnée.
- */
-vector<Coord>* Carte::getCoordBlockCasse()
-{
-	return coordBlockCasse;
-}
-
-/**
- * Renvoyer le nom de la carte
- * 
- * @return Le nom de la carte.
- */
 const char* Carte::getNomDeLaCarte ()
 {
 	return nomDeLaCarte;
@@ -521,78 +358,24 @@ const char* Carte::getNomDeLaCarte ()
 // Setter //
 ////////////
 
-/**
- * @brief Méthode setNomDeLaCarte, modifie le nom de la carte.
- *
- * @param nomDeLaCarte le nouveau nom de la carte.
- */
+
 void Carte::setNomDeLaCarte (const char* nomDeLaCarte)
 {
 	this->nomDeLaCarte = nomDeLaCarte;
 }
 
-/**
- * @brief Méthode setCoordEntiteeConstr, modifie le tableau de coordonnée d'entitée en construction.
- *
- * @param coord la nouvelle coordonnée.
- */
-void Carte::setCoordEntiteeConstr (Coord coord)
+void Carte::setSetCoordEntiteeCallback (std::function<void(const Coord&)> setCoordEntiteeCallback)
 {
-	if (coordEntiteeConstr)
-	{
-		coordEntiteeConstr->resize(nbEntiteeConstr + 1);
-		coordEntiteeConstr->at(nbEntiteeConstr) = coord;
-		nbEntiteeConstr++;
-	}
-	else
-	{
-		coordEntiteeConstr = new vector<Coord>(1);
-		if (coordEntiteeConstr)
-		{
-			coordEntiteeConstr->at(0) = coord;
-			nbEntiteeConstr++;
-		}
-		else
-		{
-			cout << "Erreur : impossible de créer le tableau de coordonnée d'entitée en construction." << endl;
-		}
-	}
+    this->setCoordEntiteeCallback = setCoordEntiteeCallback;
+
+    // Définir le callback du curseur
+    elements[LARGEUR * 3 + LARGEUR / 2].getCurseur()->setSetCoordEntiteeCallback(setCoordEntiteeCallback);
 }
 
-/**
- * @brief Méthode setCoordBlockCasse, modifie le tableau de coordonnée de block à casser.
- *
- * @param coord la nouvelle coordonnée.
- */
-void Carte::setCoordBlockCasse(Coord coord)
+void Carte::setSetCoordBlockCasseCallback (std::function<void(const Coord&)> setCoordBlockCasseCallback)
 {
-	if (coordBlockCasse)
-	{
-        // check if coord is already in the vector
-        for (uint8_t i = 0; i < nbBlockCasse; i++)
-        {
-            if (coordBlockCasse->at(i).x == coord.x && coordBlockCasse->at(i).y == coord.y)
-            {
-                BOOST_LOG_TRIVIAL(info) << "Coordonnée déjà présente dans le tableau de coordonnée de block à casser.";
-                return;
-            }
-        }
-        
-		coordBlockCasse->resize(nbBlockCasse + 1);
-		coordBlockCasse->at(nbBlockCasse) = coord;
-		nbBlockCasse++;
-	}
-	else
-	{
-		coordBlockCasse = new vector<Coord>(1);
-		if (coordBlockCasse)
-		{
-			coordBlockCasse->at(0) = coord;
-			nbBlockCasse++;
-		}
-		else
-		{
-			cout << "Erreur : impossible de créer le tableau de coordonnée de block à casser." << endl;
-		}
-	}
+    this->setCoordBlockCasseCallback = setCoordBlockCasseCallback;
+
+    // Définir le callback du curseur
+    elements[LARGEUR * 3 + LARGEUR / 2].getCurseur()->setSetCoordBlockCasseCallback(setCoordBlockCasseCallback);
 }

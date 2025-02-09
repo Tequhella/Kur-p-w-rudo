@@ -12,7 +12,13 @@
 
 Curseur::Curseur(){}
 
-Curseur::Curseur(Coord coord) : coord(coord) {}
+Curseur::Curseur(Coord coord):
+    coord(coord) {}
+
+Curseur::Curseur(Coord coord, std::function<void(const Coord&)> setCoordEntiteeCallback, std::function<void(const Coord&)> setCoordBlockCasseCallback):
+    coord(coord),
+    setCoordEntiteeCallback(setCoordEntiteeCallback),
+    setCoordBlockCasseCallback(setCoordBlockCasseCallback) {}
 
 Curseur::~Curseur(){}
 
@@ -24,6 +30,16 @@ Coord& Curseur::getCoord()
 void Curseur::setCoord(Coord coord)
 {
 	this->coord = coord;
+}
+
+void Curseur::setSetCoordEntiteeCallback(std::function<void(const Coord&)> setCoordEntiteeCallback)
+{
+    this->setCoordEntiteeCallback = setCoordEntiteeCallback;
+}
+
+void Curseur::setSetCoordBlockCasseCallback(std::function<void(const Coord&)> setCoordBlockCasseCallback)
+{
+    this->setCoordBlockCasseCallback = setCoordBlockCasseCallback;
 }
 
 bool Curseur::deplacement(char* touche)
@@ -56,7 +72,7 @@ bool Curseur::action(char* touche, Carte* carte)
 		case 'f': 
 			if (element->getTypeElement() == BLOCK)
 			{
-				carte->setCoordBlockCasse(this->coord);
+				setCoordBlockCasseCallback(this->coord);
 			}
 			else /*--->*/ cout << "Vous ne pouvez pas casser de bloc !" << endl;
 			return true;
@@ -66,7 +82,7 @@ bool Curseur::action(char* touche, Carte* carte)
 			{
 				if (element_bas->getTypeElement() == BLOCK && element->getTypeElement() == VIDE)
 				{
-					element->setEntitee(REACTEUR, carte);
+					element->setEntitee(REACTEUR, setCoordEntiteeCallback);
 					element->setTypeElement(ENTITEE);
 				}
 				else /*--->*/ cout << "Impossible de placer un réacteur ici." << endl;
@@ -79,7 +95,7 @@ bool Curseur::action(char* touche, Carte* carte)
 			{
 				if (element_bas->getTypeElement() == BLOCK && element->getTypeElement() == VIDE)
 				{
-					element->setEntitee(MINEUR, carte);
+					element->setEntitee(MINEUR, setCoordEntiteeCallback);
 					element->setTypeElement(ENTITEE);
 				}
 				else /*--->*/ cout << "Impossible de placer un mineur ici." << endl;
@@ -91,7 +107,7 @@ bool Curseur::action(char* touche, Carte* carte)
 			{
 				if (element->getTypeElement() == VIDE)
 				{
-					element->setEntitee(BOUCLIER, carte);
+					element->setEntitee(BOUCLIER, setCoordEntiteeCallback);
 					element->setTypeElement(ENTITEE);
 				}
 				else /*--->*/ cout << "Impossible de placer un bouclier ici." << endl;
@@ -108,7 +124,7 @@ bool Curseur::action(char* touche, Carte* carte)
 					element_gauche->getTypeElement() == BLOCK) &&
 					element->getTypeElement() == VIDE)
 				{
-					element->setEntitee(PHARE, carte);
+					element->setEntitee(PHARE, setCoordEntiteeCallback);
 					element->setTypeElement(ENTITEE);
 				}
 				else /*--->*/ cout << "Impossible de placer un phare ici." << endl;
@@ -121,7 +137,7 @@ bool Curseur::action(char* touche, Carte* carte)
 			{
 				if (element->getTypeElement() == VIDE)
 				{
-					element->setEntitee(BOMBE, carte);
+					element->setEntitee(BOMBE, setCoordEntiteeCallback);
 					element->setTypeElement(ENTITEE);
 				}
 				else /*--->*/ cout << "Impossible de placer une bombe ici." << endl;

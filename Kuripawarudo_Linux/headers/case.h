@@ -148,10 +148,10 @@ class Case
 		/**
 		 * Il définit le type d'entité de la case.
 		 *
-		 * @param type Le type de l'entité.
-		 * @param coordEntiteeConstr Le tableau de coordonnées d'entitée à construire.
+		 * @param type Le type d'entité.
+         * @param setCoordCallback Le callback de coordonnée.
 		 */
-		void setEntitee (TypeEntitee type, Carte* carte);
+		void setEntitee(TypeEntitee type, std::function<void(const Coord&)> setCoordCallback);
 
 		// Setter setCoord, met à jour les coordonnées.
 		void setCoord (double x, double y);

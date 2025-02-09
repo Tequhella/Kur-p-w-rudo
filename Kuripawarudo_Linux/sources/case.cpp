@@ -176,7 +176,7 @@ void Case::setBlock (uint8_t type, RocheType typeStone)
 	}
 }
 
-void Case::setEntitee (TypeEntitee type, Carte* carte)
+void Case::setEntitee (TypeEntitee type, std::function<void(const Coord&)> setCoordCallback)
 {
 	switch (type)
 	{
@@ -185,11 +185,11 @@ void Case::setEntitee (TypeEntitee type, Carte* carte)
             BOOST_LOG_TRIVIAL(error) << "Erreur : le type d'entitée n'est pas défini." ;
             break;
 		case VAISSEAU        : entitee = new Vaisseau()       ; break;
-		case REACTEUR		 : entitee = new Reacteur()		  ; carte->setCoordEntiteeConstr(coord); break;
-		case MINEUR			 : entitee = new Mineur()		  ; carte->setCoordEntiteeConstr(coord); break;
-		case BOUCLIER		 : entitee = new Bouclier()		  ; carte->setCoordEntiteeConstr(coord); break;
-		case PHARE			 : entitee = new Phare()		  ; carte->setCoordEntiteeConstr(coord); break;
-		case BOMBE			 : entitee = new Bombe()		  ; carte->setCoordEntiteeConstr(coord); break;
+		case REACTEUR		 : entitee = new Reacteur()		  ; setCoordCallback(coord); break;
+		case MINEUR			 : entitee = new Mineur()		  ; setCoordCallback(coord); break;
+		case BOUCLIER		 : entitee = new Bouclier()		  ; setCoordCallback(coord); break;
+		case PHARE			 : entitee = new Phare()		  ; setCoordCallback(coord); break;
+		case BOMBE			 : entitee = new Bombe()		  ; setCoordCallback(coord); break;
 		case CREEPER_EMETTEUR: entitee = new CreeperEmetteur(); break;
 	}
 

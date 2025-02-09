@@ -13,8 +13,7 @@
 
 #include "type.h"
 #include <thread>
-
-using namespace std;
+#include <functional>
 
 class Case;
 class Entitee;
@@ -28,9 +27,13 @@ class Carte
     *                       Constructeur & Destructeur                       *
     *************************************************************************/
 
-        /*
-        * Constructeur de la classe Carte.
-        */
+        /**
+         * Créer un nouvel objet Carte
+         * 
+         * @param dimX La largeur de la carte.
+         * @param dimY La hauteur de la carte.
+         * @param nomDeLaCarte Le nom de la carte.
+         */
         Carte (int dimX, int dimY, const char* nomDeLaCarte);
         
         /*
@@ -69,16 +72,6 @@ class Carte
          * @param pos
          */
 		void afficherAdresse (unsigned int x, unsigned int y) const;
-		
-        /**
-         * @brief Méthode gestionConstruction, décrémente les points de construction des entitée.
-         */
-        void gestionConstruction();
-
-		/**
-		 * @brief Méthode gestionCasseBlock, décrémente les points de durabilité des blocks.
-		 */
-		void gestionCasseBlock();
 
         ////////////
         // Getter //
@@ -98,20 +91,6 @@ class Carte
          * @brief Méthode getElement, récupère l'élément de la carte à la position donnée.
          */
         Case* getElement (unsigned int x, unsigned int y);
-		
-		/**
-		 * @Méthode getCoordEntiteeConstr, récupère le tableau de coordonnée d'entitée en construction.
-		 * 
-		 * @return un tableau de coordonnée.
-		 */
-		vector<Coord>* getCoordEntiteeConstr();
-
-		/**
-		 * @brief getCoordBlockCasse, récupère le tableau de coordonnée de blocks à casser.
-		 * 
-		 * @return un tableau de coordonnée.
-		 */
-		vector<Coord>* getCoordBlockCasse();
 
         /**
          * @brief Méthode getNomDeLaCarte, récupère le nom de la carte.
@@ -128,29 +107,24 @@ class Carte
 		 * @param nomDeLaCarte le nouveau nom de la carte.
 		 */
 		void setNomDeLaCarte (const char* nomDeLaCarte);
-		
-		/**
-		 * @brief Méthode setCoordEntiteeConstr, modifie le tableau de coordonnée d'entitée en construction.
-		 * 
-		 * @param coord la nouvelle coordonnée.
-		 */
-		void setCoordEntiteeConstr(Coord coord);
 
-		/**
-		 * @brief Méthode setCoordBlockCasse, modifie le tableau de coordonnée de block à casser.
-		 * 
-		 * @param coord la nouvelle coordonnée.
-		 */
-		void setCoordBlockCasse(Coord coord);
+        /**
+         * @brief Méthode setCoordEntiteeCallback, modifie la fonction de callback pour les coordonnées.
+         * 
+         * @param setCoordEntiteeCallback la nouvelle fonction de callback pour les coordonnées.
+         */
+        void setSetCoordEntiteeCallback (std::function<void(const Coord&)> setCoordEntiteeCallback);
+
+        /**
+         * @brief Méthode setCoordBlockCasseCallback, modifie la fonction de callback pour les coordonnées.
+         * 
+         * @param setCoordBlockCasseCallback la nouvelle fonction de callback pour les coordonnées.
+         */
+        void setSetCoordBlockCasseCallback (std::function<void(const Coord&)> setCoordBlockCasseCallback);
 		
 		////////////
 		// Thread //
 		////////////
-
-		/**
-		 * @brief Méthode threadConstruction, crée un thread pour la gestion de la construction.
-		 */
-		void threadConstruction();
 
     private:
 
@@ -160,11 +134,9 @@ class Carte
 
         unsigned int   dimX, dimY;
         Case*          elements;          // Propriété elements : tableau des éléments de la carte.
-        vector<Coord>* coordEntiteeConstr; // Propriété coordEntiteeConstr : tableau des coordonnées des entitées en construction.
-        vector<Coord>* coordBlockCasse;    // Propriété coordBlockCasse : tableau des coordonnées des blocks à casser.
-		uint8_t 	   nbEntiteeConstr;    // Propriété nbEntiteeConstr : nombre d'entitées en construction.
-		uint8_t 	   nbBlockCasse;       // Propriété nbBlockCasse : nombre de blocks à casser.
         const char*    nomDeLaCarte;
+        std::function<void(const Coord&)> setCoordEntiteeCallback; // Propriété setCoordEntiteeCallback : fonction de callback pour les coordonnées.
+        std::function<void(const Coord&)> setCoordBlockCasseCallback; // Propriété setCoordBlockCasseCallback : fonction de callback pour les coordonnées.
 };
 
 #endif

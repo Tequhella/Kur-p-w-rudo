@@ -98,5 +98,4 @@ enum TypeEntitee
 
 std::ostream& operator<<(std::ostream& os, TypeEntitee type);
 
-
 #endif

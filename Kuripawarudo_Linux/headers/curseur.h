@@ -31,13 +31,22 @@ class Curseur : public Base
 		 * 
 		 */
 		Curseur();
+
+        /**
+         * @brief Constructeur de la classe Curseur.
+         * 
+         * @param coord Les coordonnées du curseur.
+         */
+        Curseur(Coord coord);
 		
 		/**
 		 * @brief Constructeur de la classe Curseur.
 		 * 
 		 * @param coord Les coordonnées du curseur.
+         * @param setCoordEntiteeCallback Le callback de la méthode setCoordEntiteeConstr.
+         * @param setCoordBlockCasseCallback Le callback de la méthode setCoordBlockCasse.
 		 */
-		Curseur(Coord coord);
+		Curseur(Coord coord, std::function<void(const Coord&)> setCoordEntiteeCallback, std::function<void(const Coord&)> setCoordBlockCasseCallback);
 
 		/**
 		 * @brief Destructeur de la classe Curseur.
@@ -88,9 +97,25 @@ class Curseur : public Base
 		 */
 		void setCoord(Coord coord);
 
+        /**
+         * @brief setCoordEntiteeCallback, modifie la fonction de callback pour les coordonnées.
+         * 
+         * @param setCoordEntiteeCallback La nouvelle fonction de callback pour les coordonnées.
+         */
+        void setSetCoordEntiteeCallback(std::function<void(const Coord&)> setCoordEntiteeCallback);
+
+        /**
+         * @brief setCoordBlockCasseCallback, modifie la fonction de callback pour les coordonnées.
+         * 
+         * @param setCoordBlockCasseCallback La nouvelle fonction de callback pour les coordonnées.
+         */
+        void setSetCoordBlockCasseCallback(std::function<void(const Coord&)> setCoordBlockCasseCallback);
+
 	private:
 		
 		Coord coord;
+        std::function<void(const Coord&)> setCoordEntiteeCallback;
+        std::function<void(const Coord&)> setCoordBlockCasseCallback;
 };
 
 #endif
