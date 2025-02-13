@@ -35,11 +35,13 @@ void Curseur::setCoord(Coord coord)
 void Curseur::setSetCoordEntiteeCallback(std::function<void(const Coord&)> setCoordEntiteeCallback)
 {
     this->setCoordEntiteeCallback = setCoordEntiteeCallback;
+    BOOST_LOG_TRIVIAL(info) << "Curseur : Callback setCoordEntiteeCallback défini.";
 }
 
 void Curseur::setSetCoordBlockCasseCallback(std::function<void(const Coord&)> setCoordBlockCasseCallback)
 {
     this->setCoordBlockCasseCallback = setCoordBlockCasseCallback;
+    BOOST_LOG_TRIVIAL(info) << "Curseur : Callback setCoordBlockCasseCallback défini.";
 }
 
 bool Curseur::deplacement(char* touche)

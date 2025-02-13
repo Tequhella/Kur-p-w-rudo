@@ -335,7 +335,7 @@ void Carte::afficherCarte () const
 
 void Carte::afficherAdresse (unsigned int x, unsigned int y) const
 {
-	cout << "L'adresse de l'élément est : " << &elements[LARGEUR * y + x] << endl;
+	BOOST_LOG_TRIVIAL(info) << "L'adresse de l'élément est : " << &elements[LARGEUR * y + x] << endl;
 }
 
 ////////////
@@ -375,6 +375,7 @@ void Carte::setNomDeLaCarte (const char* nomDeLaCarte)
 void Carte::setSetCoordEntiteeCallback (std::function<void(const Coord&)> setCoordEntiteeCallback)
 {
     this->setCoordEntiteeCallback = setCoordEntiteeCallback;
+    BOOST_LOG_TRIVIAL(info) << "Carte : Callback setCoordEntiteeCallback défini.";
 
     // Définir le callback du curseur
     elements[LARGEUR * 3 + LARGEUR / 2].getCurseur()->setSetCoordEntiteeCallback(setCoordEntiteeCallback);
@@ -383,6 +384,7 @@ void Carte::setSetCoordEntiteeCallback (std::function<void(const Coord&)> setCoo
 void Carte::setSetCoordBlockCasseCallback (std::function<void(const Coord&)> setCoordBlockCasseCallback)
 {
     this->setCoordBlockCasseCallback = setCoordBlockCasseCallback;
+    BOOST_LOG_TRIVIAL(info) << "Carte : Callback setCoordBlockCasseCallback défini.";
 
     // Définir le callback du curseur
     elements[LARGEUR * 3 + LARGEUR / 2].getCurseur()->setSetCoordBlockCasseCallback(setCoordBlockCasseCallback);
