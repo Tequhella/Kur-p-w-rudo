@@ -103,18 +103,19 @@ void Jeu::bouclePrincipale()
 
 void Jeu::afficherTaille()
 {
-    std::cout << "Carte : " << sizeof(Carte) << " octets" << std::endl;
-    std::cout << "Case : " << sizeof(Case) << " octets" << std::endl;
-    std::cout << "Curseur : " << sizeof(Curseur) << " octets" << std::endl;
-    std::cout << "Vide : " << sizeof(Vide) << " octets" << std::endl;
-    std::cout << "Block : " << sizeof(Block) << " octets" << std::endl;
-    std::cout << "Entitee : " << sizeof(Entitee) << " octets" << std::endl;
-    std::cout << "Reacteur : " << sizeof(Reacteur) << " octets" << std::endl;
-    std::cout << "Mineur : " << sizeof(Mineur) << " octets" << std::endl;
-    std::cout << "Bouclier : " << sizeof(Bouclier) << " octets" << std::endl;
-    std::cout << "Phare : " << sizeof(Phare) << " octets" << std::endl;
-    std::cout << "Bombe : " << sizeof(Bombe) << " octets" << std::endl;
-    std::cout << "CreeperEmetteur : " << sizeof(CreeperEmetteur) << " octets" << std::endl;
+    BOOST_LOG_TRIVIAL(debug) << "Taille des classes :";
+    BOOST_LOG_TRIVIAL(debug) << "Carte : " << sizeof(Carte) << " octets";
+    BOOST_LOG_TRIVIAL(debug) << "Case : " << sizeof(Case) << " octets";
+    BOOST_LOG_TRIVIAL(debug) << "Curseur : " << sizeof(Curseur) << " octets";
+    BOOST_LOG_TRIVIAL(debug) << "Vide : " << sizeof(Vide) << " octets";
+    BOOST_LOG_TRIVIAL(debug) << "Block : " << sizeof(Block) << " octets";
+    BOOST_LOG_TRIVIAL(debug) << "Entitee : " << sizeof(Entitee) << " octets";
+    BOOST_LOG_TRIVIAL(debug) << "Reacteur : " << sizeof(Reacteur) << " octets";
+    BOOST_LOG_TRIVIAL(debug) << "Mineur : " << sizeof(Mineur) << " octets";
+    BOOST_LOG_TRIVIAL(debug) << "Bouclier : " << sizeof(Bouclier) << " octets";
+    BOOST_LOG_TRIVIAL(debug) << "Phare : " << sizeof(Phare) << " octets";
+    BOOST_LOG_TRIVIAL(debug) << "Bombe : " << sizeof(Bombe) << " octets";
+    BOOST_LOG_TRIVIAL(debug) << "CreeperEmetteur : " << sizeof(CreeperEmetteur) << " octets";
 }
 
 void Jeu::gestionRessources()
